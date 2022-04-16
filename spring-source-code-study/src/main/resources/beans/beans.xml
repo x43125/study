@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="role1" class="com.wx.springsourcestudy.guigu.bean.Role">
+        <!-- property元素是定义类的属性，name属性定义的是属性名称 value是值
+         相当于：
+         Role role=new Role();
+         role.setId(1);
+         role.setRoleName("高级工程师");
+         role.setNote("重要人员");-->
+        <property name="id" value="1"/>
+        <property name="roleName" value="高级工程师"/>
+        <property name="note" value="重要人员"/>
+    </bean>
+</beans>

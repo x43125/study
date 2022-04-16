@@ -1,0 +1,19 @@
+server:
+  port: 8989
+  # 不能有下划线，不区分大小写
+spring:
+  application:
+    name: EUREKACLIENT
+  cloud:
+    inetutils:
+      preferred-networks:
+        - 192.168.101.45
+      ignored-interfaces:
+        - VMware.*
+
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka

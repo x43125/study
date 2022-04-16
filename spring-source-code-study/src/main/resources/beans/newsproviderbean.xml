@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- xml方式注入 标注依赖关系 -->
+    <bean id="newsProvider" class="com.wx.springsourcestudy.fuqiang.simulation.noioc.FXNewsProviderInjectWithSetter">
+        <property name="newsListener" ref="djNewsListener"/>
+        <property name="newPersistener" ref="djNewsPersister"/>
+    </bean>
+    <bean id="djNewsListener"
+          class="com.wx.springsourcestudy.fuqiang.simulation.service.impl.DowJonesNewsListener">
+    </bean>
+    <bean id="djNewsPersister"
+          class="com.wx.springsourcestudy.fuqiang.simulation.service.impl.DowJonesNewsPersister">
+    </bean>
+</beans>

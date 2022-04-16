@@ -1,0 +1,70 @@
+package com.wx.algorithm.Java.sort;
+
+import com.wx.algorithm.Java.sort.util.SortUtil;
+
+/**
+ * 归并排序
+ */
+public class Merge {
+    public static void main(String[] args) {
+        long num = 78651578943215497L;
+        int[] arr = SortUtil.init(num);
+        System.out.println("Selection Sort:");
+        System.out.printf("原: ");
+        SortUtil.print(arr);
+        // sortUp2Bottom(arr);
+        sortBottom2Up(arr);
+        System.out.printf("现: ");
+        SortUtil.print(arr);
+    }
+
+    /**
+     * 自顶向下
+     * @param arr
+     */
+    private static void sortUp2Bottom(int[] arr) {
+        mergeSort(arr, 0, arr.length - 1);
+    }
+
+    private static void mergeSort(int[] arr, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int[] aux = new int[arr.length];
+        for (int i = left; i <= right; i++) {
+            aux[i] = arr[i];
+        }
+
+        int i = left;
+        int j = mid + 1;
+        for (int k = i; k <= right; k++) {
+            if (i > mid) {
+                arr[k] = aux[j++];
+            } else if (j > right) {
+                arr[k] = aux[i++];
+            } else if (aux[i] <= aux[j]) {
+                arr[k] = aux[i++];
+            } else {
+                arr[k] = aux[j++];
+            }
+        }
+    }
+
+    private static void sortBottom2Up(int[] arr) {
+        int length = arr.length;
+        for (int sz=1; sz<length; sz=sz+sz) {
+            for (int left=0; left<length-sz; left+=sz+sz) {
+                merge(arr, left, left+sz-1, Math.min(left+sz+sz-1, length-1));
+            }
+        }
+    }
+
+}
