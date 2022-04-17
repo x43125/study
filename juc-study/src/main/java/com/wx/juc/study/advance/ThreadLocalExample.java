@@ -1,4 +1,4 @@
-package main.java.com.wx.juc.study.advance;
+package com.wx.juc.study.advance;
 
 import java.text.SimpleDateFormat;
 import java.util.Random;

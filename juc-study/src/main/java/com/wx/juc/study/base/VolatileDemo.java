@@ -1,4 +1,4 @@
-package main.java.com.wx.juc.study.base;
+package com.wx.juc.study.base;
 
 /**
  * @Author: x43125

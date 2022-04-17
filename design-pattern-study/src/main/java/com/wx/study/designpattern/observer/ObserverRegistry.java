@@ -1,6 +1,5 @@
 package com.wx.study.designpattern.observer;
 
-import jdk.internal.util.Preconditions;
 
 import java.lang.reflect.Method;
 import java.util.*;

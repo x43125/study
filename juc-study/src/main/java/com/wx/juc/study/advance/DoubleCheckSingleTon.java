@@ -1,4 +1,5 @@
-package main.java.com.wx.juc.study.advance;
+package com.wx.juc.study.advance;
+
 
 /**
  * @Author: x43125

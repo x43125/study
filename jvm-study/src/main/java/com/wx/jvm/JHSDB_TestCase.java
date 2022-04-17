@@ -1,4 +1,4 @@
-package main.java.com.wx.jvm;
+package com.wx.jvm;
 
 /**
  * @Author: x43125

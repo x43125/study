@@ -1,4 +1,4 @@
-package main.java.com.wx.jvm;
+package com.wx.jvm;
 
 import java.util.ArrayList;
 import java.util.List;
