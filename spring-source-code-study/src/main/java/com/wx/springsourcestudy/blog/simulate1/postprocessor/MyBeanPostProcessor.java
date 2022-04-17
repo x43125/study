@@ -11,7 +11,6 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
     public MyBeanPostProcessor() {
         super();
         System.out.println("这是BeanPostProcessor实现类构造器！！");
-        // TODO Auto-generated constructor stub
     }
 
     @Override

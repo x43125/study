@@ -9,8 +9,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
-import java.time.Duration;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.Properties;
 
 /**
@@ -62,7 +61,7 @@ public class First {
     }
 
     public void consumer() {
-        consumer.subscribe(Arrays.asList(topic));
+        consumer.subscribe(Collections.singletonList(topic));
 
         while (true) {
 //            consumer.poll(new Duration(10, 10));
