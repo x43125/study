@@ -33,7 +33,7 @@ public class CmdStudy01 {
             while (goNextLine) {
                 // TODO: add the function about keyboard shortcut key e.g.: ctrl
                 String nextLine = scanner.nextLine();
-                goNextLine = sendWord(nextLine);
+                goNextLine = sendCmd(nextLine);
                 System.out.print("x> ");
             }
 
@@ -44,12 +44,12 @@ public class CmdStudy01 {
     }
 
     /**
-     *  handle cmd, if cmd need be sent to the server then send it, if not handle it directly
+     * handle cmd, if cmd need be sent to the server then send it, if not handle it directly
      *
      * @param cmd
      * @return
      */
-    private boolean sendWord(String cmd) {
+    private boolean sendCmd(String cmd) {
         String trimCmd = cmd.trim();
         if ("".equals(cmd)) {
             return true;
@@ -59,7 +59,21 @@ public class CmdStudy01 {
             return false;
         }
 
-        return executeWordAndReturn(trimCmd);
+        String executeResult = executeCmdAndReturn(trimCmd);
+        return handleExecuteResult(executeResult);
+    }
+
+    /**
+     * handle the result returned from execute cmd
+     *
+     * @param cmd
+     * @return
+     */
+    private boolean handleExecuteResult(String cmd) {
+        if (!"".equals(cmd)) {
+            System.out.println(cmd);
+        }
+        return true;
     }
 
     /**
@@ -68,10 +82,10 @@ public class CmdStudy01 {
      * @param cmd
      * @return
      */
-    private boolean executeWordAndReturn(String cmd) {
+    private String executeCmdAndReturn(String cmd) {
         if (properties.containsKey(cmd)) {
-            System.out.println(properties.getProperty(cmd));
+            return properties.getProperty(cmd);
         }
-        return true;
+        return "";
     }
 }
