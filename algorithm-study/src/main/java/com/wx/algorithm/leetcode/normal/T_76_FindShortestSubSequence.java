@@ -14,7 +14,6 @@ public class T_76_FindShortestSubSequence {
 
         HashMap<Character, Integer> need = new HashMap<>();
         HashMap<Character, Integer> window = new HashMap<>();
-
         for (int i = 0; i < t.length(); i++) {
             char ch = t.charAt(i);
             need.put(ch, need.getOrDefault(ch, 0) + 1);
@@ -22,8 +21,8 @@ public class T_76_FindShortestSubSequence {
         int l = 0;
         int r = 0;
         int valid = 0;
-        int len = Integer.MAX_VALUE;
         int start = 0;
+        int len = Integer.MAX_VALUE;
         while (r < s.length()) {
             char ch = s.charAt(r);
             r++;
