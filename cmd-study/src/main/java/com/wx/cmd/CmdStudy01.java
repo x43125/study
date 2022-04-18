@@ -1,5 +1,6 @@
 package com.wx.cmd;
 
+import java.util.Properties;
 import java.util.Scanner;
 
 /**
@@ -9,43 +10,68 @@ import java.util.Scanner;
  */
 public class CmdStudy01 {
 
+    private Properties properties;
+
     public static void main(String[] args) {
         System.out.println("Hello, Welcome to my System!");
+        CmdStudy01 cmdStudy01 = new CmdStudy01();
+        cmdStudy01.run();
+    }
 
-        /** TODO: add a init function 
-         * - init the return word
+    private void run() {
+
+        /** TODO: add a init function
+         * - init the return word √
          * - init the tips word
          */
+        InitCmd initCmd = new InitCmd();
+        properties = initCmd.getReturnProperties();
 
-        try (Scanner scanner = new Scanner(System.in);) {
+        try (Scanner scanner = new Scanner(System.in)) {
             boolean goNextLine = true;
             System.out.print("x> ");
             while (goNextLine) {
                 // TODO: add the function about keyboard shortcut key e.g.: ctrl
                 String nextLine = scanner.nextLine();
-                goNextLine = switchCase(nextLine);
+                goNextLine = sendWord(nextLine);
                 System.out.print("x> ");
             }
+
             System.out.println("Good Bye!");
         } catch (Exception e) {
             System.out.println("execute error: " + e.getMessage());
         }
     }
 
-    private static boolean switchCase(String cmd) {
+    /**
+     *  handle cmd, if cmd need be sent to the server then send it, if not handle it directly
+     *
+     * @param cmd
+     * @return
+     */
+    private boolean sendWord(String cmd) {
         String trimCmd = cmd.trim();
-
-        if (cmd == null || "".equals(cmd))
+        if ("".equals(cmd)) {
             return true;
-        switch (trimCmd) {
-            case "hello":
-                System.out.println("hello world");
-                return true;
-            case "exit":
-            case "quit":
-                return false;
-            default:
-                return true;
         }
+
+        if ("quit".equals(trimCmd) || "exit".equals(trimCmd)) {
+            return false;
+        }
+
+        return executeWordAndReturn(trimCmd);
+    }
+
+    /**
+     * handle cmd localized, if the cmd need to be sent to the server, the server will implement this function
+     *
+     * @param cmd
+     * @return
+     */
+    private boolean executeWordAndReturn(String cmd) {
+        if (properties.containsKey(cmd)) {
+            System.out.println(properties.getProperty(cmd));
+        }
+        return true;
     }
 }
