@@ -8,7 +8,7 @@ public class InitCmd {
     private final Properties returnProperties = new Properties();
 
     public InitCmd() {
-        InputStream is = InitCmd.class.getClassLoader().getResourceAsStream("shorcut.properties");
+        InputStream is = InitCmd.class.getClassLoader().getResourceAsStream("shortcut.properties");
         try {
             returnProperties.load(is);
         } catch (IOException e) {
@@ -21,6 +21,7 @@ public class InitCmd {
             returnProperties.load(fis);
         } catch (IOException e) {
             throw new RuntimeException(e);
+
         }
     }
 
