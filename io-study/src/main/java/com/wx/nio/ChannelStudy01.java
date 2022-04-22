@@ -1,4 +1,4 @@
-package com.wx.bio;
+package com.wx.nio;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,7 +26,5 @@ public class ChannelStudy01 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 }

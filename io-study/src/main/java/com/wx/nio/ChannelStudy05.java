@@ -1,4 +1,4 @@
-package com.wx.bio;
+package com.wx.nio;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;

@@ -1,4 +1,4 @@
-package com.wx.bio;
+package com.wx.nio;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,11 +12,11 @@ import java.nio.channels.FileChannel;
  * @Author: x43125
  * @Date: 22/04/21
  */
-public class ChannelStudy04 {
+public class ChannelStudy03 {
 
     public static void main(String[] args) {
-        String filePath = "F:\\test\\ppdream-logo.jpg";
-        String filePath2 = "F:\\test\\ppdream-logo-2.jpg";
+        String filePath = "F:\\test\\test.txt";
+        String filePath2 = "F:\\test\\test2.txt";
 
         File file = new File(filePath);
 
@@ -25,7 +25,16 @@ public class ChannelStudy04 {
              FileOutputStream fos = new FileOutputStream(filePath2);
              FileChannel fosChannel = fos.getChannel()
         ) {
-            fosChannel.transferFrom(fisChannel, 0, fisChannel.size());
+            ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+            while (true) {
+                byteBuffer.clear();
+                int read = fisChannel.read(byteBuffer);
+                if (read == -1) {
+                    break;
+                }
+                byteBuffer.flip();
+                fosChannel.write(byteBuffer);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
