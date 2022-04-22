@@ -1,12 +1,16 @@
 package com.wx.springredisstudy.controller;
 
 import org.redisson.Redisson;
+import org.redisson.api.RKeys;
+import org.redisson.api.RList;
 import org.redisson.api.RLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -25,6 +29,7 @@ public class RedisManager {
 
     @RequestMapping("/deduct_stock")
     public String deductStock() {
+        System.out.println("deduct stocks");
         String doDeductResult = doDeductWithSelf();
         String doDeductWithRedissonResult = doDeductWithRedisson();
         return "doDeductResult:" + doDeductResult + "\ndoDeductWithRedissonResult:" + doDeductWithRedissonResult;
