@@ -1,4 +1,4 @@
-package com.wx.nio;
+package com.wx.ab.nio.channel;
 
 import java.io.File;
 import java.io.FileInputStream;

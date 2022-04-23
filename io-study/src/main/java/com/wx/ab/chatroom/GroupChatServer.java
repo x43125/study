@@ -1,10 +1,9 @@
-package com.wx.chatroom;
+package com.wx.ab.chatroom;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 
 /**
@@ -24,13 +23,17 @@ public class GroupChatServer {
             this.listenSocketChannel.socket().bind(new InetSocketAddress(PORT));
             this.listenSocketChannel.configureBlocking(false);
             this.listenSocketChannel.register(this.selector, SelectionKey.OP_ACCEPT);
+            System.out.println("开始运行...");
+            System.out.println(listenSocketChannel.getLocalAddress());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void listen() {
+        System.out.println("服务开始监听...");
         try {
+            // while(true) 需要放在 try catch里面，才能正常的抛出RuntimeException
             while (true) {
                 int count = selector.select();
                 if (count > 0) {
@@ -75,8 +78,10 @@ public class GroupChatServer {
 //                System.out.println(channel.getRemoteAddress() + " 离线了...");
 //            }
         } catch (IOException e) {
+//            e.printStackTrace();
             try {
                 System.out.println(channel.getRemoteAddress() + " 离线了...");
+                channel.close();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -84,13 +89,13 @@ public class GroupChatServer {
     }
 
     private void sendMsg2OtherClients(String msg, SocketChannel self) {
-        System.out.println("服务器转发消息中...");
         ByteBuffer buffer = ByteBuffer.wrap(msg.trim().getBytes());
         for (SelectionKey key : selector.keys()) {
             SelectableChannel targetChannel = key.channel();
             if (targetChannel instanceof SocketChannel && targetChannel != self) {
                 SocketChannel dest = (SocketChannel) targetChannel;
                 try {
+                    System.out.println("服务器转发消息中...消息 [" + msg.trim() + "] 已发送至: " + dest.getRemoteAddress());
                     dest.write(buffer);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
@@ -100,9 +105,7 @@ public class GroupChatServer {
     }
 
     public static void main(String[] args) {
-        System.out.println("开始运行...");
         GroupChatServer server = new GroupChatServer();
-        System.out.println("服务开始监听...");
         server.listen();
     }
 }

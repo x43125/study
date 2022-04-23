@@ -1,4 +1,4 @@
-package com.wx.bio;
+package com.wx.ab.bio;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package com.wx.nio;
+package com.wx.ab.nio;
 
 import java.nio.IntBuffer;
 

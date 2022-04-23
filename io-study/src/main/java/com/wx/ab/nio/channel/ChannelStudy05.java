@@ -1,4 +1,4 @@
-package com.wx.nio;
+package com.wx.ab.nio.channel;
 
 import java.io.*;
 import java.nio.MappedByteBuffer;

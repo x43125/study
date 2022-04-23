@@ -1,16 +1,13 @@
-package com.wx.chatroom;
+package com.wx.ab.chatroom;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectableChannel;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import java.util.Scanner;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @Descrption:
@@ -62,7 +59,9 @@ public class GroupChatClient {
                         SocketChannel sc = (SocketChannel) key.channel();
                         sc.read(buffer);
                         String msg = new String(buffer.array());
+                        buffer.clear();
                         System.out.println("接收到消息：" + msg.trim());
+                        System.out.println("消息长度: " + msg.length());
                     }
                 }
             } else {
