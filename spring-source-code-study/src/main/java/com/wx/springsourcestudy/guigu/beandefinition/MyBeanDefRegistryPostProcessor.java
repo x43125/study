@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MyBeanDefRegistryPostProcessor implements BeanDefinitionRegistryPostProcessor {
+
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
         System.out.println("postProcessBeanDefinitionRegistry : " + registry.getBeanDefinitionCount() + " ============= ");

@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
  * @Date: 22/04/06
  */
 @Configuration
-public class MainConfig3 {
+public class MainConfig4 {
     @Bean
     public HelloWorld getHelloWorld() {
         return new HelloWorld();
