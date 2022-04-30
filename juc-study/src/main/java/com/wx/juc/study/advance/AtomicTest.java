@@ -11,17 +11,31 @@ import java.util.concurrent.atomic.AtomicLong;
  * @Date: 21/11/21
  */
 public class AtomicTest {
+    static AtomicLong l = new AtomicLong(1000L);
     public static void main(String[] args) {
-        AtomicLong l = new AtomicLong(1000L);
+        System.out.println(l);
 
-        l.incrementAndGet();
-        l.decrementAndGet();
-        l.getAndIncrement();
+        new Thread(new AtomicSimulate()).start();
+        new Thread(new AtomicSimulate()).start();
+        new Thread(new AtomicSimulate()).start();
+        new Thread(new AtomicSimulate()).start();
 
-        Map<String, String> map = new ConcurrentHashMap<>();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
-        CopyOnWriteArrayList<String> list = new CopyOnWriteArrayList<>();
+        System.out.println(l);
 
+    }
+
+    static class AtomicSimulate implements Runnable{
+        @Override
+        public void run() {
+            l.incrementAndGet();
+            System.out.println(Thread.currentThread() + " : " + l);
+        }
     }
 
 }
