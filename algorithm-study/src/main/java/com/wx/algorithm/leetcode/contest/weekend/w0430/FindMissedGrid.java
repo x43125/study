@@ -11,11 +11,13 @@ public class FindMissedGrid {
 //        int[][] guards = {{0, 0}, {1, 1}, {2, 3}}, walls = {{0, 1}, {2, 2}, {1, 4}};
         int m = 1, n = 100000;
         int[][] guards = {{0, 0}}, walls = {{0, 1}};
-        System.out.println(countUnguarded(m, n, guards, walls));
+//        System.out.println(countUnguarded(m, n, guards, walls));
+        System.out.println(countUnguarded_02(m, n, guards, walls));
     }
 
     /**
-     * 优化
+     * 优化 时间耗时太长了
+     *
      * @param m
      * @param n
      * @param guards
@@ -81,6 +83,61 @@ public class FindMissedGrid {
             }
         }
         return res;
+    }
+
+    /**
+     * 从警卫的角度来看，标记能见查到的位置
+     *
+     * @param m
+     * @param n
+     * @param guards
+     * @param walls
+     * @return
+     */
+    public static int countUnguarded_02(int m, int n, int[][] guards, int[][] walls) {
+        int[][] grids = init(m, n, guards, walls);
+        int no = m * n - guards.length - walls.length;
+        for (int[] guard : guards) {
+            int x = guard[0], y = guard[1];
+            for (int i = x - 1; i >= 0; i--) {
+                if (grids[i][y] == 0) {
+                    no--;
+                    grids[i][y] = 3;
+                } else if (grids[i][y] == 3) {
+                } else {
+                    break;
+                }
+            }
+            for (int i = x + 1; i < m; i++) {
+                if (grids[i][y] == 0) {
+                    no--;
+                    grids[i][y] = 3;
+                } else if (grids[i][y] == 3) {
+                } else {
+                    break;
+                }
+            }
+            for (int i = y - 1; i >= 0; i--) {
+                if (grids[x][i] == 0) {
+                    no--;
+                    grids[x][i] = 3;
+                } else if (grids[x][i] == 3) {
+                } else {
+                    break;
+                }
+            }
+            for (int i = y + 1; i < n; i++) {
+                if (grids[x][i] == 0) {
+                    no--;
+                    grids[x][i] = 3;
+                } else if (grids[x][i] == 3) {
+                } else {
+                    break;
+                }
+            }
+        }
+
+        return no;
     }
 
     private static int[][] init(int m, int n, int[][] guards, int[][] walls) {
