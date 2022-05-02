@@ -1,4 +1,4 @@
-package com.wx.springsourcestudy.guigu.sqlstudy;
+package com.wx.sqlstudy;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
