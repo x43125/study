@@ -16,7 +16,7 @@ public class BeanLifeCycleTest {
         System.out.println("容器初始化成功！！！！！");
         //得到Person，并使用
         Person person = factory.getBean("person", Person.class);
-        System.out.println("person: " + person  + "！！！！！");
+        System.out.println("person: " + person + "！！！！！");
         System.out.println("现在开始关闭容器！！！！！");
         ((ClassPathXmlApplicationContext) factory).registerShutdownHook();
         System.out.println("容器已关闭！！！！！");

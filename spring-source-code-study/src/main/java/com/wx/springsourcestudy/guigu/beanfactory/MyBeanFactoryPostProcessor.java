@@ -18,9 +18,9 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
         int count = beanFactory.getBeanDefinitionCount();
         String[] names = beanFactory.getBeanDefinitionNames();
         System.out.println("当前BeanFactory中有：" + count + "个bean");
-        for (int i = 0; i < names.length; i++) {
-            System.out.println(i + " : " + names[i]);
-        }
+//        for (int i = 0; i < names.length; i++) {
+//            System.out.println(i + " : " + names[i]);
+//        }
         System.out.println("-----------------------------------------------------");
     }
 }

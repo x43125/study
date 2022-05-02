@@ -16,7 +16,7 @@
     </bean>
 
     <bean id="person" class="com.wx.springsourcestudy.blog.simulate1.bean.Person" init-method="myInit"
-          destroy-method="myDestory" scope="singleton" p:name="张三" p:address="广州"
+          destroy-method="myDestroy" scope="singleton" p:name="张三" p:address="广州"
           p:phone="1590000000" />
 
 </beans>
