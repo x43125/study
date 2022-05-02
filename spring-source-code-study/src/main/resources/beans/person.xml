@@ -6,17 +6,39 @@
             http://www.springframework.org/schema/beans
             http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
 
-    <bean id="beanPostProcessor" class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanPostProcessor">
+    <bean id="beanPostProcessor"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanPostProcessor">
     </bean>
 
-    <bean id="instantiationAwareBeanPostProcessor" class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyInstantiationAwareBeanPostProcessor">
+    <bean id="instantiationAwareBeanPostProcessor"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyInstantiationAwareBeanPostProcessor">
     </bean>
 
-    <bean id="beanFactoryPostProcessor" class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanFactoryPostProcessor">
+    <bean id="beanFactoryPostProcessor"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanFactoryPostProcessor">
+    </bean>
+
+    <bean id="registryPostProcessor"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyRegistryPostProcessor">
+    </bean>
+
+    <bean id="registryPostProcessorPriority"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyRegistryPostProcessorPriority">
+    </bean>
+    <bean id="registryPostProcessorOrdered"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyRegistryPostProcessorOrdered">
     </bean>
 
     <bean id="person" class="com.wx.springsourcestudy.blog.simulate1.bean.Person" init-method="myInit"
-          destroy-method="myDestroy" scope="singleton" p:name="张三" p:address="广州"
-          p:phone="1590000000" />
+          destroy-method="myDestroy" p:name="张三" p:address="广州"
+          p:phone="1590000000"/>
+
+    <bean id="personPriority" class="com.wx.springsourcestudy.blog.simulate1.bean.PersonPriority" init-method="myInit"
+          destroy-method="myDestroy" p:name="张三" p:address="广州"
+          p:phone="1590000000"/>
+
+    <bean id="personOrder" class="com.wx.springsourcestudy.blog.simulate1.bean.PersonOrdered" init-method="myInit"
+          destroy-method="myDestroy" p:name="张三" p:address="广州"
+          p:phone="1590000000"/>
 
 </beans>

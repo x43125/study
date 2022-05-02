@@ -37,4 +37,10 @@ public class MyInstantiationAwareBeanPostProcessor implements InstantiationAware
         System.out.println("InstantiationAwareBeanPostProcessor调用postProcessPropertyValues方法");
         return pvs;
     }
+
+    @Override
+    public boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException {
+        System.out.println("InstantiationAwareBeanPostProcessor 调用 postProcessAfterInstantiation 方法");
+        return InstantiationAwareBeanPostProcessor.super.postProcessAfterInstantiation(bean, beanName);
+    }
 }
