@@ -14,8 +14,16 @@
           class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyInstantiationAwareBeanPostProcessor">
     </bean>
 
-    <bean id="beanFactoryPostProcessor"
+    <bean id="myBeanFactoryPostProcessor"
           class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanFactoryPostProcessor">
+    </bean>
+
+    <bean id="myBeanFactoryPostProcessorPriority"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanFactoryPostProcessorPriority">
+    </bean>
+
+    <bean id="myBeanFactoryPostProcessorOrdered"
+          class="com.wx.springsourcestudy.blog.simulate1.postprocessor.MyBeanFactoryPostProcessorOrdered">
     </bean>
 
     <bean id="registryPostProcessor"

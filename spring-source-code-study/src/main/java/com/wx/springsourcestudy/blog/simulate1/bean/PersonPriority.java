@@ -59,7 +59,7 @@ public class PersonPriority implements BeanFactoryAware, BeanNameAware, Initiali
     // 这是BeanFactoryAware接口方法
     @Override
     public void setBeanFactory(BeanFactory arg0) throws BeansException {
-        System.out.println("PersonPriority: 【BeanFactoryAware接口】调用BeanFactoryAware.setBeanFactory()");
+        System.out.println("PersonPriority:【BeanFactoryAware接口】调用BeanFactoryAware.setBeanFactory()");
         this.beanFactory = arg0;
     }
 
@@ -78,7 +78,7 @@ public class PersonPriority implements BeanFactoryAware, BeanNameAware, Initiali
 
     // 这是DisposableBean接口方法
     @Override
-    public void destroy() throws Exception {
+    public void destroy() {
         System.out.println("PersonPriority:【DisposableBean接口】调用DisposableBean.destroy()");
     }
 

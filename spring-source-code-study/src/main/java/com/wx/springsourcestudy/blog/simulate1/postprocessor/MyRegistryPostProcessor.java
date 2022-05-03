@@ -14,16 +14,16 @@ public class MyRegistryPostProcessor implements BeanDefinitionRegistryPostProces
 
     public MyRegistryPostProcessor() {
         super();
-        System.out.println("这是BeanDefinitionRegistryPostProcessor的构造器");
+        System.out.println("这是 BeanDefinitionRegistryPostProcessor 的构造器");
     }
 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-        System.out.println("===MyRegistryPostProcessor.postProcessBeanDefinitionRegistry: " + registry.getBeanDefinitionCount());
+        System.out.println("=== MyRegistryPostProcessor.postProcessBeanDefinitionRegistry: " + registry.getBeanDefinitionCount());
     }
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        System.out.println("===MyRegistryPostProcessor.postProcessBeanFactory: " + beanFactory.getBeanDefinitionCount());
+        System.out.println("=== MyRegistryPostProcessor.postProcessBeanFactory: " + beanFactory.getBeanDefinitionCount());
     }
 }
