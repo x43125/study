@@ -6,7 +6,7 @@ import org.springframework.beans.factory.*;
 /**
  * @author x
  */
-public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean, DisposableBean {
+public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean, DisposableBean, SmartInitializingSingleton {
 
     private String name;
     private String address;
@@ -86,5 +86,10 @@ public class Person implements BeanFactoryAware, BeanNameAware, InitializingBean
     // 通过<bean>的destroy-method属性指定的初始化方法
     public void myDestroy() {
         System.out.println("【destroy-method】调用<bean>的destroy-method属性指定的初始化方法");
+    }
+
+    @Override
+    public void afterSingletonsInstantiated() {
+        System.out.println("【SmartInitializingSingleton】调用SmartInitializingSingleton.afterSingletonsInstantiated");
     }
 }
