@@ -9,9 +9,9 @@ import java.lang.reflect.Field;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class UnsafeTest {
+public class UnsafeStudy {
 
-    // 被错，不能通过”正规“渠道直接使用 unsafe
+    // 报错，不能通过”正规“渠道直接使用 unsafe
 //    static final Unsafe unsafe = Unsafe.getUnsafe();
 //
 //    static final long stateOffset;
@@ -44,7 +44,7 @@ public class UnsafeTest {
             Field field = Unsafe.class.getDeclaredField("theUnsafe");
             field.setAccessible(true);
             unsafe = (Unsafe) field.get(null);
-            stateOffset = unsafe.objectFieldOffset(UnsafeTest.class.getDeclaredField("state"));
+            stateOffset = unsafe.objectFieldOffset(UnsafeStudy.class.getDeclaredField("state"));
         } catch (Exception e) {
             System.out.println(e.getLocalizedMessage());
             throw new Error(e);
@@ -52,8 +52,8 @@ public class UnsafeTest {
     }
 
     public static void main(String[] args) {
-        UnsafeTest unsafeTest = new UnsafeTest();
-        Boolean success = unsafe.compareAndSwapInt(unsafeTest, stateOffset, 0, 1);
+        UnsafeStudy unsafeStudy = new UnsafeStudy();
+        Boolean success = unsafe.compareAndSwapInt(unsafeStudy, stateOffset, 0, 1);
         System.out.println(success);
     }
 

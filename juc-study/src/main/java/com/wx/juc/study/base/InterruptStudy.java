@@ -5,7 +5,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class InterruptTest {
+public class InterruptStudy {
 
     public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {

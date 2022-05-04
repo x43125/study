@@ -5,7 +5,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class DeadLockTest2 {
+public class DeadLockStudy2 {
 
     private static Object resourceA = new Object();
     private static Object resourceB = new Object();

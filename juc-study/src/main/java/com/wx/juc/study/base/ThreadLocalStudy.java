@@ -5,7 +5,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class ThreadLocalTest {
+public class ThreadLocalStudy {
 
     private static void print(String str) {
         System.out.println(str + ":" + localVariable.get());

@@ -5,7 +5,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/14
  */
-public class ThreadTest {
+public class ThreadStudy {
 
     public static class MyThread extends Thread {
         @Override
@@ -16,7 +16,7 @@ public class ThreadTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("休息3s后");
+            System.out.println("MyThread 休息3s后");
         }
     }
 
@@ -29,7 +29,7 @@ public class ThreadTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("休息1s后");
+        System.out.println("Main Thread 休息1s后");
     }
 
 }

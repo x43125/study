@@ -5,7 +5,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/14
  */
-public class RunnableTest implements Runnable {
+public class RunnableStudy implements Runnable {
 
     @Override
     public void run() {
@@ -13,9 +13,9 @@ public class RunnableTest implements Runnable {
     }
 
     public static void main(String[] args) {
-        RunnableTest runnableTest = new RunnableTest();
-        new Thread(runnableTest).start();
-        new Thread(runnableTest).start();
+        RunnableStudy runnableStudy = new RunnableStudy();
+        new Thread(runnableStudy).start();
+        new Thread(runnableStudy).start();
         System.out.println("i am a main thread");
     }
 }

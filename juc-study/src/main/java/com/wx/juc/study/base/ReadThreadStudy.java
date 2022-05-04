@@ -1,14 +1,11 @@
 package com.wx.juc.study.base;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * @Descrption:
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class ReadThreadTest {
+public class ReadThreadStudy {
 
     public static class ReadThread extends Thread {
         @Override

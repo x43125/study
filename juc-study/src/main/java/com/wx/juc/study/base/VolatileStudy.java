@@ -4,7 +4,7 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 22/03/02
  */
-public class VolatileDemo {
+public class VolatileStudy {
     static int volatileFlag = 1;
 //    static volatile int volatileFlag = 1;
 

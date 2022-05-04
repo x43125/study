@@ -5,28 +5,27 @@ package com.wx.juc.study.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class DaemonThreadTest {
-
+public class InterruptStudy2 {
     public static void main(String[] args) throws InterruptedException {
-
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
-                System.out.println("this is a daemon thread");
                 try {
-                    Thread.sleep(3000);
+                    System.out.println("child thread begin sleep for 2000 seconds");
+                    Thread.sleep(2000000);
+                    System.out.println("thread awaking");
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("thread is interrupted while sleeping");
+                    return;
                 }
-                System.out.println("daemon is over");
+                System.out.println("thread leaving normally");
             }
         });
 
-        thread.setDaemon(true);
         thread.start();
-
         Thread.sleep(1000);
-
+        thread.interrupt();
+        thread.join();
         System.out.println("main thread is over");
     }
 }
