@@ -7,14 +7,14 @@ import java.util.concurrent.locks.LockSupport;
  * @Author: x43125
  * @Date: 21/11/21
  */
-public class ParkTest {
+public class ParkStudy {
 
     public void parkTest() {
         LockSupport.park();
     }
 
     public static void main(String[] args) {
-        ParkTest parkTest = new ParkTest();
-        parkTest.parkTest();
+        ParkStudy parkStudy = new ParkStudy();
+        parkStudy.parkTest();
     }
 }

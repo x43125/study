@@ -5,7 +5,7 @@ package com.wx.juc.study.advance;
  * @Author: x43125
  * @Date: 21/11/28
  */
-public class ConcurrentTest {
+public class ConcurrentStudy {
     static volatile int i = 0;
 
     public static void main(String[] args) throws InterruptedException {

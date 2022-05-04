@@ -1,6 +1,5 @@
 package com.wx.juc.study.advance;
 
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
@@ -8,7 +7,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * @Author: x43125
  * @Date: 21/11/21
  */
-public class RandomTest {
+public class RandomStudy {
     public static void main(String[] args) {
 //        Random random = new Random();
 //

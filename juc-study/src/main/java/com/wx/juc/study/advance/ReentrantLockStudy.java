@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Author: x43125
  * @Date: 21/11/24
  */
-public class ReentrantLockTest {
+public class ReentrantLockStudy {
 
     private List<String> list = new ArrayList<>();
     private volatile ReentrantLock lock = new ReentrantLock();
@@ -23,8 +23,17 @@ public class ReentrantLockTest {
         }
     }
 
+    private String get(int index) {
+        lock.lock();
+        try {
+            return list.get(index);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     private void remove(String s) {
-        lock.unlock();
+        lock.lock();
         try {
             list.remove(s);
         } finally {
@@ -33,7 +42,16 @@ public class ReentrantLockTest {
     }
 
     public static void main(String[] args) {
+        ReentrantLockStudy study = new ReentrantLockStudy();
+        study.add("aa");
+        study.add("bb");
+        study.add("cc");
 
+        System.out.println("0 " + study.get(0));
+        System.out.println("1 " + study.get(1));
+        System.out.println("2 " + study.get(2));
 
+        study.remove("bb");
+        System.out.println("1 " + study.get(1));
     }
 }

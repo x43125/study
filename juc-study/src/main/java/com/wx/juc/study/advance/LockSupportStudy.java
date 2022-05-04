@@ -7,7 +7,7 @@ import java.util.concurrent.locks.LockSupport;
  * @Author: x43125
  * @Date: 21/11/21
  */
-public class LockSupportTest {
+public class LockSupportStudy {
 
     public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {

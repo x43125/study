@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @Author: x43125
  * @Date: 21/11/24
  */
-public class ReadAndWriteLockTest {
+public class ReadAndWriteLockStudy {
 
     private List<String> list = new ArrayList<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
@@ -42,5 +42,19 @@ public class ReadAndWriteLockTest {
         } finally {
             readLock.unlock();
         }
+    }
+
+    public static void main(String[] args) {
+        ReadAndWriteLockStudy study = new ReadAndWriteLockStudy();
+        study.add("a");
+        study.add("b");
+        study.add("c");
+
+        System.out.println("0 " + study.get(0));
+        System.out.println("1 " + study.get(1));
+        System.out.println("2 " + study.get(2));
+
+        study.remove("b");
+        System.out.println("1 " + study.get(1));
     }
 }
