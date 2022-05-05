@@ -1,7 +1,6 @@
 package com.wx.juc.study.advance.aqs;
 
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
