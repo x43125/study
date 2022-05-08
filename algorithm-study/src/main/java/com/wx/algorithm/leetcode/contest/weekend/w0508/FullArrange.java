@@ -35,7 +35,7 @@ public class FullArrange {
 
     public static void main(String[] args) {
         String pressedKeys = "222";
-        int i = countTexts_02(pressedKeys);
+        int i = countTexts_self(pressedKeys);
         System.out.println(i);
     }
 
@@ -59,7 +59,35 @@ public class FullArrange {
                 }
             }
 
-            ans = ans*s[count] % mod;
+            ans = ans * s[count] % mod;
+        }
+
+        return (int) ans;
+    }
+
+    public static int countTexts_self(String pressedKeys) {
+        // if s!=7 && s!=9  dp[i] = dp[i-1]+dp[i-2]+dp[i-3]
+        // else dp[i] = dp[i-1]+dp[i-2]+dp[i-3]+dp[i-4]
+        final int mod = 1000000007;
+        long ans = 1;
+        for (int i = 0, j = 0; i < pressedKeys.length(); i = j) {
+            while (j < pressedKeys.length() && pressedKeys.charAt(i) == pressedKeys.charAt(j)) {
+                j++;
+            }
+            int length = j - i;
+            int c = pressedKeys.charAt(i) - '0';
+            int count = 3;
+            if (c == 7 || c == 9) {
+                count = 4;
+            }
+            int[] s = new int[length + 1];
+            s[0] = 1;
+            for (int k = 1; k <= length; k++) {
+                for (int l = 1; l <= count && l <= k; l++) {
+                    s[k] = (s[k] + s[k - l]) % mod;
+                }
+            }
+            ans = ans * s[length] % mod;
         }
 
         return (int) ans;
