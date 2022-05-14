@@ -36,9 +36,7 @@ public class NettyClient {
             ChannelFuture future = bootstrap.connect("localhost", 8888).sync();
             future.channel().closeFuture().sync();
         } finally {
-            if(eventLoopGroup != null) {
-                eventLoopGroup.shutdownGracefully();
-            }
+            eventLoopGroup.shutdownGracefully();
         }
     }
 }

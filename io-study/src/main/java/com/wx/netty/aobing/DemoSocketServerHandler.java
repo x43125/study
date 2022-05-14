@@ -11,11 +11,9 @@ import java.util.concurrent.TimeUnit;
  * @Author: wx
  * @Date: 2022/04/25 15:52
  */
-public class DemoSocketServerHandler
-        extends ChannelInboundHandlerAdapter {
+public class DemoSocketServerHandler extends ChannelInboundHandlerAdapter {
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg)
-            throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         System.out.println("Client Address ====== " + ctx.channel().remoteAddress());
         ctx.channel().writeAndFlush("from server:" + UUID.randomUUID());
         ctx.fireChannelActive();
@@ -23,8 +21,7 @@ public class DemoSocketServerHandler
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx,
-                                Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         cause.printStackTrace();
         ctx.close();
     }
