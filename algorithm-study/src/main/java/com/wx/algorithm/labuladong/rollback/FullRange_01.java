@@ -8,7 +8,7 @@ import java.util.List;
  * @Author: x43125
  * @Date: 22/05/18
  */
-public class FullArrange {
+public class FullRange_01 {
     public static void main(String[] args) {
         int[] nums = {1, 2, 3, 4, 5};
         List<List<Integer>> permute = permute(nums);
