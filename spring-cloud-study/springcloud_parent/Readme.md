@@ -25,6 +25,8 @@ spring:
   application:
     name: nacos-server
 ```
+登录网址：`127.0.0.1:8848`
+默认用户名密码：`nacos:nacos`
 
 2. 在启动程序上标上微服务客户端注解
 
