@@ -11,6 +11,11 @@
     <modules>
         <module>srpingcloud_01eureka_server</module>
         <module>springcloud_02eureka_client</module>
+        <module>nacos-server</module>
+        <module>member</module>
+        <module>coupon</module>
+        <module>gateway</module>
+        <module>common</module>
     </modules>
 
     <parent>
