@@ -36,8 +36,9 @@ public class NioChatClient {
         NioChatClient chatClient = new NioChatClient(host, port);
         new Thread(() -> {
             while (true) {
+                chatClient.receiveMsg();
+
                 try {
-                    chatClient.receiveMsg();
                     Thread.sleep(3000);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
@@ -73,6 +74,7 @@ public class NioChatClient {
             ByteBuffer buffer = ByteBuffer.allocate(1024);
             while (keyIterator.hasNext()) {
                 SelectionKey key = keyIterator.next();
+                keyIterator.remove();
                 if (key == null) {
                     continue;
                 }
@@ -94,6 +96,7 @@ public class NioChatClient {
         }
     }
 
+    //todo
     private void reconnect() {
         System.out.println("重连...");
         try {
@@ -107,8 +110,6 @@ public class NioChatClient {
     private void printMsg(List<DataInfo> parse) {
         parse.forEach(dataInfo -> System.out.println(dataInfo.getNickName() + " > " + dataInfo.getData()));
     }
-
-
 
     private String format(String data) {
         return NICKNAME_START + clientName + NICKNAME_END + data + DATA_CONNECTOR;
