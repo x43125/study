@@ -1,4 +1,4 @@
-package com.wx.ab.chatroom;
+package com.wx.ab.chatroom.version1;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -53,10 +53,6 @@ public class GroupChatServer {
                         }
                     }
                 }
-                // 没有可用通道的时候
-//                else {
-//                    System.out.println("等待...");
-//                }
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,11 +70,7 @@ public class GroupChatServer {
                 System.out.println("from 客户端 " + msg.trim());
                 sendMsg2OtherClients(msg, channel);
             }
-//            else if (count == -1) {
-//                System.out.println(channel.getRemoteAddress() + " 离线了...");
-//            }
         } catch (IOException e) {
-//            e.printStackTrace();
             try {
                 System.out.println(channel.getRemoteAddress() + " 离线了...");
                 channel.close();

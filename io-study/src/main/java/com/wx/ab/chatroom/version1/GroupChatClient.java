@@ -1,4 +1,4 @@
-package com.wx.ab.chatroom;
+package com.wx.ab.chatroom.version1;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;

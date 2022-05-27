@@ -21,7 +21,6 @@ public class NettyServer {
         EventLoopGroup parentGroup = new NioEventLoopGroup();
         EventLoopGroup childGroup = new NioEventLoopGroup();
         try {
-
             ServerBootstrap bootstrap = new ServerBootstrap();
             bootstrap.group(parentGroup, childGroup)
                     .channel(NioServerSocketChannel.class)
