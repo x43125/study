@@ -1,6 +1,7 @@
 package com.wx.juc.study.thread;
 
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Descrption: 创建线程
@@ -123,6 +124,44 @@ public class CreateThread {
         executorService.shutdown();
         singleThreadExecutor.shutdown();
 
-//        ThreadFactory
+        System.out.println("=======================================================================");
+        ExecutorService service = Executors.newCachedThreadPool(new MyThreadFactory(true));
+        for (int i = 0; i < 10; i++) {
+            service.execute(new MyRunnable(String.valueOf(i)));
+        }
+        service.shutdown();
+    }
+
+    //      todo ThreadFactory
+    static class MyThreadFactory implements ThreadFactory {
+        private AtomicInteger atomicInteger = new AtomicInteger(0);
+        private boolean isDaemon;
+
+        public MyThreadFactory(boolean isDaemon) {
+            this.isDaemon = isDaemon;
+        }
+
+        @Override
+        public Thread newThread(Runnable r) {
+            atomicInteger.incrementAndGet();
+//            Thread thread = new Thread(() -> System.out.println(Thread.currentThread().getName() + " " + atomicInteger.get()));
+            Thread thread = new Thread(r);
+            thread.setDaemon(isDaemon);
+            return thread;
+        }
+    }
+
+    static class MyRunnable implements Runnable {
+
+        private String msg;
+
+        public MyRunnable(String msg) {
+            this.msg = msg;
+        }
+
+        @Override
+        public void run() {
+            System.out.println("runnable:" + msg);
+        }
     }
 }
