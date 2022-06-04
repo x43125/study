@@ -10,15 +10,24 @@ import java.sql.Statement;
  * @Date: 22/04/07
  */
 class IndexStudy01 {
-    static String url = "jdbc:postgresql://192.168.11.128:5432/postgres";
-    static String usr = "postgres";
-    static String psd = "123ABCdef*";
-    static String driver = "org.postgresql.Driver";
+//    static String url = "jdbc:postgresql://192.168.11.128:5432/postgres";
+//    static String usr = "postgres";
+//    static String psd = "123ABCdef*";
+//    static String driver = "org.postgresql.Driver";
+    static String url = "jdbc:mysql://47.98.59.193:3306/test?serverTimezone=UTC";
+    static String usr = "root";
+    static String psd = "root";
+    static String driver = "com.mysql.cj.jdbc.Driver";
+
+
+    /*
+
+     */
 
     public static void main(String[] args) {
         long startTime = System.currentTimeMillis();
         System.out.println("开始");
-        Connection conn = null;
+        Connection conn;
 
         try {
             Class.forName(driver);

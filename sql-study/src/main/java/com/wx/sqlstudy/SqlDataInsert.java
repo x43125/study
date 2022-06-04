@@ -12,16 +12,21 @@ import java.util.Random;
 class SqlDataInsert {
 
     public static void main(String[] args) {
-        insert(5000000);
+        insert(10 * 10000);
     }
 
     private static void insert(int number) {
         Connection con = null;
         PreparedStatement pst = null;
-        String url = "jdbc:postgresql://192.168.11.128:5432/postgres";
-        String user = "postgres";
-        String password = "123ABCdef*";
-        String driver = "org.postgresql.Driver";
+//        String url = "jdbc:postgresql://192.168.11.128:5432/postgres";
+//        String user = "postgres";
+//        String password = "123ABCdef*";
+//        String driver = "org.postgresql.Driver";
+
+        String url = "jdbc:mysql://47.98.59.193:3306/test?serverTimezone=UTC";
+        String user = "root";
+        String password = "root";
+        String driver = "com.mysql.cj.jdbc.Driver";
 
         try {
             StringBuffer sql = new StringBuffer();
@@ -33,18 +38,19 @@ class SqlDataInsert {
             // 关闭事务自动提交
             con.setAutoCommit(false);
             // 每10000次提交一次
-            final int batchSize = 10000;
+            final int batchSize = 1000;
             int count = 0;
             Long startTime = System.currentTimeMillis();
             pst = con.prepareStatement(sql.toString());
             for (int i = 0; i < number; i++) {
                 pst.setString(1, getRandomString(5, 15));
                 pst.setString(2, getRandomEmail());
-                pst.setString(3, getRandomString(10, 500));
+                pst.setString(3, getRandomString(10, 20));
                 // 把一个SQL命令加入命令列表
                 pst.addBatch();
                 if (++count % batchSize == 0) {
                     pst.executeBatch();
+                    con.commit();
                     System.out.println("===== " + i);
                     count = 0;
                 }
@@ -73,7 +79,7 @@ class SqlDataInsert {
     }
 
     private static String getRandomString(int randomMin, int randomMax) {
-        int[][] arr = {{48,57},{65,90},{97,122}};
+        int[][] arr = {{48, 57}, {65, 90}, {97, 122}};
         Random random = new Random();
         StringBuilder sb = new StringBuilder();
         int randomLength = random.nextInt(randomMax - randomMin) + randomMin;
