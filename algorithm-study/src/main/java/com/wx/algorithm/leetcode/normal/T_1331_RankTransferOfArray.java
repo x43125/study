@@ -10,7 +10,7 @@ import java.util.Map;
  * @Author: x43125
  * @Date: 22/07/28
  */
-public class T_1331RankTransforOfArray {
+public class T_1331_RankTransferOfArray {
 
     public static int[] arrayRankTransform(int[] arr) {
         int[] sortArr = Arrays.copyOf(arr, arr.length);
