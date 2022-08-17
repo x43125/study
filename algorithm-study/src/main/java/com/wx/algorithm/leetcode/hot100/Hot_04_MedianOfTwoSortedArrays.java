@@ -22,69 +22,57 @@ public class Hot_04_MedianOfTwoSortedArrays {
      *
      * @param nums1
      * @param nums2
-     * @return todo 边界 恨他吗有代表性
+     * @return todo 边界 很他吗有代表性
      */
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
-        boolean singular = false;
-        int length = nums1.length + nums2.length;
-        if (length % 2 != 0) {
-            singular = true;
-        }
+        int m = nums1.length;
+        int n = nums2.length;
 
-        int left = length / 2;
-        int right = singular ? left : left + 1;
+        int len = m + n;
+        int left = -1, right = -1;
+        int aStart = 0, bStart = 0;
+        int mid = len / 2;
 
-        int i = 0, j = 0;
-        double res = 0;
-        while (i < nums1.length && j < nums2.length) {
-            if (nums1[i] < nums2[j]) {
-                i++;
-                if (left == 0) {
-                    res += nums1[i - 1];
-                }
-                if (right == 0) {
-                    res += nums1[i - 1];
-                    return res / 2;
-                }
+        for (int i = 0; i <= mid; i++) {
+            left = right;
+            if (aStart < m && (bStart >= n || nums1[aStart] < nums2[bStart])) {
+                right = nums1[aStart++];
             } else {
-                j++;
-                if (left == 0) {
-                    res += nums2[j - 1];
-                }
-                if (right == 0) {
-                    res += nums2[j - 1];
-                    return res / 2;
-                }
+                right = nums2[bStart++];
             }
-            left--;
-            right--;
         }
 
-        while (i != nums1.length) {
-            i++;
-            if (left == 0) {
-                res += nums1[i - 1];
-            }
-            if (right == 0) {
-                res += nums1[i - 1];
-                return res / 2;
-            }
-            left--;
-            right--;
-        }
-
-        while (j != nums2.length) {
-            j++;
-            if (left == 0) {
-                res += nums2[j - 1];
-            }
-            if (right == 0) {
-                res += nums2[j - 1];
-                return res / 2;
-            }
-            left--;
-            right--;
-        }
-        return 0;
+        return (len & 1) == 0 ? (left + right) / 2.0 : right;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
