@@ -42,6 +42,7 @@ public class Hot_04_MedianOfTwoSortedArrays {
             }
         }
 
+
         return (len & 1) == 0 ? (left + right) / 2.0 : right;
     }
 }
