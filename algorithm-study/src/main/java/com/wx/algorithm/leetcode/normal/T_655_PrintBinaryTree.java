@@ -23,14 +23,19 @@ public class T_655_PrintBinaryTree {
         TreeNode node6 = new TreeNode(6);
         TreeNode node7 = new TreeNode(7);
         TreeNode node8 = new TreeNode(8);
+        TreeNode node9 = new TreeNode(9);
 
         node1.left = node2;
-        node1.right = node3;
         node2.left = node4;
-        node2.right = node5;
-        node3.right = node6;
-        node4.left = node7;
-        node6.right = node8;
+        node4.left = node6;
+
+        node6.left = node9;
+
+        node1.right = node3;
+        node3.right = node5;
+        node5.right = node7;
+
+        node7.left = node8;
         List<List<String>> lists = printBinaryTree.printTree(node1);
         lists.forEach(list -> {
             list.forEach(
