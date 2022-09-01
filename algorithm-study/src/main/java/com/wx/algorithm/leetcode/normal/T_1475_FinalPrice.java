@@ -2,7 +2,7 @@
  * @Author: wangxiang wangxiang@flashhold.com
  * @Date: 2022-09-01 11:05:33
  * @LastEditors: wangxiang wangxiang@flashhold.com
- * @LastEditTime: 2022-09-01 11:16:40
+ * @LastEditTime: 2022-09-01 11:41:27
  * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T_1475_LastPrice.java
  * @Description: 
  * 输入：prices = [8,4,6,2,3]
@@ -24,14 +24,13 @@ public class T_1475_FinalPrice {
         int[] res = new int[prices.length];
 
         for (int i = 0; i < prices.length; i++) {
-            int num = prices[i];
+            res[i] = prices[i];
             for (int j = i+1; j < prices.length; j++) {
                 if (prices[j] <= prices[i]) {
-                    num = prices[i] - prices[j];
+                    res[i] = prices[i] - prices[j];
                     break;
                 }
             }
-            res[i] = num;
         }
 
         return res;
