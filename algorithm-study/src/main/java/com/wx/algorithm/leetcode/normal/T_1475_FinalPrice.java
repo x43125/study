@@ -2,7 +2,7 @@
  * @Author: wangxiang wangxiang@flashhold.com
  * @Date: 2022-09-01 11:05:33
  * @LastEditors: wangxiang wangxiang@flashhold.com
- * @LastEditTime: 2022-09-01 11:41:27
+ * @LastEditTime: 2022-09-01 11:43:06
  * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T_1475_LastPrice.java
  * @Description: 
  * 输入：prices = [8,4,6,2,3]
