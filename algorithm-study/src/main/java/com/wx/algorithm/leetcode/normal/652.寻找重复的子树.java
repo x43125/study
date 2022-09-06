@@ -11,7 +11,7 @@ import com.wx.algorithm.base.model.TreeNode;
  * @Author: wangxiang wangxiang@flashhold.com
  * @Date: 2022-09-05 10:34:26
  * @LastEditors: wangxiang wangxiang@flashhold.com
- * @LastEditTime: 2022-09-05 10:55:21
+ * @LastEditTime: 2022-09-06 10:22:38
  * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\652.寻找重复的子树.java
  * @Description: 这种有返回值的递归，还是不太熟
  *   先声明一个全局的结果集来储存最终的返回
@@ -29,16 +29,16 @@ import com.wx.algorithm.base.model.TreeNode;
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
- *     int val;
- *     TreeNode left;
- *     TreeNode right;
- *     TreeNode() {}
- *     TreeNode(int val) { this.val = val; }
- *     TreeNode(int val, TreeNode left, TreeNode right) {
- *         this.val = val;
- *         this.left = left;
- *         this.right = right;
- *     }
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
  * }
  */
 class Solution {
@@ -57,7 +57,7 @@ class Solution {
         if (root == null) {
             return "#";
         }
-        
+
         String left = traverse(root.left);
         String right = traverse(root.right);
 
@@ -69,9 +69,8 @@ class Solution {
             res.add(root);
         }
 
-        memo.put(subTree, freq+1);
+        memo.put(subTree, freq + 1);
         return subTree;
     }
 }
 // @lc code=end
-
