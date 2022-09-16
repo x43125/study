@@ -2,7 +2,7 @@
  * @Author: wangxiang wangxiang@flashhold.com
  * @Date: 2022-09-08 11:44:25
  * @LastEditors: wangxiang wangxiang@flashhold.com
- * @LastEditTime: 2022-09-08 17:42:42
+ * @LastEditTime: 2022-09-08 17:46:37
  * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\667.优美的排列-ii.java
  * @Description: 找规律的题，贼恶心，没做出来
  */
@@ -23,6 +23,7 @@ class Solution {
             answer[idx] = i;
             ++idx;
         }
+
         for (int i = n - k, j = n; i <= j; ++i, --j) {
             answer[idx] = i;
             ++idx;
@@ -32,7 +33,6 @@ class Solution {
             }
         }
         return answer;
-
     }
 }
 // @lc code=end
