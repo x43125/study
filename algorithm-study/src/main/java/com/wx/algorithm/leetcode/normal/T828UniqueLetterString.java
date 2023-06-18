@@ -3,7 +3,7 @@
  * @Date: 2022-09-06 10:23:33
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-06 11:23:01
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\828.统计子串中的唯一字符.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T828UniqueLetterString.java
  * @Description: 
  */
 package com.wx.algorithm.leetcode.normal;
@@ -18,7 +18,7 @@ import java.util.Map;
  */
 
 // @lc code=start
-class Solution {
+class T828UniqueLetterString {
 
     /**
      * 暴力法：超时

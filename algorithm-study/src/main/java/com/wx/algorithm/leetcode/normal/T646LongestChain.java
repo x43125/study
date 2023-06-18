@@ -7,7 +7,7 @@ import java.util.Arrays;
  * @Date: 2022-09-03 14:01:43
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-03 16:22:00
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\646.最长数对链.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T646LongestChain.java
  * @Description: 
  * 定义 \textit{dp}[i]dp[i] 为以 \textit{pairs}[i]pairs[i] 为结尾的最长数对链的长度。
  * 计算 \textit{dp}[i]dp[i] 时，可以先找出所有的满足 \textit{pairs}[i][0] > \textit{pairs}[j][1]pairs[i][0]>pairs[j][1] 的 jj，
@@ -22,7 +22,7 @@ import java.util.Arrays;
  */
 
 // @lc code=start
-class Solution {
+class T646LongestChain {
 
     /**
      * dp方式

@@ -3,7 +3,7 @@
  * @Date: 2022-09-08 11:44:25
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-08 17:46:37
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\667.优美的排列-ii.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T667BeautifulArray.java
  * @Description: 找规律的题，贼恶心，没做出来
  */
 package com.wx.algorithm.leetcode.normal;
@@ -15,7 +15,7 @@ package com.wx.algorithm.leetcode.normal;
  */
 
 // @lc code=start
-class Solution {
+class T667BeautifulArray {
     public int[] constructArray(int n, int k) {
         int[] answer = new int[n];
         int idx = 0;

@@ -3,7 +3,7 @@
  * @Date: 2022-09-02 14:47:21
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-02 14:49:52
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\1.两数之和.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T1TwoSum.java
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 package com.wx.algorithm.leetcode.normal;
@@ -15,7 +15,7 @@ package com.wx.algorithm.leetcode.normal;
  */
 
 // @lc code=start
-class Solution {
+class T1TwoSum {
     public int[] twoSum(int[] nums, int target) {
         int[] res = new int[2];
         for (int i = 0; i < nums.length; i++) {

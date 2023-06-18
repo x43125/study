@@ -1,3 +1,5 @@
+package com.wx.algorithm.leetcode.normal;
+
 import java.util.Arrays;
 
 /*
@@ -7,7 +9,7 @@ import java.util.Arrays;
  */
 
 // @lc code=start
-class Solution {
+class T1619AverageAfterDeleteSomeNumber {
     public double trimMean(int[] arr) {
         Arrays.sort(arr);
         double res = 0;

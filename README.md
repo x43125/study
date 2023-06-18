@@ -1,4 +1,2 @@
 # study
-storage many things of study
-
-new add
+storage all study notes

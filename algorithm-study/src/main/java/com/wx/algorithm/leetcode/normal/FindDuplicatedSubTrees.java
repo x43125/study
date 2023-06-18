@@ -12,7 +12,7 @@ import com.wx.algorithm.base.model.TreeNode;
  * @Date: 2022-09-05 10:34:26
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-06 10:22:38
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\652.寻找重复的子树.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\FindDuplicatedSubTrees.java
  * @Description: 这种有返回值的递归，还是不太熟
  *   先声明一个全局的结果集来储存最终的返回
  *   然后先递归左子树，再递归右子树
@@ -41,7 +41,7 @@ import com.wx.algorithm.base.model.TreeNode;
  * }
  * }
  */
-class Solution {
+class FindDuplicatedSubTrees {
 
     Map<String, Integer> memo;
     List<TreeNode> res;

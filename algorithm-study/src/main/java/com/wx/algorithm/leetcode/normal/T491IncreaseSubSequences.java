@@ -12,7 +12,7 @@ import java.util.Set;
  */
 
 // @lc code=start
-class Solution {
+class T491IncreaseSubSequences {
 
     List<List<Integer>> res;
     List<Integer> list;

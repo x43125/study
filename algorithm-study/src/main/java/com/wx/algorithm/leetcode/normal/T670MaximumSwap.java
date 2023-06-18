@@ -11,7 +11,7 @@ import java.util.Map;
  * @Date: 2022-09-13 10:28:11
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-13 10:54:40
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\670.最大交换.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T670MaximumSwap.java
  * @Description: 
  */
 /*
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 
 // @lc code=start
-class Solution {
+class T670MaximumSwap {
     public int maximumSwap(int num) {
         String numV = String.valueOf(num);
         Map<Integer, Integer> map = new HashMap<>();

@@ -5,7 +5,7 @@ package com.wx.algorithm.leetcode.normal;
  * @Date: 2022-09-05 10:23:21
  * @LastEditors: wangxiang wangxiang@flashhold.com
  * @LastEditTime: 2022-09-05 10:30:54
- * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\1582.二进制矩阵中的特殊位置.java
+ * @FilePath: \algorithm-study\src\main\java\com\wx\algorithm\leetcode\normal\T1582NumSpecial.java
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 /*
@@ -15,7 +15,7 @@ package com.wx.algorithm.leetcode.normal;
  */
 
 // @lc code=start
-class Solution {
+class T1582NumSpecial {
     public int numSpecial(int[][] mat) {
         int count = 0;
         for (int i = 0; i < mat.length; i++) {
