@@ -16,7 +16,7 @@ public class T438FindAnagrams {
     }
 
     /**
-     * 暴力法：超时
+     * 官解1
      *
      * @param s
      * @param p
@@ -48,6 +48,64 @@ public class T438FindAnagrams {
             --sArray[s.charAt(i) - 'a'];
             ++sArray[s.charAt(i + n) - 'a'];
             if (Arrays.equals(sArray, pArray)) {
+                result.add(i + 1);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * 官解2
+     * 绝啊，转化：将字母个数相同则两字符串为异位词 转化成 两字符串的相同字母的个数差值是否==0来判断
+     * @param s
+     * @param p
+     * @return
+     */
+    public static List<Integer> findAnagrams2(String s, String p) {
+        // 特殊场景
+        if (s.length() < p.length()) {
+            return new ArrayList<>();
+        }
+
+        List<Integer> result = new ArrayList<>();
+        int[] count = new int[26];
+        for (int i = 0; i < p.length(); i++) {
+            // 因为只会是小写的字母
+            // 一个➕一个➖，如果最终为0，则说明字符数量相等
+            ++count[s.charAt(i) - 'a'];
+            --count[p.charAt(i) - 'a'];
+        }
+        // 边界
+        int differ = 0;
+        for (int i : count) {
+            if (i != 0) {
+                differ++;
+            }
+        }
+        if (differ == 0) {
+            result.add(0);
+        }
+
+        // 正常遍历
+        int n = p.length();
+        int length = s.length();
+        for (int i = 0; i < length - n; i++) {
+            // 去掉最左侧的值
+            if (count[s.charAt(i) - 'a'] == 1) {
+                --differ;
+            } else if (count[s.charAt(i) - 'a'] == 0) {
+                ++differ;
+            }
+            --count[s.charAt(i) - 'a'];
+            // 增加右侧的值
+            if (count[s.charAt(i + n) - 'a'] == -1) {
+                --differ;
+            } else if (count[s.charAt(i + n) - 'a'] == 0) {
+                ++differ;
+            }
+            ++count[s.charAt(i + n) - 'a'];
+            if (differ == 0) {
                 result.add(i + 1);
             }
         }
