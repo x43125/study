@@ -7,7 +7,10 @@ package com.wx.algorithm.leetcode.hot100;
  */
 public class T3LengthOfLongestSubstring {
     public static void main(String[] args) {
-        String s = "pwwkew";
+//        String s = "pwwkew";
+//        String s = "abcabcbb";
+        String s = "b1bb  b  %  b";
+//        String s = "";
         int subLongestLength = lengthOfLongestSubstring(s);
         System.out.println("subLongestLength = " + subLongestLength);
     }
