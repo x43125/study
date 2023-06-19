@@ -42,6 +42,7 @@ public class T560SubArraySum {
 
     /**
      * 前缀和
+     * 很妙的解法：将连续和==target 转化成了 当前和-前缀和=连续和
      *
      * @param nums
      * @param k
