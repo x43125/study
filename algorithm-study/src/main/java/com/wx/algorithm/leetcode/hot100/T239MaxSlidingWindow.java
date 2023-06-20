@@ -14,7 +14,7 @@ public class T239MaxSlidingWindow {
         int[] nums = {1, 3, -1, -3, 5, 3, 6, 7};
 //        int[] nums = {1, -1};
         int k = 3;
-        int[] maxArray = maxSlidingWindow2(nums, k);
+        int[] maxArray = maxSlidingWindow3(nums, k);
         for (int max : maxArray) {
             System.out.print(max + " ");
         }
@@ -66,7 +66,7 @@ public class T239MaxSlidingWindow {
     }
 
     /**
-     * optimize1: 有线队列
+     * optimize1: 有序队列
      *
      * @param nums
      * @param k
@@ -98,6 +98,47 @@ public class T239MaxSlidingWindow {
             }
             // 此时的最大值即为当前窗口下的最大值
             ans[i - k + 1] = queue.peek()[0];
+        }
+
+        return ans;
+    }
+
+    /**
+     * optimize2: 单调队列；双向队列
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
+    public static int[] maxSlidingWindow3(int[] nums, int k) {
+        int n = nums.length;
+        if (k == 1) {
+            return nums;
+        }
+        // 用于存储，大值的下标
+        Deque<Integer> deque = new LinkedList<>();
+        for (int i = 0; i < k; i++) {
+            // 如果非空 且 队尾小于当前值，则弹出该值
+            while (!deque.isEmpty() && nums[i] >= nums[deque.peekLast()]) {
+                deque.pollLast();
+            }
+            // 将新值插入到队尾
+            deque.offerLast(i);
+        }
+        int[] ans = new int[n - k + 1];
+        ans[0] = nums[deque.peekFirst()];
+
+        for (int i = k; i < n; i++) {
+            // 先将右侧值添加进来
+            while (!deque.isEmpty() && nums[deque.peekLast()] <= nums[i]) {
+                deque.pollLast();
+            }
+            deque.offerLast(i);
+            // 然后如果最大值是在窗口左侧，则弹出
+            while (deque.peekFirst() <= i - k) {
+                deque.pollFirst();
+            }
+            ans[i - k + 1] = nums[deque.peekFirst()];
         }
 
         return ans;
