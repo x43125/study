@@ -16,12 +16,12 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 目标类 -->
-    <bean id="demoService" class="com.shawn.springstudy.service.AopDemoServiceImpl">
+    <bean id="demoService" class="com.shawn.springstudy.service.impl.AopDemoServiceImpl">
         <!-- configure properties of bean here as normal -->
     </bean>
 
     <!-- 目标类 -->
-    <bean id="demoService2" class="com.shawn.springstudy.service.AopDemoServiceImpl2">
+    <bean id="demoService2" class="com.shawn.springstudy.service.impl.AopDemoServiceImpl2">
         <!-- configure properties of bean here as normal -->
     </bean>
 
@@ -34,7 +34,7 @@
         <!-- 配置切面 -->
         <aop:aspect ref="logAspect">
             <!-- 配置切入点: 即在哪些方法上执行 -->
-            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.AopDemoServiceImpl.*(..))"/>
+            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.impl.AopDemoServiceImpl.*(..))"/>
 <!--            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.*.*(..))"/>-->
             <!-- 环绕通知 -->
             <aop:around method="doAround" pointcut-ref="pointCutMethod"/>
@@ -47,7 +47,7 @@
             <!-- 最终通知 -->
             <aop:after method="doAfter" pointcut-ref="pointCutMethod"/>
 
-            <aop:pointcut id="pointCutMethod2" expression="execution(* com.shawn.springstudy.service.AopDemoServiceImpl2.*(..))"/>
+            <aop:pointcut id="pointCutMethod2" expression="execution(* com.shawn.springstudy.service.impl.AopDemoServiceImpl2.*(..))"/>
             <!-- 最终通知 -->
             <aop:after method="doAfter" pointcut-ref="pointCutMethod2"/>
         </aop:aspect>

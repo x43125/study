@@ -1,13 +1,15 @@
 package com.shawn.springstudy.aop;
 
-import com.shawn.springstudy.service.AopDemoServiceImpl;
-import com.shawn.springstudy.service.AopDemoServiceImpl2;
+import com.shawn.springstudy.service.IJdkProxyService;
+import com.shawn.springstudy.service.impl.AopDemoServiceImpl;
+import com.shawn.springstudy.service.impl.AopDemoServiceImpl2;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.context.support.StaticWebApplicationContext;
+
+import javax.annotation.Resource;
 
 /**
  * @author wangxiang
@@ -16,6 +18,10 @@ import org.springframework.web.context.support.StaticWebApplicationContext;
  */
 @SpringBootTest
 public class LogAspectjTest {
+
+    @Autowired
+    private IJdkProxyService iJdkProxyService;
+
     @Test
     void LogAspectJTest() {
         ApplicationContext context = new ClassPathXmlApplicationContext("com/shawn/aop/LogAspectj.xml");
@@ -35,6 +41,18 @@ public class LogAspectjTest {
         service2.doMethod2();
         try {
             service2.doMethod3();
+        } catch (Exception e) {
+//            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Test
+    void annotationLogAspectJTest() {
+        iJdkProxyService.doMethod1();
+        iJdkProxyService.doMethod2();
+        try {
+            iJdkProxyService.doMethod3();
         } catch (Exception e) {
 //            throw new RuntimeException(e);
         }
