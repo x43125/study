@@ -1,17 +1,20 @@
-package com.shawn.springstudy;
-
+package com.shawn.springstudy.aop;
 
 import com.shawn.springstudy.service.AopDemoServiceImpl;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  * @author wangxiang
- * @date 2023/6/21 20:42
+ * @date 2023/6/24 15:29
  * @description
  */
-public class LogAspectTest {
-    public static void main(String[] args) {
+@SpringBootTest
+public class LogAspectjTest {
+    @Test
+    void LogAspectJTest() {
         ApplicationContext context = new ClassPathXmlApplicationContext("LogAspectj.xml");
         AopDemoServiceImpl service = context.getBean("demoService", AopDemoServiceImpl.class);
 
@@ -23,5 +26,4 @@ public class LogAspectTest {
 //            throw new RuntimeException(e);
         }
     }
-
 }
