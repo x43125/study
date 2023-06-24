@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
+import org.springframework.web.context.support.StaticWebApplicationContext;
 
 /**
  * @author wangxiang
@@ -15,7 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 public class LogAspectjTest {
     @Test
     void LogAspectJTest() {
-        ApplicationContext context = new ClassPathXmlApplicationContext("LogAspectj.xml");
+        ApplicationContext context = new ClassPathXmlApplicationContext("com/shawn/aop/LogAspectj.xml");
         AopDemoServiceImpl service = context.getBean("demoService", AopDemoServiceImpl.class);
 
         service.doMethod1();
