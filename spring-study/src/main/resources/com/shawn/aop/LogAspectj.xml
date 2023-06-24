@@ -20,6 +20,11 @@
         <!-- configure properties of bean here as normal -->
     </bean>
 
+    <!-- 目标类 -->
+    <bean id="demoService2" class="com.shawn.springstudy.service.AopDemoServiceImpl2">
+        <!-- configure properties of bean here as normal -->
+    </bean>
+
     <!-- 切面 -->
     <bean id="logAspect" class="com.shawn.springstudy.aspect.LogAspect">
         <!-- configure properties of aspect here as normal -->
@@ -28,8 +33,9 @@
     <aop:config>
         <!-- 配置切面 -->
         <aop:aspect ref="logAspect">
-            <!-- 配置切入点 -->
-            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.*.*(..))"/>
+            <!-- 配置切入点: 即在哪些方法上执行 -->
+            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.AopDemoServiceImpl.*(..))"/>
+<!--            <aop:pointcut id="pointCutMethod" expression="execution(* com.shawn.springstudy.service.*.*(..))"/>-->
             <!-- 环绕通知 -->
             <aop:around method="doAround" pointcut-ref="pointCutMethod"/>
             <!-- 前置通知 -->
@@ -40,6 +46,10 @@
             <aop:after-throwing method="doAfterThrowing" pointcut-ref="pointCutMethod" throwing="e"/>
             <!-- 最终通知 -->
             <aop:after method="doAfter" pointcut-ref="pointCutMethod"/>
+
+            <aop:pointcut id="pointCutMethod2" expression="execution(* com.shawn.springstudy.service.AopDemoServiceImpl2.*(..))"/>
+            <!-- 最终通知 -->
+            <aop:after method="doAfter" pointcut-ref="pointCutMethod2"/>
         </aop:aspect>
     </aop:config>
 
