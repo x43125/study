@@ -7,7 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
  * @date 2023/6/21 20:32
  * @description
  */
-public class LogAspect {
+public class LogAspectXml {
 
     /**
      * 环绕通知.

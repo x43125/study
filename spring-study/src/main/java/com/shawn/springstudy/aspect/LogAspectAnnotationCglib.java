@@ -6,7 +6,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.stereotype.Component;
 
 /**
- * 定义切面
+ * jdk动态代理，针对接口的 定义切面
  *
  * @author wangxiang
  * @date 2023/6/24 17:04
@@ -15,12 +15,16 @@ import org.springframework.stereotype.Component;
 @EnableAspectJAutoProxy
 @Component
 @Aspect
-public class LogAspectAnnotation {
+public class LogAspectAnnotationCglib {
 
     /**
      * 定义切入点
+     * 定义到下一级，就可以命中 CglibProxyDemoServiceImpl，定义到上一级就不行
      */
-    @Pointcut("execution(* com.shawn.springstudy.service.*.*(..))")
+    // 不可以
+//    @Pointcut("execution(* com.shawn.springstudy.service.*.*(..))")
+    // 可以
+    @Pointcut("execution(* com.shawn.springstudy.service.impl.*.*(..))")
     public void pointCutMethod() {
 
     }

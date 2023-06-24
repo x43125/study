@@ -26,7 +26,7 @@
     </bean>
 
     <!-- 切面 -->
-    <bean id="logAspect" class="com.shawn.springstudy.aspect.LogAspect">
+    <bean id="logAspect" class="com.shawn.springstudy.aspect.LogAspectXml">
         <!-- configure properties of aspect here as normal -->
     </bean>
 
