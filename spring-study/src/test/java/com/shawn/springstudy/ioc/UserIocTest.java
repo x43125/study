@@ -20,7 +20,7 @@ import java.util.List;
  * @description
  */
 @SpringBootTest
-public class IocTest {
+public class UserIocTest {
 
     @Test
     void testUserNormal() {
@@ -54,5 +54,11 @@ public class IocTest {
         userList.forEach(System.out::println);
     }
 
-
+    @Test
+    void testUserIocByAnnotation() {
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("com.shawn.springstudy");
+        UserService userService = context.getBean("userService", UserServiceImpl.class);
+        List<User> userList = userService.findUserList();
+        userList.forEach(System.out::println);
+    }
 }
