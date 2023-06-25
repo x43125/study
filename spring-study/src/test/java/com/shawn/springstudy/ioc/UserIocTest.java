@@ -9,6 +9,7 @@ import com.shawn.springstudy.service.UserService;
 import com.shawn.springstudy.service.impl.AgentServiceImpl;
 import com.shawn.springstudy.service.impl.UserServiceImpl;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -21,7 +22,7 @@ import java.util.List;
  * @date 2023/6/25 14:11
  * @description
  */
-@SpringBootTest
+//@SpringBootTest
 public class UserIocTest {
 
     @Test
@@ -67,8 +68,25 @@ public class UserIocTest {
     @Test
     void testUserIocByAnnotation2() {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("com.shawn.springstudy");
-        AgentService agentService = context.getBean("agentServiceImpl", AgentServiceImpl.class);
-        String agentName = agentService.getAgentName();
-        System.out.println("agentName = " + agentName);
+        boolean b = context.containsBean("agentServiceImpl");
+        System.out.println("b = " + b);
+        ObjectProvider<UserServiceImpl> beanProvider = context.getBeanProvider(UserServiceImpl.class);
+        System.out.println("beanProvider = " + beanProvider);
+
+        boolean isSingleton = context.isSingleton("agentServiceImpl");
+        System.out.println("isSingleton = " + isSingleton);
+
+        boolean isPrototype = context.isPrototype("agentServiceImpl");
+        System.out.println("isPrototype = " + isPrototype);
+
+        boolean isTypeMatch = context.isTypeMatch("agentServiceImpl", AgentServiceImpl.class);
+        System.out.println("isTypeMatch = " + isTypeMatch);
+
+        Class<?> agentServiceImpl = context.getType("agentServiceImpl");
+        System.out.println("agentServiceImpl = " + agentServiceImpl);
+
+//        AgentService agentService = context.getBean("agentServiceImpl", AgentServiceImpl.class);
+//        String agentName = agentService.getAgentName();
+//        System.out.println("agentName = " + agentName);
     }
 }
