@@ -85,8 +85,17 @@ public class UserIocTest {
         Class<?> agentServiceImpl = context.getType("agentServiceImpl");
         System.out.println("agentServiceImpl = " + agentServiceImpl);
 
+        String[] aliases = context.getAliases("agentServiceImpl");
+        for (String alias : aliases) {
+            System.out.print(alias + " ");
+        }
+        System.out.println();
+
+
 //        AgentService agentService = context.getBean("agentServiceImpl", AgentServiceImpl.class);
 //        String agentName = agentService.getAgentName();
 //        System.out.println("agentName = " + agentName);
+
+
     }
 }
