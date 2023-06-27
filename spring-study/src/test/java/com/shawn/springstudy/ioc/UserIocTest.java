@@ -39,6 +39,12 @@ public class UserIocTest {
      */
     @Test
     void testUserIocByXmlConfig() {
+        ApplicationContext context1 = new ClassPathXmlApplicationContext(
+                "com/shawn/ioc/UserDao.xml", "com/shawn/ioc/UserService.xml");
+        UserDaoImpl userDaoImpl = context1.getBean("userDao", UserDaoImpl.class);
+        List<User> userList1 = userDaoImpl.findUserList();
+        userList1.forEach(System.out::println);
+
         ApplicationContext context = new ClassPathXmlApplicationContext(
                 "com/shawn/ioc/UserDao.xml", "com/shawn/ioc/UserService.xml");
         UserService userService = context.getBean("userService", UserServiceImpl.class);
