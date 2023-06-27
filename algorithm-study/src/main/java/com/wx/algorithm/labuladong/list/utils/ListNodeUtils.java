@@ -1,6 +1,6 @@
 package com.wx.algorithm.labuladong.list.utils;
 
-import com.wx.algorithm.labuladong.list.pojo.ListNode;
+import com.wx.algorithm.base.model.ListNode;
 
 public class ListNodeUtils {
 

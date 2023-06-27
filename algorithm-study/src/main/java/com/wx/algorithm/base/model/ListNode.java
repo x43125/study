@@ -1,4 +1,4 @@
-package com.wx.algorithm.labuladong.list.pojo;
+package com.wx.algorithm.base.model;
 
 public class ListNode {
     public int val;

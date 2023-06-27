@@ -1,7 +1,5 @@
 package com.wx.algorithm.leetcode.contest.spring;
 
-import com.wx.algorithm.labuladong.list.pojo.ListNode;
-
 import java.util.TreeSet;
 
 public class Paint {

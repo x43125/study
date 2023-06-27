@@ -1,6 +1,6 @@
 package com.wx.algorithm.leetcode.normal;
 
-import com.wx.algorithm.labuladong.list.pojo.ListNode;
+import com.wx.algorithm.base.model.ListNode;
 import com.wx.algorithm.labuladong.list.utils.ListNodeUtils;
 
 public class T_83_RemoveDuplicateListNode {
