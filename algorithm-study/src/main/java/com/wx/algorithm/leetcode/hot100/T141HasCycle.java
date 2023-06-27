@@ -8,11 +8,6 @@ import com.wx.algorithm.base.model.ListNode;
  * @description
  */
 public class T141HasCycle {
-    public static void main(String[] args) {
-
-
-    }
-
     public boolean hasCycle(ListNode head) {
         if (head == null || head.next == null) {
             return false;
