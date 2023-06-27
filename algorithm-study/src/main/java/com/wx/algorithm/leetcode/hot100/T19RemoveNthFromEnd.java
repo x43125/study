@@ -27,7 +27,6 @@ public class T19RemoveNthFromEnd {
             preNode = preNode.next;
         }
         preNode.next = node.next;
-
         return preHead.next;
     }
 }
