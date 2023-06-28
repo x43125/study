@@ -5,6 +5,7 @@ import com.shawn.springstudy.factory.BeanFactoryConfig;
 import com.shawn.springstudy.model.Student;
 import com.shawn.springstudy.model.User;
 import com.shawn.springstudy.ref.BeansConfig;
+import com.shawn.springstudy.ref.MyBeanFactoryPostProcessor;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -80,7 +81,7 @@ public class RefreshTest {
     @Test
     void testBeanFactory() {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
-        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(BeanFactoryConfig.class).getBeanDefinition();
+        AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(BeanFactoryConfig.class).setScope("singleton").getBeanDefinition();
         beanFactory.registerBeanDefinition("config", beanDefinition);
 //        AbstractBeanDefinition beanDefinition1 = BeanDefinitionBuilder.genericBeanDefinition(BeansConfig.class).getBeanDefinition();
 //        beanFactory.registerBeanDefinition("config1", beanDefinition1);
@@ -88,14 +89,18 @@ public class RefreshTest {
         // 初始的时候只有config一个bean
         printBeanDefinitionNames(beanFactory);
 
-        // 这一步把注解相关的类加到容器中
+        // 这一步把注解相关的后处理器加到容器中
         AnnotationConfigUtils.registerAnnotationConfigProcessors(beanFactory);
-        // 所以此时容器中多了与注解处理相关的bean
+        // 所以此时容器中多了与注解处理相关的后处理器bean
         printBeanDefinitionNames(beanFactory);
 
-        // 执行所有的beanFactoryPostProcessor.postProcessBeanFactory方法
-        // 这一步会去执行具体的方法，比如：internalConfigurationAnnotationProcessor这个类会去寻找所有的被@Configuration注解的类，
-        // 然后将其内部的bean加载到容器中
+        // 将自建的beanFactoryPostProcessor添加进容器中
+        AbstractBeanDefinition beanDefinition2 = BeanDefinitionBuilder.genericBeanDefinition(MyBeanFactoryPostProcessor.class).setScope("singleton").getBeanDefinition();
+        beanFactory.registerBeanDefinition("myBeanFactoryPostProcessor", beanDefinition2);
+
+        // 让后处理器运行：从beanFactory中获取刚刚加载进去的后处理器bean，可以通过 type来获取
+        // 获取到之后，再for循环执行每个后处理器，这些后处理器做了一系列重要的操作
+        // 比如：internalConfigurationAnnotationProcessor这个后处理器会去寻找所有的被@Configuration注解的类，然后将其内部的bean加载到容器中
         beanFactory.getBeansOfType(BeanFactoryPostProcessor.class).values()
                 .forEach(processor -> processor.postProcessBeanFactory(beanFactory));
         // 所以此时再打印，就又多了 BeanFactoryConfig下的两个bean：Bean1, Bean2

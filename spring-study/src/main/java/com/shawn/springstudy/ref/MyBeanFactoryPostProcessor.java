@@ -17,6 +17,6 @@ public class MyBeanFactoryPostProcessor implements BeanFactoryPostProcessor {
 
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
-        log.info("========================== execute BeanFactoryPostProcessor#postProcessBeanFactory");
+        log.info("========================== execute MyBeanFactoryPostProcessor#postProcessBeanFactory");
     }
 }
