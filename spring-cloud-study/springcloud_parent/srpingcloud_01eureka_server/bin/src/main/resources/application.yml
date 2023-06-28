@@ -1,0 +1,20 @@
+server:
+  port: 8761
+# 不能有下划线，不区分大小写
+spring:
+  application:
+    name: EUREKASERVER
+  cloud:
+    inetutils:
+      ignored-interfaces: .*VMnet.*
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    fetch-registry: false
+#    register-with-eureka: false
+
+
+
+
