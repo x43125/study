@@ -17,6 +17,6 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> findUserList() {
-        return Collections.singletonList(new User(1L, "zhangsan", 11));
+        return Collections.singletonList(new User());
     }
 }
