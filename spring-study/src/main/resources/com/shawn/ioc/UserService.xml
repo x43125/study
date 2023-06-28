@@ -3,6 +3,9 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
  http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="userDao" class="com.shawn.springstudy.dao.impl.UserDaoImpl">
+        <!-- additional collaborators and configuration for this bean go here -->
+    </bean>
     <!-- services -->
     <bean id="userService" class="com.shawn.springstudy.service.impl.UserServiceImpl">
         <property name="userDao" ref="userDao"/>

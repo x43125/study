@@ -7,4 +7,7 @@ package com.shawn.springstudy.factory;
  */
 public class Bean2 {
 
+    public Bean2() {
+        System.out.println("construct bean2");
+    }
 }

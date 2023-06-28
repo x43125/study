@@ -11,6 +11,10 @@ public class Bean1 {
     @Autowired
     private Bean2 bean2;
 
+    public Bean1() {
+        System.out.println("construct bean1");
+    }
+
     public Bean2 getBean2() {
         return bean2;
     }

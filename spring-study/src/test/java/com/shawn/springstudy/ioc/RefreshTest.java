@@ -1,24 +1,32 @@
 package com.shawn.springstudy.ioc;
 
 import com.shawn.springstudy.context.UserRegisteredEvent;
+import com.shawn.springstudy.context.WebConfig;
+import com.shawn.springstudy.dao.UserDao;
+import com.shawn.springstudy.factory.Bean1;
 import com.shawn.springstudy.factory.BeanFactoryConfig;
 import com.shawn.springstudy.model.Student;
 import com.shawn.springstudy.model.User;
-import com.shawn.springstudy.ref.BeansConfig;
 import com.shawn.springstudy.ref.MyBeanFactoryPostProcessor;
+import com.shawn.springstudy.service.impl.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultSingletonBeanRegistry;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
+import org.springframework.boot.web.servlet.context.AnnotationConfigServletWebServerApplicationContext;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigUtils;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.Resource;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -79,7 +87,7 @@ public class RefreshTest {
     }
 
     @Test
-    void testBeanFactory() {
+    void testStudyBeanFactory() {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         AbstractBeanDefinition beanDefinition = BeanDefinitionBuilder.genericBeanDefinition(BeanFactoryConfig.class).setScope("singleton").getBeanDefinition();
         beanFactory.registerBeanDefinition("config", beanDefinition);
@@ -105,11 +113,48 @@ public class RefreshTest {
                 .forEach(processor -> processor.postProcessBeanFactory(beanFactory));
         // 所以此时再打印，就又多了 BeanFactoryConfig下的两个bean：Bean1, Bean2
         printBeanDefinitionNames(beanFactory);
+
+        // 前面已经将beanPostProcessor注册进容器中了，现在将beanFactory与这些beanPostProcessor关联上 (beanFactory.addBeanPostProcessor)
+        beanFactory.getBeansOfType(BeanPostProcessor.class).values().forEach(beanFactory::addBeanPostProcessor);
+        printBeanDefinitionNames(beanFactory);
+        // 本身是懒汉式创建，调用下面这个方法可以改为 饿汉式：提前创建好对象
+        beanFactory.preInstantiateSingletons();
+        System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+        Bean1 bean1 = beanFactory.getBean(Bean1.class);
+        System.out.println("bean1 = " + bean1);
+        System.out.println("bean1.getBean2() = " + bean1.getBean2());
     }
 
     private void printBeanDefinitionNames(DefaultListableBeanFactory beanFactory) {
         System.out.println("=========================== start");
         for (String beanDefinitionName : beanFactory.getBeanDefinitionNames()) {
+            System.out.println(beanDefinitionName);
+        }
+        System.out.println("=========================== end");
+    }
+
+    @Test
+    void testStudyApplicationContext() {
+//        ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext("com/shawn/ioc/UserService.xml");
+//        printBeanDefinitionNames(context);
+//        UserDao userDao = context.getBean(UserServiceImpl.class).getUserDao();
+//        System.out.println("userDao = " + userDao);
+
+
+//        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+//        printBeanDefinitionNames(beanFactory);
+//
+//        XmlBeanDefinitionReader reader = new XmlBeanDefinitionReader(beanFactory);
+//        reader.loadBeanDefinitions("com/shawn/ioc/UserService.xml");
+//        printBeanDefinitionNames(beanFactory);
+
+        AnnotationConfigServletWebServerApplicationContext context = new AnnotationConfigServletWebServerApplicationContext(WebConfig.class);
+
+    }
+
+    private void printBeanDefinitionNames(ApplicationContext context) {
+        System.out.println("=========================== start");
+        for (String beanDefinitionName : context.getBeanDefinitionNames()) {
             System.out.println(beanDefinitionName);
         }
         System.out.println("=========================== end");
