@@ -1,4 +1,4 @@
-package com.shawn.springstudy.ref;
+package com.shawn.springstudylifecycle01.bean.post.processor;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
  * @description
  */
 @Slf4j
-//@Component
+@Component
 public class MyBeanPostProcessor implements InstantiationAwareBeanPostProcessor, DestructionAwareBeanPostProcessor {
 
     @Override
