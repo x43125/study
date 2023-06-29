@@ -1,9 +1,8 @@
 package com.wx.base.reflect;
 
-import com.shawn.base.model.Son;
-
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import com.wx.base.model.Son;
 
 /**
  * @author wangxiang

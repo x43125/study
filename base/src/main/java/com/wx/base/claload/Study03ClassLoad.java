@@ -1,6 +1,6 @@
 package com.wx.base.claload;
 
-import com.shawn.base.model.Father;
+import com.wx.base.model.Father;
 
 /**
  * @author wangxiang
