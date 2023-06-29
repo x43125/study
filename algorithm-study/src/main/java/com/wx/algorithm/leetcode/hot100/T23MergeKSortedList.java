@@ -11,7 +11,7 @@ import java.util.Queue;
  * @date 2023/6/29 15:04
  * @description
  */
-public class MergeKSortedList {
+public class T23MergeKSortedList {
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode ans = null;
         for (ListNode list : lists) {
