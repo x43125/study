@@ -67,4 +67,60 @@ public class T148SortList {
 
         return preHead.next;
     }
+
+    /**
+     * 自底向上：非递归方式
+     *
+     * @param head
+     * @return
+     */
+    public ListNode sortListOptimize(ListNode head) {
+        if (head == null) {
+            return null;
+        }
+
+        // 链表的长度
+        int length = 0;
+        ListNode temp = head;
+        while (temp != null) {
+            length++;
+            temp = temp.next;
+        }
+
+        // 标志头节点
+        ListNode preHead = new ListNode(-1);
+        preHead.next = head;
+
+        // 每次subLength * 2;
+        for (int subLength = 1; subLength < length; subLength <<= 1) {
+            ListNode prev = preHead, curr = preHead.next;
+            // 每次遍历整个链表
+            while (curr != null) {
+                // 两组两组的排序，合并
+                ListNode head1 = curr;
+                for (int i = 1; i < subLength && curr.next != null; i++) {
+                    curr = curr.next;
+                }
+                ListNode head2 = curr.next;
+                curr.next = null;
+                curr = head2;
+                for (int i = 1; i < subLength && curr != null && curr.next != null; i++) {
+                    curr = curr.next;
+                }
+
+                ListNode next = null;
+                if (curr != null) {
+                    next = curr.next;
+                    curr.next = null;
+                }
+
+                prev.next = merge(head1, head2);
+                while (prev.next != null) {
+                    prev = prev.next;
+                }
+                curr = next;
+            }
+        }
+        return preHead.next;
+    }
 }
