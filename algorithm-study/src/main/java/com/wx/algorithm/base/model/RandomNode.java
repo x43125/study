@@ -1,3 +1,5 @@
+package com.wx.algorithm.base.model;
+
 public class RandomNode {
     public int val;
     public RandomNode next;
