@@ -98,22 +98,25 @@ public class T148SortList {
             while (curr != null) {
                 // 两组两组的排序，合并
                 ListNode head1 = curr;
+                // 找到第一组
                 for (int i = 1; i < subLength && curr.next != null; i++) {
                     curr = curr.next;
                 }
                 ListNode head2 = curr.next;
                 curr.next = null;
                 curr = head2;
+                // 找到第二组
                 for (int i = 1; i < subLength && curr != null && curr.next != null; i++) {
                     curr = curr.next;
                 }
 
+                // 找到下一次遍历的点，如果到底了就不需要了
                 ListNode next = null;
                 if (curr != null) {
                     next = curr.next;
                     curr.next = null;
                 }
-
+                // 归并此次的两组，并与之前已经归并的合并到一起
                 prev.next = merge(head1, head2);
                 while (prev.next != null) {
                     prev = prev.next;
