@@ -52,5 +52,23 @@ public class T236FindLowestCommonAncestor {
         return traverse(root.left, node) || traverse(root.right, node);
     }
 
+    public TreeNode lowestCommonAncestorOptimize(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null) {
+            return null;
+        }
+        if (root == p || root == q) {
+            return root;
+        }
 
+        TreeNode left = lowestCommonAncestorOptimize(root.left, p, q);
+        TreeNode right = lowestCommonAncestorOptimize(root.right, p, q);
+
+        if (left != null && right != null) {
+            return root;
+        } else if (left != null) {
+            return left;
+        } else {
+            return right;
+        }
+    }
 }
