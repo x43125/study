@@ -75,7 +75,7 @@ public class T437PathSum {
         preSum.put(curr, preSum.getOrDefault(curr, 0) + 1);
         ans += dfs(node.left, preSum, curr, targetSum);
         ans += dfs(node.right, preSum, curr, targetSum);
-        preSum.put(curr, preSum.getOrDefault(curr, 0) - 1);
+        preSum.put(curr, preSum.get(curr) - 1);
 
         return ans;
     }
