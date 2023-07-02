@@ -56,6 +56,7 @@ public class T236FindLowestCommonAncestor {
         if (root == null) {
             return null;
         }
+
         if (root == p || root == q) {
             return root;
         }
