@@ -59,7 +59,17 @@ public class T208Trie {
         }
 
         public static void main(String[] args) {
-
+            Trie node = new Trie();
+            node.insert("bapple");
+            boolean search1 = node.search("apple");
+            boolean search2 = node.search("app");
+            boolean startsWith1 = node.startsWith("app");
+            node.insert("app");
+            boolean search3 = node.search("app");
+            System.out.println("search1 = " + search1);
+            System.out.println("search2 = " + search2);
+            System.out.println("startsWith1 = " + startsWith1);
+            System.out.println("search3 = " + search3);
         }
     }
 }
