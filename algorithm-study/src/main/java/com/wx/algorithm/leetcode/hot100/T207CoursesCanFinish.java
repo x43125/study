@@ -114,6 +114,7 @@ public class T207CoursesCanFinish {
             }
         }
 
+        // 扫描过的是否等于所有的
         return visited == numCourses;
     }
 }
