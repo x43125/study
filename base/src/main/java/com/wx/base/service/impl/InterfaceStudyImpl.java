@@ -31,14 +31,18 @@ public class InterfaceStudyImpl implements InterfaceStudy {
         return this.getName().equals(o.getName());
     }
 
-//    @Override
-//    public int hashCode() {
+    @Override
+    public int hashCode() {
 //        int h = this.hash;
 //        if (h == 0 && this.value.length > 0) {
 //            this.hash = h = this.isLatin1() ? StringLatin1.hashCode(this.value) : StringUTF16.hashCode(this.value);
 //        }
 //        return h;
-//    }
+        int result = 17;
+        result = result * 31 + name.hashCode();
+
+        return result;
+    }
 
     @Override
     public void func2() {
