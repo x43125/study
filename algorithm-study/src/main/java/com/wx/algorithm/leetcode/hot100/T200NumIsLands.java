@@ -129,7 +129,8 @@ public class T200NumIsLands {
             for (int j = 0; j < n; j++) {
                 int idx = i * n + j;
                 if (grid[i][j] == '1') {
-                    if (i + 1 < m && grid[i + 1][j] == '1') { //合并岛屿
+                    // 合并岛屿，因为是合并操作，所以只需要向右，向下就可以了
+                    if (i + 1 < m && grid[i + 1][j] == '1') {
                         union(idx, (i + 1) * n + j);
                     }
                     if (j + 1 < n && grid[i][j + 1] == '1') {
@@ -149,7 +150,7 @@ public class T200NumIsLands {
      */
     private int find(int i) {
         if (p[i] == i) {
-            return p[i];
+            return i;
         }
         return p[i] = find(p[i]);
     }
