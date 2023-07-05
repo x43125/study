@@ -8,26 +8,32 @@ package com.wx.base.juc.base;
 public class InterruptStudy {
 
     public static void main(String[] args) throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int time = 0;
+        Thread thread = new Thread(() -> {
+            int time = 0;
 
-                while (!Thread.currentThread().isInterrupted()) {
-                    System.out.println(Thread.currentThread() + "hello");
-                    time++;
+            while (!Thread.currentThread().isInterrupted()) {
+                System.out.println(Thread.currentThread().getName() + " hello");
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
                 }
-
-                System.out.println(time);
+                time++;
             }
-        });
 
+            System.out.println(time + "ms");
+        }, "t1");
+
+        System.out.println("thread.isAlive() = " + thread.isAlive());
         thread.start();
-        Thread.sleep(1000);
+        Thread.sleep(1);
+        System.out.println(thread.getName() + ".isInterrupted() = " + thread.isInterrupted());
+        System.out.println("thread.isAlive() = " + thread.isAlive());
         System.out.println("main thread interrupt thread");
         thread.interrupt();
-
+        System.out.println(thread.getName() + ".isInterrupted() = " + thread.isInterrupted());
         thread.join();
+        System.out.println("thread.isAlive() = " + thread.isAlive());
         System.out.println("main is over");
     }
 }

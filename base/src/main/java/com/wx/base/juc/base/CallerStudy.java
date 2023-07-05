@@ -13,35 +13,28 @@ public class CallerStudy implements Callable<String> {
     @Override
     public String call() throws Exception {
         Thread.sleep(1000);
-        return Thread.currentThread().getName() + "hello";
+        return Thread.currentThread().getName() + " hello";
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
         // 创建异步任务
         FutureTask<String> futureTask1 = new FutureTask<>(new CallerStudy());
         FutureTask<String> futureTask2 = new FutureTask<>(new CallerStudy());
         System.out.println("========");
 
         //启动线程
-        Thread thread1 = new Thread(futureTask1);
+        Thread thread1 = new Thread(futureTask1, "t1");
         thread1.start();
-        try {
-            //等待任务执行完毕，并返回结果
-            String result = futureTask1.get();
-            System.out.println(result);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
-        thread1 = new Thread(futureTask2);
-        thread1.start();
+        Thread thread2 = new Thread(futureTask2, "t2");
+        thread2.start();
+        //等待任务执行完毕，并返回结果
+        String result1 = futureTask1.get();
+        System.out.println(result1);
         System.out.println("--------");
-        try {
-            //等待任务执行完毕，并返回结果
-            String result = futureTask2.get();
-            System.out.println(result);
-        } catch (ExecutionException | InterruptedException e) {
-            e.printStackTrace();
-        }
+
+        //等待任务执行完毕，并返回结果
+        String result2 = futureTask2.get();
+        System.out.println(result2);
         System.out.println("++++++++");
     }
 }
