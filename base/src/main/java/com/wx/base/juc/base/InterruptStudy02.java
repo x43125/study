@@ -5,7 +5,7 @@ package com.wx.base.juc.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class InterruptStudy2 {
+public class InterruptStudy02 {
     public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {
             @Override

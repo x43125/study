@@ -5,7 +5,7 @@ package com.wx.base.juc.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class ThreadLocalStudy2 {
+public class ThreadLocalStudy02 {
     public static ThreadLocal<String> threadLocal = new ThreadLocal<>();
     public static InheritableThreadLocal<String> inheritableThreadLocal = new InheritableThreadLocal<>();
 

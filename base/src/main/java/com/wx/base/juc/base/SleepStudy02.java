@@ -8,7 +8,7 @@ import java.util.concurrent.locks.ReentrantLock;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class SleepStudy2 {
+public class SleepStudy02 {
     private static final Lock lock = new ReentrantLock();
 
     public static void main(String[] args) throws InterruptedException {
