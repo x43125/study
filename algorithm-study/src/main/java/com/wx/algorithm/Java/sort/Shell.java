@@ -25,7 +25,7 @@ public class Shell {
             for (int k = length - 1; k >= length - 1 - j; --k) {
                 for (int i = k; i >= j; i -= j) {
                     if (arr[i] < arr[i - j]) { 
-                        SortUtil.exch(arr, i, i - j);
+                        SortUtil.swap(arr, i, i - j);
                     }
                 }
             }

@@ -29,7 +29,7 @@ public class Selection {
                     min = arr[j];
                 }
             }
-            SortUtil.exch(arr, i, right);
+            SortUtil.swap(arr, i, right);
         }
     }
 

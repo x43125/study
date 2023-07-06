@@ -40,9 +40,9 @@ public class Quick {
             if (i >= j) {
                 break;
             }
-            SortUtil.exch(arr, i, j);
+            SortUtil.swap(arr, i, j);
         }
-        SortUtil.exch(arr, left, j);
+        SortUtil.swap(arr, left, j);
         return j;
     }
 }

@@ -28,7 +28,7 @@ public class MaxPQImpl implements MaxPQ {
 
     private void swim(int n) {
         while (n>1 && arr[n/2]<arr[n]) {
-            SortUtil.exch(arr, n, n/2);
+            SortUtil.swap(arr, n, n/2);
             n /= 2;
         }
     }
@@ -41,7 +41,7 @@ public class MaxPQImpl implements MaxPQ {
     @Override
     public int delMax() {
         int max = arr[1];
-        SortUtil.exch(arr, 1, n--);
+        SortUtil.swap(arr, 1, n--);
         arr[n+1] = -1;
         sink(arr, 1, n);
         return max;
@@ -56,7 +56,7 @@ public class MaxPQImpl implements MaxPQ {
             if (arr[i] >= arr[j]) {
                 break;
             }
-            SortUtil.exch(arr, i, j);
+            SortUtil.swap(arr, i, j);
         }
     }
 
@@ -76,7 +76,7 @@ public class MaxPQImpl implements MaxPQ {
             sink(nums, i, length);
         }
         while (length > 1) {
-            SortUtil.exch(arr, 1, length--);
+            SortUtil.swap(arr, 1, length--);
             sink(arr, 1, length);
         }
     }
