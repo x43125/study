@@ -11,10 +11,10 @@ public class Selection {
         long num = 78651578943215497L;
         int[] arr = SortUtil.init(num);
         System.out.println("Selection Sort:");
-        System.out.printf("原: ");
+        System.out.print("原: ");
         SortUtil.print(arr);
-        sort(arr);
-        System.out.printf("现: ");
+        sort2(arr);
+        System.out.print("现: ");
         SortUtil.print(arr);
     }
 
@@ -33,5 +33,18 @@ public class Selection {
         }
     }
 
-
+    public static void sort2(int[] nums) {
+        int n = nums.length;
+        for (int i = 0; i < n - 1; i++) {
+            int min = Integer.MAX_VALUE;
+            int right = -1;
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] < min) {
+                    right = j;
+                    min = nums[j];
+                }
+            }
+            SortUtil.swap(nums, i, right);
+        }
+    }
 }

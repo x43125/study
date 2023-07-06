@@ -19,6 +19,10 @@ public class Insert {
         SortUtil.print(arr);
     }
 
+    /**
+     * 左侧为已排好序，当前节点依次向前比较，如果小于则交换，如果大于则停止
+     * @param arr
+     */
     public static void sort(int[] arr) {
         int n = arr.length;
         int i, j;
