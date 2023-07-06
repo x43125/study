@@ -5,7 +5,7 @@ package com.wx.base.juc.base;
  * @Author: x43125
  * @Date: 21/11/18
  */
-public class JoinInterruptTest {
+public class JoinStudy02 {
 
     public static void main(String[] args) {
         Thread threadOne = new Thread(new Runnable() {

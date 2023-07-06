@@ -5,7 +5,7 @@ package com.wx.base.juc.base;
  * @Author: x43125
  * @Date: 21/11/18
  */
-public class JoinTest {
+public class JoinStudy {
     public static void main(String[] args) throws InterruptedException {
         Thread threadOne = new Thread(new Runnable() {
             @Override

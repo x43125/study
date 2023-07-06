@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
  * @date 2023/7/4 23:11
  * @description
  */
-public class ThreadStudy01 {
+public class ThreadStudy02 {
     private int cnt = 0;
 
     public void add() {
@@ -23,10 +23,10 @@ public class ThreadStudy01 {
 
 
     public static void main(String[] args) throws InterruptedException {
-        ThreadStudy01 threadStudy01 = new ThreadStudy01();
+        ThreadStudy02 threadStudy02 = new ThreadStudy02();
 //        threadStudy01.threadUnsafeExample();
 
-        threadStudy01.vectorUnsafeExample();
+        threadStudy02.vectorUnsafeExample();
     }
 
     /**
@@ -35,7 +35,7 @@ public class ThreadStudy01 {
      */
     private void threadUnsafeExample() throws InterruptedException {
         final int threadSize = 1000;
-        ThreadStudy01 example = new ThreadStudy01();
+        ThreadStudy02 example = new ThreadStudy02();
         final CountDownLatch countDownLatch = new CountDownLatch(threadSize);
         ExecutorService executorService = Executors.newCachedThreadPool();
         for (int i = 0; i < threadSize; i++) {
