@@ -54,5 +54,15 @@
             <artifactId>logback-classic</artifactId>
             <version>1.4.7</version>
         </dependency>
+
+<!--        打印对象头工具 -->
+        <!-- https://mvnrepository.com/artifact/org.openjdk.jol/jol-core -->
+        <dependency>
+            <groupId>org.openjdk.jol</groupId>
+            <artifactId>jol-core</artifactId>
+            <version>0.17</version>
+<!--            <scope>provided</scope>-->
+        </dependency>
+
     </dependencies>
 </project>
