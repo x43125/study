@@ -18,8 +18,6 @@ public class Quick {
         sort2(arr);
         System.out.print("现: ");
         SortUtil.print(arr);
-
-
     }
 
     public static void sort(int[] arr, int left, int right) {
