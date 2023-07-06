@@ -11,12 +11,15 @@ public class Quick {
     public static void main(String[] args) {
         long num = 2705398416L;
         int[] arr = SortUtil.init(num);
-        System.out.println("Insert Sort:");
-        System.out.printf("原: ");
+        System.out.println("Quick Sort:");
+        System.out.print("原: ");
         SortUtil.print(arr);
-        sort(arr, 0, arr.length - 1);
-        System.out.printf("现: ");
+//        sort(arr, 0, arr.length - 1);
+        sort2(arr);
+        System.out.print("现: ");
         SortUtil.print(arr);
+
+
     }
 
     public static void sort(int[] arr, int left, int right) {
@@ -44,5 +47,38 @@ public class Quick {
         }
         SortUtil.swap(arr, left, j);
         return j;
+    }
+
+    public static void sort2(int[] nums) {
+        quickSort2(nums, 0, nums.length - 1);
+    }
+
+    public static void quickSort2(int[] nums, int left, int right) {
+        if (left >= right) {
+            return;
+        }
+
+        int i = left, j = right, x = nums[left];
+
+        while (i < j) {
+            while (i < j && nums[j] > x) {
+                j--;
+            }
+            if (i < j) {
+                nums[i] = nums[j];
+                i++;
+            }
+            while (i < j && nums[i] < x) {
+                i++;
+            }
+            if (i < j) {
+                nums[j] = nums[i];
+                j--;
+            }
+        }
+        // 最后需要把最开始的值放在最终的i位置
+        nums[i] = x;
+        quickSort2(nums, left, i - 1);
+        quickSort2(nums, i + 1, right);
     }
 }
