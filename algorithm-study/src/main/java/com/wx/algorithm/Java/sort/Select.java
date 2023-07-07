@@ -6,7 +6,7 @@ import com.wx.algorithm.Java.sort.util.SortUtil;
  * 选择排序
  * O(n^2)
  */
-public class Selection {
+public class Select {
     public static void main(String[] args) {
         long num = 78651578943215497L;
         int[] arr = SortUtil.init(num);
