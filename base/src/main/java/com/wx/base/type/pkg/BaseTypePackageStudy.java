@@ -1,5 +1,7 @@
 package com.wx.base.type.pkg;
 
+import java.io.IOException;
+
 /**
  * @author wangxiang
  * @date 2023/6/29 17:07
@@ -40,5 +42,60 @@ public class BaseTypePackageStudy {
         String s5 = "abc".intern();
         System.out.println(s1 == s5);
         System.out.println(s3 == s5);
+
+
+        Integer i1 = 124;
+        Integer i2 = 124;
+        Integer i3 = new Integer(124);
+
+        System.out.println(i1 == i2);
+        System.out.println(i1 == i3);
+
+        Integer i4 = 128;
+        Integer i5 = 128;
+        Integer i6 = new Integer(128);
+
+        System.out.println(i4 == i5);
+        System.out.println(i5 == i6);
+
+        Parent p = new Child();
+        try {
+            System.out.println("p.getLongParam() = " + p.getLongParam());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
+
+    private void a() {
+
+    }
+
+    public int a(int b) {
+        return b;
+    }
+
+    private void a(int b, int a) {
+
+    }
+
+    private void a(String a, int b) {
+    }
+
+    private void a(int a, String b) {
+    }
+}
+
+class Parent {
+    public long getLongParam() throws IOException {
+        return 1L;
+    }
+}
+
+class Child extends Parent {
+//    @Override
+//    public long getLongParam() throws Exception {
+//        return 1;
+//    }
+
+
 }
