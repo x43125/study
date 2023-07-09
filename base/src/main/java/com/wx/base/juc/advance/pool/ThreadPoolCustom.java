@@ -50,26 +50,17 @@ class ThreadPool {
      * 线程集合：Thread集合，用于执行上面的任务
      */
     private HashSet<Worker> workers = new HashSet<>();
+    /**
+     * 核心线程数
+     */
     private int coreSize;
+    /**
+     * 获取任务时的超时时间
+     */
     private long timeout;
     private TimeUnit timeUnit;
 
     private RejectPolicy<Runnable> rejectPolicy;
-
-    public void execute(Runnable task) {
-        synchronized (workers) {
-            if (workers.size() < coreSize) {
-                Worker worker = new Worker(task);
-                System.out.println("新增 worker: " + worker + ", " + task);
-                workers.add(worker);
-                worker.start();
-            } else {
-                System.out.println("加入任务队列：" + task);
-//                taskQueue.put(task);
-                taskQueue.tryPut(rejectPolicy, task);
-            }
-        }
-    }
 
     public ThreadPool(int coreSize, long timeout, TimeUnit timeUnit, int queueCapacity, RejectPolicy<Runnable> rejectPolicy) {
         this.coreSize = coreSize;
@@ -77,6 +68,27 @@ class ThreadPool {
         this.timeUnit = timeUnit;
         this.taskQueue = new BlockingQueue<>(queueCapacity);
         this.rejectPolicy = rejectPolicy;
+    }
+
+    /**
+     * 执行任务
+     * @param task
+     */
+    public void execute(Runnable task) {
+        synchronized (workers) {
+            // 当任务数没有超过 coreSize 时，直接交给worker对象执行
+            if (workers.size() < coreSize) {
+                Worker worker = new Worker(task);
+                System.out.println("新增 worker: " + worker + ", " + task);
+                workers.add(worker);
+                worker.start();
+            } else {
+                // 当超过了coreSize时，则加入任务队列暂存
+                System.out.println("加入任务队列：" + task);
+//                taskQueue.put(task);
+                taskQueue.tryPut(rejectPolicy, task);
+            }
+        }
     }
 
     class Worker extends Thread {
@@ -130,10 +142,10 @@ class BlockingQueue<T> {
     /**
      * 容量:最大容量
      */
-    private int capacity;
+    private int queueCapacity;
 
-    public BlockingQueue(int capacity) {
-        this.capacity = capacity;
+    public BlockingQueue(int queueCapacity) {
+        this.queueCapacity = queueCapacity;
     }
 
     public T poll(long timeout, TimeUnit timeUnit) {
@@ -188,7 +200,7 @@ class BlockingQueue<T> {
         lock.lock();
         try {
             long nanos = timeUnit.toNanos(timeout);
-            while (queue.size() == capacity) {
+            while (queue.size() == queueCapacity) {
                 System.out.println("等待加入任务队列: " + task);
                 if (nanos <= 0) {
                     return false;
@@ -220,7 +232,7 @@ class BlockingQueue<T> {
     public void put(T task) {
         lock.lock();
         try {
-            while (queue.size() == capacity) {
+            while (queue.size() == queueCapacity) {
                 System.out.println("等待加入任务队列: " + task);
                 fullWaitSet.await();
             }
@@ -238,11 +250,14 @@ class BlockingQueue<T> {
     public void tryPut(RejectPolicy<T> rejectPolicy, T task) {
         lock.lock();
         try {
-            if (queue.size() == capacity) {
+            if (queue.size() == queueCapacity) {
+                // 执行拒绝策略
                 rejectPolicy.reject(this, task);
             } else {
                 System.out.println("加入任务队列: " + task);
+                // 将任务加入阻塞队列队尾
                 queue.addLast(task);
+                // 唤醒emptyWaitSet
                 emptyWaitSet.signal();
             }
         } finally {
