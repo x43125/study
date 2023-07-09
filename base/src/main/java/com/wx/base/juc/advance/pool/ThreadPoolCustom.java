@@ -18,7 +18,13 @@ public class ThreadPoolCustom {
             // 1.死等
 //            queue.put(task);
             // 2.带超时等待
-            queue.offer(task, 500, TimeUnit.MILLISECONDS);
+//            queue.offer(task, 1500, TimeUnit.MILLISECONDS);
+            // 3.让调用者放弃任务执行
+//            System.out.println("放弃：" + task);
+            // 4.让调用者抛异常
+//            throw new RuntimeException("任务执行失败:" + task);
+            // 5.让调用者自己执行任务
+            task.run();
         }));
 
         for (int i = 0; i < 3; i++) {
@@ -29,7 +35,7 @@ public class ThreadPoolCustom {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println(j);
+                System.out.println(Thread.currentThread().getName() + ": " + j);
             });
         }
 
@@ -72,6 +78,7 @@ class ThreadPool {
 
     /**
      * 执行任务
+     *
      * @param task
      */
     public void execute(Runnable task) {
@@ -84,7 +91,7 @@ class ThreadPool {
                 worker.start();
             } else {
                 // 当超过了coreSize时，则加入任务队列暂存
-                System.out.println("加入任务队列：" + task);
+//                System.out.println("加入任务队列：" + task);
 //                taskQueue.put(task);
                 taskQueue.tryPut(rejectPolicy, task);
             }
@@ -105,7 +112,7 @@ class ThreadPool {
             // 2）当task执行完毕，再接着从任务队列获取任务并执行
             while (task != null || (task = taskQueue.take()) != null) {
                 try {
-                    System.out.println("正在执行：" + task) ;
+                    System.out.println("正在执行：" + task);
                     task.run();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -148,29 +155,29 @@ class BlockingQueue<T> {
         this.queueCapacity = queueCapacity;
     }
 
-    public T poll(long timeout, TimeUnit timeUnit) {
-        lock.lock();
-        try {
-            long nanos = timeUnit.toNanos(timeout);
-            // 当队列为空的时候，等待;当不为空的时候，则返回头节点任务
-            while (queue.isEmpty()) {
-                // 等待队列插值的时候唤醒
-                // 返回值是 等待时间-已经经过的时间 = 剩余应该等待的时间
-                if (nanos <= 0) {
-                    return null;
-                }
-                nanos = emptyWaitSet.awaitNanos(nanos);
-            }
-            T headTask = queue.removeFirst();
-            // 当取出了一个任务后，队列则非满状态，此时可以唤醒 fullWaitSet 等待
-            fullWaitSet.signal();
-            return headTask;
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            lock.unlock();
-        }
-    }
+//    public T poll(long timeout, TimeUnit timeUnit) {
+//        lock.lock();
+//        try {
+//            long nanos = timeUnit.toNanos(timeout);
+//            // 当队列为空的时候，等待;当不为空的时候，则返回头节点任务
+//            while (queue.isEmpty()) {
+//                // 等待队列插值的时候唤醒
+//                // 返回值是 等待时间-已经经过的时间 = 剩余应该等待的时间
+//                if (nanos <= 0) {
+//                    return null;
+//                }
+//                nanos = emptyWaitSet.awaitNanos(nanos);
+//            }
+//            T headTask = queue.removeFirst();
+//            // 当取出了一个任务后，队列则非满状态，此时可以唤醒 fullWaitSet 等待
+//            fullWaitSet.signal();
+//            return headTask;
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
 
     /**
      * 从任务队列中取任务
@@ -208,7 +215,7 @@ class BlockingQueue<T> {
                 nanos = fullWaitSet.awaitNanos(nanos);
             }
             // 当添加一个任务进队列后，队列则非空状态，此时可以唤醒 emptyWaitSet 等待
-            System.out.println("加入任务队列: " + task);
+//            System.out.println("加入任务队列: " + task);
             queue.addLast(task);
             emptyWaitSet.signal();
             return true;
@@ -229,23 +236,23 @@ class BlockingQueue<T> {
         }
     }
 
-    public void put(T task) {
-        lock.lock();
-        try {
-            while (queue.size() == queueCapacity) {
-                System.out.println("等待加入任务队列: " + task);
-                fullWaitSet.await();
-            }
-            // 当添加一个任务进队列后，队列则非空状态，此时可以唤醒 emptyWaitSet 等待
-            System.out.println("加入任务队列: " + task);
-            queue.addLast(task);
-            emptyWaitSet.signal();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        } finally {
-            lock.unlock();
-        }
-    }
+//    public void put(T task) {
+//        lock.lock();
+//        try {
+//            while (queue.size() == queueCapacity) {
+//                System.out.println("等待加入任务队列: " + task);
+//                fullWaitSet.await();
+//            }
+//            // 当添加一个任务进队列后，队列则非空状态，此时可以唤醒 emptyWaitSet 等待
+//            System.out.println("加入任务队列: " + task);
+//            queue.addLast(task);
+//            emptyWaitSet.signal();
+//        } catch (InterruptedException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            lock.unlock();
+//        }
+//    }
 
     public void tryPut(RejectPolicy<T> rejectPolicy, T task) {
         lock.lock();
