@@ -64,6 +64,7 @@ class ThreadPool {
                 workers.add(worker);
                 worker.start();
             } else {
+                System.out.println("加入任务队列：" + task);
 //                taskQueue.put(task);
                 taskQueue.tryPut(rejectPolicy, task);
             }
@@ -92,6 +93,7 @@ class ThreadPool {
             // 2）当task执行完毕，再接着从任务队列获取任务并执行
             while (task != null || (task = taskQueue.take()) != null) {
                 try {
+                    System.out.println("正在执行：" + task) ;
                     task.run();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -101,6 +103,7 @@ class ThreadPool {
             }
 
             synchronized (workers) {
+                System.out.println("worker 被移除: " + task);
                 workers.remove(this);
             }
         }
