@@ -14,14 +14,13 @@ public class TryCatchFinally {
     public static String returnI() {
         try {
             int i = 1 / 0;
-            return "try";
+//            return "try";
         } catch (Exception e) {
-//            e.printStackTrace();
-            throw new Exception();
-//            return "catch";
+            e.printStackTrace();
+            return "catch";
         } finally {
-            return "finally";
+//            return "finally";
         }
-//        return res + 3;
+        return "3";
     }
 }
