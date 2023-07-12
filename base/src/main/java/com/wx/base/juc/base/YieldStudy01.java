@@ -5,9 +5,9 @@ package com.wx.base.juc.base;
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class YieldTest implements Runnable {
+public class YieldStudy01 implements Runnable {
 
-    YieldTest() {
+    YieldStudy01() {
         Thread thread = new Thread(this);
         thread.start();
     }
@@ -16,8 +16,8 @@ public class YieldTest implements Runnable {
     public void run() {
         for (int i = 0; i < 5; ++i) {
             if (i % 5 == 0) {
-                System.out.println(Thread.currentThread() + "yield cpu...");
-//                Thread.yield();
+                System.out.println(Thread.currentThread() + " yield cpu...");
+                Thread.yield();
             }
         }
 
@@ -25,8 +25,8 @@ public class YieldTest implements Runnable {
     }
 
     public static void main(String[] args) {
-        new YieldTest();
-        new YieldTest();
-        new YieldTest();
+        new YieldStudy01();
+        new YieldStudy01();
+        new YieldStudy01();
     }
 }

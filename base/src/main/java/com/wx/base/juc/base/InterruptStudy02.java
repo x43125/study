@@ -7,19 +7,16 @@ package com.wx.base.juc.base;
  */
 public class InterruptStudy02 {
     public static void main(String[] args) throws InterruptedException {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    System.out.println("child thread begin sleep for 2000 seconds");
-                    Thread.sleep(2000000);
-                    System.out.println("thread awaking");
-                } catch (InterruptedException e) {
-                    System.out.println("thread is interrupted while sleeping");
-                    return;
-                }
-                System.out.println("thread leaving normally");
+        Thread thread = new Thread(() -> {
+            try {
+                System.out.println("child thread begin sleep for 2000 seconds");
+                Thread.sleep(2000000);
+                System.out.println("thread awaking");
+            } catch (InterruptedException e) {
+                System.out.println("thread is interrupted while sleeping");
+                return;
             }
+            System.out.println("thread leaving normally");
         });
 
         thread.start();
