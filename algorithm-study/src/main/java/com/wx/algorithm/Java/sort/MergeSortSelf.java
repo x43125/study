@@ -65,4 +65,23 @@ public class MergeSortSelf {
             nums[k] = temp[k - left];
         }
     }
+
+    /**
+     * 自底向上
+     *
+     * @param nums
+     */
+    private static void sort2(int[] nums) {
+        int n = nums.length;
+        for (int i = 1; i < n; i *= 2) {
+            mergeSort2(nums, n, i);
+        }
+    }
+
+    private static void mergeSort2(int[] nums, int n, int gap) {
+        int i;
+        for (i = 0; i + 2 * gap - 1 < n; i += 2 * gap) {
+            merge(nums, i, i + gap - 1, i + 2 * gap - 1);
+        }
+    }
 }

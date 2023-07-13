@@ -18,8 +18,8 @@ public class SortAllToolKit {
 //        System.out.println("Quick Sort:");
 //        quickSort(nums);
         System.out.println("Merge Sort:");
-        mergeSort1(nums);
-//        mergeSort2(nums);
+//        mergeSort1(nums);
+        mergeSort2(nums);
         System.out.print("现: ");
         SortUtil.print(nums);
     }
