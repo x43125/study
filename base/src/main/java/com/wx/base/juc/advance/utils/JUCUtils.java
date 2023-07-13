@@ -1,5 +1,8 @@
 package com.wx.base.juc.advance.utils;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatterBuilder;
+
 /**
  * @author Shawn
  * @date 2023/7/12 16:18
@@ -7,7 +10,8 @@ package com.wx.base.juc.advance.utils;
  */
 public class JUCUtils {
     public static void sysout(String content) {
-        System.out.println(Thread.currentThread().getName() + " " + content);
+        LocalDateTime now = LocalDateTime.now();
+        System.out.println(now + " " + Thread.currentThread().getName() + " " + content);
     }
 
     public static void sysout(Long content) {

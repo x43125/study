@@ -1,5 +1,8 @@
 package com.wx.base.juc.advance.pool;
 
+import com.wx.base.juc.advance.utils.JUCUtils;
+
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -16,14 +19,15 @@ public class ThreadPoolStudy {
                 6,
                 1,
                 TimeUnit.SECONDS,
-                new LinkedBlockingDeque<>(5),
-                new ThreadPoolExecutor.CallerRunsPolicy()
+                new ArrayBlockingQueue<>(5),
+                new ThreadPoolExecutor.AbortPolicy()
         );
 
         for (int i = 0; i < 20; i++) {
             int finalI = i;
             executor.execute(() -> {
-                System.out.println(finalI + " " + Thread.currentThread().getName() + " 开始运行");
+                JUCUtils.sysout(finalI + " 开始运行");
+                JUCUtils.sleeper(1000);
             });
         }
 
