@@ -1,5 +1,7 @@
 package com.wx.base.juc.base;
 
+import com.wx.base.juc.advance.utils.JUCUtils;
+
 import java.util.concurrent.locks.LockSupport;
 
 /**
@@ -10,34 +12,16 @@ import java.util.concurrent.locks.LockSupport;
 public class ParkStudy01 {
     public static void main(String[] args) {
         Thread t1 = new Thread(() -> {
-            try {
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
+            JUCUtils.sleeper(1000);
+            JUCUtils.sysout("park");
             LockSupport.park();
-            LockSupport.park();
-
+            JUCUtils.sysout("park completed");
         }, "t1");
 
-        System.out.println("开启线程");
         t1.start();
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("unpark 线程");
+        JUCUtils.sysout("t1 -> unpark");
         LockSupport.unpark(t1);
-
-
-        try {
-            Thread.sleep(10000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-        System.out.println("再次unpark");
-        LockSupport.unpark(t1);
-
+        JUCUtils.sysout("t1 -> unpark completed");
+//        JUCUtils.sleeper(1000);
     }
 }
