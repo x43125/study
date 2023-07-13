@@ -15,6 +15,10 @@ public class MergeSortSelf {
         }
     }
 
+    /**
+     * 自顶向下
+     * @param nums
+     */
     private static void sort(int[] nums) {
         if (nums == null) {
             return;
