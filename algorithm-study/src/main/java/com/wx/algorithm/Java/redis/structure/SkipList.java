@@ -1,4 +1,4 @@
-package com.wx.algorithm.Java.RedisStructure;
+package com.wx.algorithm.Java.redis.structure;
 
 import java.util.Random;
 
