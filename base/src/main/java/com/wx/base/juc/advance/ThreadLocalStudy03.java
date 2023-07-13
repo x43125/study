@@ -1,11 +1,11 @@
-package com.wx.base.juc.base;
+package com.wx.base.juc.advance;
 
 /**
  * @Descrption:
  * @Author: x43125
  * @Date: 21/11/20
  */
-public class ThreadLocalStudy {
+public class ThreadLocalStudy03 {
 
     private static void print(String str) {
         System.out.println(str + ":" + localVariable.get());

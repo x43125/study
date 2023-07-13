@@ -1,4 +1,4 @@
-package com.wx.base.juc.base;
+package com.wx.base.juc.advance;
 
 /**
  * @Descrption:
