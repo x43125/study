@@ -1,6 +1,7 @@
 package com.wx.base.juc.base;
 
 
+import com.wx.base.juc.advance.utils.JUCUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -8,27 +9,31 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2023/7/5 22:52
  * @description
  */
-@Slf4j
 public class Synchronized8Study {
-//    static Logger logger = LoggerFactory.getLogger(Synchronized8Study.class);
-    public static synchronized void a() {
-        try {
-            Thread.sleep(1000);
-            log.debug("1");
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    static Object o = new Object();
+    static Object o2 = new Object();
 
-    public synchronized void b() {
-        log.debug("2");
+    public synchronized static void print() {
+        JUCUtils.sysout("打印打印");
+        JUCUtils.sleeper(1000);
     }
 
     public static void main(String[] args) {
-        Synchronized8Study s1 = new Synchronized8Study();
-        Synchronized8Study s2 = new Synchronized8Study();
 
-        new Thread(() -> a()).start();
-        new Thread(() -> s2.b()).start();
+        new Thread(() -> {
+            print();
+//            synchronized (o) {
+//                JUCUtils.sysout("锁住了o，等待释放");
+//                JUCUtils.sleeper(1000);
+//            }
+        }).start();
+
+        new Thread(() -> {
+            print();
+//            synchronized (o2) {
+//                JUCUtils.sysout("锁住了o2，等待释放");
+//                JUCUtils.sleeper(1000);
+//            }
+        }).start();
     }
 }
