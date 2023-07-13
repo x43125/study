@@ -9,15 +9,17 @@ import com.wx.algorithm.Java.sort.util.SortUtil;
  */
 public class SortAllToolKit {
     public static void main(String[] args) {
-        long num = 270051398416L;
-        int[] nums = SortUtil.init(num);
+//        long num = 270051398416L;
+//        int[] nums = SortUtil.init(num);
+        int[] nums = {2, 7, 2, 5, 1, 9, 4, 9, 5, 7, 3, 3};
+
         System.out.print("原: ");
         SortUtil.print(nums);
 //        System.out.println("Quick Sort:");
 //        quickSort(nums);
         System.out.println("Merge Sort:");
-//        mergeSort1(nums);
-        mergeSort2(nums);
+        mergeSort1(nums);
+//        mergeSort2(nums);
         System.out.print("现: ");
         SortUtil.print(nums);
     }
