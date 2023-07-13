@@ -1,4 +1,4 @@
-package com.wx.base.juc.advance;
+package com.wx.base.juc.base;
 
 import java.util.concurrent.locks.LockSupport;
 
@@ -7,7 +7,7 @@ import java.util.concurrent.locks.LockSupport;
  * @Author: x43125
  * @Date: 21/11/21
  */
-public class LockSupportStudy {
+public class ParkStudy02 {
 
     public static void main(String[] args) throws InterruptedException {
         Thread thread = new Thread(new Runnable() {

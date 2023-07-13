@@ -1,4 +1,4 @@
-package com.wx.base.juc.advance;
+package com.wx.base.juc.base;
 
 import java.util.concurrent.locks.LockSupport;
 
