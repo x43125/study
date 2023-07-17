@@ -18,7 +18,7 @@ public class ThreadLocalStudy04 {
 
     static final AtomicLong NEXT_ID = new AtomicLong(0);
 
-    static final ThreadLocal<Long> T_1 = ThreadLocal.withInitial(() -> NEXT_ID.getAndDecrement());
+    static final ThreadLocal<Long> T_1 = ThreadLocal.withInitial(NEXT_ID::getAndDecrement);
 
     static long get() {
         return T_1.get();
@@ -26,34 +26,34 @@ public class ThreadLocalStudy04 {
 
     public static void main(String[] args) {
         // 相同线程多次调用，结果都是相同的不会改变
-//        long nextId = ThreadLocalStudy04.get();
-//        JUCUtils.sysout("nextId = " + nextId);
-//
-//        long nextId3 = ThreadLocalStudy04.get();
-//        JUCUtils.sysout("nextId = " + nextId3);
-//
-//        new Thread(() -> {
-//            long nextId1 = ThreadLocalStudy04.get();
-//            JUCUtils.sysout("nextId = " + nextId1);
-//        }).start();
-//
-//        new Thread(() -> {
-//            long nextId2 = ThreadLocalStudy04.get();
-//            JUCUtils.sysout("nextId = " + nextId2);
-//        }).start();
+        long nextId = ThreadLocalStudy04.get();
+        JUCUtils.sysout("nextId = " + nextId);
 
-        // ThreadLocal来实现 线程安全的 DateFormat
-//        new Thread(() -> {
-//            DateFormat df = SafeDateFormat.get();
-//            String time = df.format(new Date());
-//            System.out.println("time = " + time + " " + df);
-//        }).start();
+        long nextId3 = ThreadLocalStudy04.get();
+        JUCUtils.sysout("nextId = " + nextId3);
+
+        new Thread(() -> {
+            long nextId1 = ThreadLocalStudy04.get();
+            JUCUtils.sysout("nextId = " + nextId1);
+        }).start();
+
+        new Thread(() -> {
+            long nextId2 = ThreadLocalStudy04.get();
+            JUCUtils.sysout("nextId = " + nextId2);
+        }).start();
 //
-//        new Thread(() -> {
-//            DateFormat df = SafeDateFormat.get();
-//            String time = df.format(new Date());
-//            System.out.println("time = " + time + " " + df);
-//        }).start();
+        // ThreadLocal来实现 线程安全的 DateFormat
+        new Thread(() -> {
+            DateFormat df = SafeDateFormat.getT();
+            String time = df.format(new Date());
+            System.out.println("time = " + time + " " + df);
+        }).start();
+
+        new Thread(() -> {
+            DateFormat df = SafeDateFormat.getT();
+            String time = df.format(new Date());
+            System.out.println("time = " + time + " " + df);
+        }).start();
 
 //        DateFormat df = SafeDateFormat.get();
 //        String time = df.format(new Date());
@@ -64,11 +64,13 @@ public class ThreadLocalStudy04 {
         for (int i = 0; i < 10; i++) {
             service.execute(() -> {
                 try {
-                    DateFormat df = SafeDateFormat.get();
+                    DateFormat df = SafeDateFormat.getT();
                     String time = df.format(new Date());
-                    JUCUtils.sysout(time);
+                    Long l = SafeDateFormat.getL();
+                    JUCUtils.sysout(time + "          " + l);
                 } finally {
-                    SafeDateFormat.remove();
+                    SafeDateFormat.removeT();
+                    SafeDateFormat.removeL();
                 }
             });
         }
@@ -79,11 +81,24 @@ class SafeDateFormat {
     static final ThreadLocal<DateFormat> T_1 = ThreadLocal
             .withInitial(() -> new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
 
-    static DateFormat get() {
+    static final AtomicLong AL = new AtomicLong(0);
+    static final ThreadLocal<Long> L_1 = ThreadLocal.withInitial(AL::getAndIncrement);
+
+    public static DateFormat getT() {
         return T_1.get();
     }
 
-    public static void remove() {
+    public static void removeT() {
         T_1.remove();
     }
+
+    public static Long getL() {
+        return L_1.get();
+    }
+
+    public static void removeL() {
+        L_1.remove();
+    }
 }
+
+
