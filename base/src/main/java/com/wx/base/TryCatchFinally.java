@@ -11,16 +11,17 @@ public class TryCatchFinally {
         System.out.println("returnI() = " + returnI());
     }
 
-    public static String returnI() {
+    public static int returnI() {
+        int a = 1;
         try {
             int i = 1 / 0;
-//            return "try";
+            return a;
         } catch (Exception e) {
-            e.printStackTrace();
-            return "catch";
+//            e.printStackTrace();
+            a++;
+            return a + 1;
         } finally {
-//            return "finally";
+            return a + 2;
         }
-        return "3";
     }
 }
