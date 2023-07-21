@@ -1,4 +1,4 @@
-package com.shawn.springaopstudy01.proxy.jdk;
+package com.shawn.springaopstudy01.proxy.jdk.principal;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

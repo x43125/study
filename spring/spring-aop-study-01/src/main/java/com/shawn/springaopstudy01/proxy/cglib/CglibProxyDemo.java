@@ -20,14 +20,12 @@ public class CglibProxyDemo {
 
     public static void main(String[] args) {
         Target target = new Target();
-        Target targetProxy = (Target) Enhancer.create(Target.class, new MethodInterceptor() {
-            @Override
-            public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-                System.out.println("before...");
-                Object invoke = method.invoke(target, args);
-                System.out.println("after...");
-                return invoke;
-            }
+        Target targetProxy = (Target) Enhancer.create(Target.class,
+                (MethodInterceptor) (o, method, objects, methodProxy) -> {
+            System.out.println("before...");
+            Object invoke = method.invoke(target, args);
+            System.out.println("after...");
+            return invoke;
         });
 
         targetProxy.foo();

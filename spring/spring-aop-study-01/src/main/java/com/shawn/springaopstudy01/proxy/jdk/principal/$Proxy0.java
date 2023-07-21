@@ -1,6 +1,6 @@
-package com.shawn.springaopstudy01.proxy.jdk;
+package com.shawn.springaopstudy01.proxy.jdk.principal;
 
-import com.shawn.springaopstudy01.proxy.jdk.JdkProxySimulate.*;
+import com.shawn.springaopstudy01.proxy.jdk.principal.JdkProxySimulate.*;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
