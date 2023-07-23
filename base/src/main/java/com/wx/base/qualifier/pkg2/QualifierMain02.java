@@ -8,8 +8,15 @@ import com.wx.base.qualifier.QualifierDemo01;
  * @description
  */
 public class QualifierMain02 {
+    public String name;
+
+    public QualifierMain02(String name) {
+        this.name = name;
+    }
+
     public static void main(String[] args) {
-        QualifierDemo01 demo01 = new QualifierDemo01();
+        QualifierDemo01 demo01 = new QualifierDemo01(12, new QualifierMain02("zhangsan"));
 //        demo01.print();
+
     }
 }
