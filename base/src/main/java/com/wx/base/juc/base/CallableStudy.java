@@ -9,7 +9,7 @@ import java.util.concurrent.FutureTask;
  * @Author: x43125
  * @Date: 21/11/14
  */
-public class CallerStudy implements Callable<String> {
+public class CallableStudy implements Callable<String> {
     @Override
     public String call() throws Exception {
         Thread.sleep(1000);
@@ -18,8 +18,8 @@ public class CallerStudy implements Callable<String> {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         // 创建异步任务
-        FutureTask<String> futureTask1 = new FutureTask<>(new CallerStudy());
-        FutureTask<String> futureTask2 = new FutureTask<>(new CallerStudy());
+        FutureTask<String> futureTask1 = new FutureTask<>(new CallableStudy());
+        FutureTask<String> futureTask2 = new FutureTask<>(new CallableStudy());
         System.out.println("========");
 
         //启动线程

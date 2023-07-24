@@ -26,5 +26,9 @@ public class QualifierMain01 {
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
         }
+
+//        StringBuffer
+//        StringBuilder
+
     }
 }

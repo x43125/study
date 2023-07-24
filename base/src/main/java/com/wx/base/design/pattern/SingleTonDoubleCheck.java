@@ -6,11 +6,15 @@ package com.wx.base.design.pattern;
  * @description
  */
 public class SingleTonDoubleCheck {
-    // 问题1:
+    /**
+     * 问题1:
+     */
     private SingleTonDoubleCheck() {
     }
 
-    // 问题2: 为什么要加volatile， 答：为了防止指令重排序，拿到不完整的实例
+    /**
+     * 问题2: 为什么要加volatile， 答：为了防止指令重排序，拿到不完整的实例
+     */
     private static volatile SingleTonDoubleCheck INSTANCE = null;
 
     public static SingleTonDoubleCheck getInstance() {
