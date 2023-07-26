@@ -8,6 +8,7 @@
     <artifactId>springcloud_parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+    <!-- 子模块 -->
     <modules>
         <module>srpingcloud_01eureka_server</module>
         <module>springcloud_02eureka_client</module>
@@ -16,18 +17,22 @@
         <module>coupon</module>
         <module>gateway</module>
         <module>common</module>
+        <module>springcloud_03eureka_client02</module>
+        <module>springcloud_04eureka_client01</module>
+        <module>springcloud_05Hystrix_01</module>
     </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.6.6</version>
+        <version>2.2.8.RELEASE</version>
     </parent>
 
+    <!--    维护Spring cloud版本依赖 -->
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <spring.cloud-version>2021.0.1</spring.cloud-version>
+        <spring.cloud-version>Hoxton.SR12</spring.cloud-version>
     </properties>
 
     <dependencyManagement>

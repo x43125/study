@@ -1,9 +1,9 @@
 server:
-  port: 8989
+  port: 8990
   # 不能有下划线，不区分大小写
 spring:
   application:
-    name: EUREKACLIENT
+    name: EUREKACLIENT02
   cloud:
     inetutils:
       preferred-networks:
@@ -17,9 +17,3 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-feign:
-  httpclient:
-    connection-timeout: 5000
-    ok-http:
-      read-timeout: 5000
-

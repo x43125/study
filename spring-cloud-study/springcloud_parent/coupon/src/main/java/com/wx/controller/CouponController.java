@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * @Descrption:
@@ -28,7 +29,7 @@ public class CouponController {
     public CommonResult memberCoupons() {
         CouponEntity couponEntity = new CouponEntity();
         couponEntity.setCouponName("满100减10");
-        return CommonResult.success(Arrays.asList(couponEntity), "coupons");
+        return CommonResult.success(Collections.singletonList(couponEntity), "coupons");
     }
 
     @RequestMapping("/test")
