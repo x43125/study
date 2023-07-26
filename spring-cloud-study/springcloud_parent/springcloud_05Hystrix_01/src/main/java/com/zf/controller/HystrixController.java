@@ -23,7 +23,7 @@ public class HystrixController {
         return "hello hystrix " + id;
     }
 
-    public String demoFallBack() {
-        return "当前活动过于繁忙，请稍后再试";
+    public String demoFallBack(Integer id) {
+        return "当前活动过于繁忙，请稍后再试, " + id + " 将返回";
     }
 }

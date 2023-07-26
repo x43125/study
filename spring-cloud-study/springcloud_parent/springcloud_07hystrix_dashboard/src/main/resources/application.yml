@@ -1,0 +1,10 @@
+server:
+  port: 8994
+
+spring:
+  application:
+    name: HYSTRIXDASHBOARD
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
