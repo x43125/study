@@ -12,16 +12,12 @@
     <modules>
         <module>srpingcloud_01eureka_server</module>
         <module>springcloud_02eureka_client</module>
-        <module>nacos-server</module>
-        <module>member</module>
-        <module>coupon</module>
-        <module>gateway</module>
-        <module>common</module>
         <module>springcloud_03eureka_client02</module>
         <module>springcloud_04eureka_client01</module>
         <module>springcloud_05Hystrix_01</module>
         <module>springcloud_06feign_client01</module>
         <module>springcloud_07hystrix_dashboard</module>
+        <module>springcloud_08gateway</module>
     </modules>
 
     <parent>

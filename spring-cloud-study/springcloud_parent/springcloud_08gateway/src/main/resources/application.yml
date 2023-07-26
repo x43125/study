@@ -1,0 +1,21 @@
+server:
+  port: 8995
+
+spring:
+  application:
+    name: GATEWAY
+  cloud:
+    consul:
+      host: localhost
+      port: 8500
+    gateway:
+      routes:
+        - id: hystrix_router
+          uri: http://localhost:8992
+          predicates:
+            - Path:/hystrix/**
+
+        - id: feign_router
+          uri: http://localhost:8993
+          predicates:
+            - Path:/user/**
