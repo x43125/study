@@ -26,7 +26,7 @@
         <version>2.2.8.RELEASE</version>
     </parent>
 
-    <!--    维护Spring cloud版本依赖 -->
+    <!-- 维护Spring cloud版本依赖 -->
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>

@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: USERS02
+  cloud:
+    nacos:
+      discovery:
+        ip: localhost
+        port: 8848

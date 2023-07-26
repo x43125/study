@@ -1,0 +1,11 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: NACOSCLIENT01
+  cloud:
+    nacos:
+      discovery:
+        ip: localhost
+        port: 8848

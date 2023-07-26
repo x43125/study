@@ -1,0 +1,11 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: PRODUCTS03
+  cloud:
+    nacos:
+      discovery:
+        ip: localhost
+        port: 8848
