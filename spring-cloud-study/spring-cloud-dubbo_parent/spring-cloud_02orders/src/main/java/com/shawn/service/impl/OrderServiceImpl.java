@@ -3,6 +3,7 @@ package com.shawn.service.impl;
 import com.shawn.beans.UserAddress;
 import com.shawn.service.OrderService;
 import com.shawn.service.UserService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    @Autowired
+    @DubboReference
     UserService userService;
 
     @Override
