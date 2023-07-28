@@ -12,6 +12,7 @@
         <module>springcloud-alibaba_nacos-client01</module>
         <module>springcloud-alibaba_02users</module>
         <module>springcloud-alibaba_03products</module>
+        <module>springcloud-alibaba_sentinel-client04</module>
     </modules>
 
     <parent>
