@@ -40,6 +40,4 @@ public class MyAspect {
 
 //        return result;
     }
-
-
 }
