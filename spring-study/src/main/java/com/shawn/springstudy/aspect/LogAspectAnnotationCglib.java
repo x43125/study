@@ -24,7 +24,7 @@ public class LogAspectAnnotationCglib {
     // 不可以
 //    @Pointcut("execution(* com.shawn.springstudy.service.*.*(..))")
     // 可以
-    @Pointcut("execution(* com.shawn.springstudy.service.impl.*.*(..))")
+    @Pointcut("execution(* com.shawn.springstudy.service.impl.CglibProxyDemoServiceImpl.*(..))")
     public void pointCutMethod() {
 
     }

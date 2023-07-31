@@ -1,7 +1,6 @@
 package com.shawn.springstudy.ioc;
 
 import com.shawn.springstudy.context.UserRegisteredEvent;
-import com.shawn.springstudy.context.WebConfig;
 import com.shawn.springstudy.dao.UserDao;
 import com.shawn.springstudy.factory.Bean1;
 import com.shawn.springstudy.factory.BeanFactoryConfig;
@@ -148,7 +147,7 @@ public class RefreshTest {
 //        reader.loadBeanDefinitions("com/shawn/ioc/UserService.xml");
 //        printBeanDefinitionNames(beanFactory);
 
-        AnnotationConfigServletWebServerApplicationContext context = new AnnotationConfigServletWebServerApplicationContext(WebConfig.class);
+//        AnnotationConfigServletWebServerApplicationContext context = new AnnotationConfigServletWebServerApplicationContext(WebConfig.class);
 
     }
 
