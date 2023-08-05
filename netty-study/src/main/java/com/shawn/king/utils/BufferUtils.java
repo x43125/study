@@ -12,10 +12,12 @@ import java.nio.ByteBuffer;
 @Slf4j
 public class BufferUtils {
     public static void debugRead(ByteBuffer buffer) {
+        StringBuffer sb = new StringBuffer();
         while (buffer.hasRemaining()) {
             char c = (char) buffer.get();
-            log.info("读取到的字节： {}", c);
+            sb.append(c);
         }
+        log.info(Thread.currentThread().getName() + " - 读取到的字节： {}", sb);
     }
 
     public static void split(ByteBuffer buffer) {
