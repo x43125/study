@@ -13,7 +13,7 @@ import java.util.concurrent.Future;
  * @description
  */
 @Slf4j
-public class FutureTask01 {
+public class JdkFuture01 {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         ExecutorService service = Executors.newFixedThreadPool(1);
         log.debug("submit...");
