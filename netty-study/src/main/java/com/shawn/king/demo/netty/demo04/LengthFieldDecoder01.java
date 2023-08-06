@@ -15,7 +15,7 @@ import io.netty.handler.logging.LoggingHandler;
 public class LengthFieldDecoder01 {
     public static void main(String[] args) {
         EmbeddedChannel channel = new EmbeddedChannel(
-                new LengthFieldBasedFrameDecoder(1024, 0, 4, 0, 0),
+                new LengthFieldBasedFrameDecoder(1024, 0, 4, 1, 0),
                 new LoggingHandler(LogLevel.DEBUG)
         );
 
@@ -29,7 +29,8 @@ public class LengthFieldDecoder01 {
     private static void send(ByteBuf buffer, String msg) {
         byte[] bytes = msg.getBytes();
         int length = bytes.length;
-        buffer.writeByte(length);
+        buffer.writeInt(length);
+        buffer.writeByte(1);
         buffer.writeBytes(bytes);
     }
 }
