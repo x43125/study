@@ -1,4 +1,4 @@
-package com.shawn.king.nio.demo.demo05;
+package com.shawn.king.demo.nio.demo05;
 
 import com.shawn.king.utils.BufferUtils;
 import lombok.extern.slf4j.Slf4j;
