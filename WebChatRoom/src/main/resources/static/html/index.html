@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Java Web Chat</title>
+    <style>
+        /* Add your custom CSS styles here */
+    </style>
+</head>
+<body>
+    <div id="chat-box"></div>
+    <input type="text" id="message-input" placeholder="Type your message here..." />
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        // WebSocket connection
+        var socket = new WebSocket("ws://" + window.location.host + "/chat");
+
+        // Event when WebSocket connection is established
+        socket.onopen = function () {
+            console.log("WebSocket connection opened.");
+        };
+
+        // Event when a message is received from the server
+        socket.onmessage = function (event) {
+            var message = event.data;
+            var chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += "<p>" + message + "</p>";
+        };
+
+        // Event when WebSocket connection is closed
+        socket.onclose = function () {
+            console.log("WebSocket connection closed.");
+        };
+
+        // Function to send a message to the server
+        function sendMessage() {
+            var messageInput = document.getElementById("message-input");
+            var message = messageInput.value;
+            socket.send(message);
+            messageInput.value = "";
+        }
+    </script>
+</body>
+</html>
+
