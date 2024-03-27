@@ -1,14 +1,11 @@
-package com.shawn;
+package com.shawn.service.impl;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSException;
 import com.aliyun.oss.model.*;
-import com.enmonster.platform.kjs.service.AlyOssService;
+import com.shawn.service.AlyOssService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -19,9 +16,9 @@ import java.util.List;
 /**
  * @description: OSS接口
  */
+@Slf4j
 public class AlyOssServiceImpl implements AlyOssService {
 
-    @Resource(name = "ossClient")
     private OSS ossClient;
     // 分片上传每片的大小
     private Long partSize = 1 * 1024 * 1024l;
@@ -171,7 +168,7 @@ public class AlyOssServiceImpl implements AlyOssService {
                 (System.currentTimeMillis() - startTime) / 1000);
     }
 
-    private int calcPartCount(long fileLength, int partSize, Integer endIndex) {
+    private int calcPartCount(long fileLength, long partSize, Integer endIndex) {
         int partCount = endIndex == null ? (int) (fileLength / partSize) : endIndex;
         if (fileLength % partSize != 0) {
             partCount++;
