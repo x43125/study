@@ -91,15 +91,35 @@ public class AlyOssServiceImpl implements AlyOssService {
         multipartUpload(bucketName, objectName, path, null, null, uploadId);
     }
 
-    public void continueUpload(String bucketName, String objectName, String path,
-                               Integer startIndex, Integer endIndex, String uploadId) {
-        log.info("续传：uploadId:{}, bucketName:{}, objectName:{}, startIndex:{},endIndex:{}",
-                uploadId, bucketName, objectName, startIndex, endIndex);
-        multipartUpload(bucketName, objectName, path, startIndex, endIndex, uploadId);
-    }
+//    public void continueUpload(String bucketName, String objectName, String path,
+//                               Integer startIndex, Integer endIndex, String uploadId) {
+//        log.info("续传：uploadId:{}, bucketName:{}, objectName:{}, startIndex:{},endIndex:{}",
+//                uploadId, bucketName, objectName, startIndex, endIndex);
+//        multipartUpload(bucketName, objectName, path, startIndex, endIndex, uploadId);
+//    }
 
-    private void multipartUpload(String bucketName, String objectName, String path,
-                                 Integer startIndex, Integer endIndex, String uploadId) {
+    /**
+     * 上传
+     * - 计算文件的分片数
+     * - 并行上传
+     * - 每次上传后记录下当前上传情况以供断点续传
+     * - 出问题后重试：断点续传
+     * - 根据已经上传的分片数，已经上传的分片的index，uploadId 实现续传
+     * <p>
+     * 上传任务记录表：
+     * id, deleteId, uploadId, total_count, done_index, status, is_deleted, gmt_create, gmt_modified
+     * 1, 1, 1, 10, {2,3,4,5}, done, 0, 2021-01-01 00:00:00, 2021-01-01 00:00:00
+     * <p>
+     * 开始上传：
+     * - 计算文件的分片数
+     * - 插入一条数据到表中, e.g.: total_count = 10 done_index={}
+     * - 开始循环
+     * - 每上传成功一次就更新记录的done_index，e.g.: done_index={1,2}
+     * - 如果出问题了，则触发重试逻辑，继续上传未传部分的分片
+     */
+
+
+    private void multipartUpload(String bucketName, String objectName, String path, String uploadId) {
         long startTime = System.currentTimeMillis();
         // partETags是PartETag的集合。PartETag由分片的ETag和分片号组成。
         List<PartETag> partETags = new ArrayList<>();
@@ -119,8 +139,8 @@ public class AlyOssServiceImpl implements AlyOssService {
         uploadPartRequest.setKey(objectName);
         uploadPartRequest.setUploadId(uploadId);
         // 遍历分片上传
-        int i = startIndex == null ? 0 : startIndex;
-        int partCount = calcPartCount(fileLength, partSize, endIndex);
+        int i = 0;
+        int partCount = calcPartCount(fileLength, partSize);
         log.info("开始分片上传，共{}份文件，uploadId:{}", partCount, uploadId);
         for (; i < partCount; i++) {
             long curStartTime = System.currentTimeMillis();
@@ -168,8 +188,47 @@ public class AlyOssServiceImpl implements AlyOssService {
                 (System.currentTimeMillis() - startTime) / 1000);
     }
 
-    private int calcPartCount(long fileLength, long partSize, Integer endIndex) {
-        int partCount = endIndex == null ? (int) (fileLength / partSize) : endIndex;
+    private void continueUpload(String bucketName, String objectName, String path, String uploadId,
+                                List<Integer> doneIndex, Long fileLength) {
+        UploadPartRequest uploadPartRequest = new UploadPartRequest();
+        uploadPartRequest.setBucketName(bucketName);
+        uploadPartRequest.setKey(objectName);
+        uploadPartRequest.setUploadId(uploadId);
+        int partCount = calcPartCount(fileLength, partSize);
+        log.info("开始分片上传，共{}份文件，uploadId:{}", partCount, uploadId);
+        for (int i = 0; i < partCount; i++) {
+            long curStartTime = System.currentTimeMillis();
+            long startPos = (long) i * partSize;
+            // 如果是最后一个分片则为剩下所有的大小，否则则是每次分片的大小
+            long curPartSize = (i + 1 == partCount) ? (fileLength - startPos) : partSize;
+            InputStream inputStream;
+            try {
+                // 因为每次分片上传后都会close inputStream，所以每次上传前需要重新open
+                URLConnection urlConnection = url.openConnection();
+                inputStream = urlConnection.getInputStream();
+                // InputStream.skip()方法跳过已经上传的数据
+                long skip = inputStream.skip(startPos);
+                log.info("第{}份文件开始上传, 共{}份文件, 跳过了{}字节数据", partCount, i, skip);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            uploadPartRequest.setInputStream(inputStream);
+            // 设置分片大小。除了最后一个分片没有大小限制，其他的分片最小为100 KB。
+            uploadPartRequest.setPartSize(curPartSize);
+            // 设置分片号。每一个上传的分片都有一个分片号，取值范围是1~10000，如果超出此范围，OSS将返回InvalidArgument错误码。
+            uploadPartRequest.setPartNumber(i + 1);
+            // 每个分片不需要按顺序上传，甚至可以在不同客户端上传，OSS会按照分片号排序组成完整的文件。
+            UploadPartResult uploadPartResult = ossClient.uploadPart(uploadPartRequest);
+            // 每次上传分片之后，OSS的返回结果包含PartETag。PartETag将被保存在partETags中。
+            partETags.add(uploadPartResult.getPartETag());
+            log.info("第{}份文件上传成功，共{}份文件，耗时：{}秒",
+                    i, partCount, (System.currentTimeMillis() - curStartTime) / 1000);
+        }
+
+    }
+
+    private int calcPartCount(long fileLength, long partSize) {
+        int partCount = (int) (fileLength / partSize);
         if (fileLength % partSize != 0) {
             partCount++;
         }
