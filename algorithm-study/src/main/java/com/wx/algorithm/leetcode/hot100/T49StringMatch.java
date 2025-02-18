@@ -13,7 +13,7 @@ import java.util.Map;
 public class T49StringMatch {
     public static void main(String[] args) {
         String[] strs = {"cab","tin","pew","duh","may","ill","buy","bar","max","doc"};
-        List<List<String>> lists = groupAnagrams(strs);
+        List<List<String>> lists = groupAnagrams_2(strs);
         for (List<String> list : lists) {
             for (String s : list) {
                 System.out.print(s + " ");
@@ -91,5 +91,29 @@ public class T49StringMatch {
             }
         }
         return result;
+    }
+
+    public static List<List<String>> groupAnagrams_2(String[] strs) {
+        Map<String, List<String>> map = new HashMap<>();
+        for (String str : strs) {
+            int[] counts = new int[26];
+            int length = str.length();
+            for (int i = 0; i < length; i++) {
+                counts[str.charAt(i) - 'a']++;
+            }
+            // 将每个出现次数大于 0 的字母和出现次数按顺序拼接成字符串，作为哈希表的键
+            StringBuffer sb = new StringBuffer();
+            for (int i = 0; i < 26; i++) {
+                if (counts[i] != 0) {
+                    sb.append((char) ('a' + i));
+                    sb.append(counts[i]);
+                }
+            }
+            String key = sb.toString();
+            List<String> list = map.getOrDefault(key, new ArrayList<>());
+            list.add(str);
+            map.put(key, list);
+        }
+        return new ArrayList<>(map.values());
     }
 }
