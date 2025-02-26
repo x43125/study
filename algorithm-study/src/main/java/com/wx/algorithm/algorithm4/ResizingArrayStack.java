@@ -18,6 +18,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
         if (N == a.length) {
             resize(2 * a.length);
         }
+        // 压入一条新的数据，将N向后递增
         a[N++] = item;
     }
 
