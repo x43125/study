@@ -31,6 +31,24 @@ public class SortBase {
     }
 
     /**
+     * 插入排序
+     * 
+     * @param a
+     */
+    public static void insertSort(Comparable[] a) {
+        int n = a.length;
+        // 外层控制起点
+        for (int i=1; i<n; i++) {
+            // 内层控制比较
+            for (int j=i; j>0; j--) {
+                if (less(a[j], a[j-1])) {
+                    exch(a, j, j-1);
+                }
+            }
+        }
+    }
+
+    /**
      * 比较
      *
      * @param v
@@ -73,9 +91,15 @@ public class SortBase {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String[] a = sc.nextLine().split(" ");
+        Integer[] n = new Integer[a.length];
+        for (int i = 0; i < a.length; i++) {
+            n[i] = Integer.parseInt(a[i]);
+        }
+
         sc.close();
-        chooseSort(a);
-        assert isSorted(a);
-        show(a);
+        // chooseSort(n);
+        insertSort(n);
+        assert isSorted(n);
+        show(n);
     }
 }
