@@ -88,21 +88,16 @@ public class SortBase {
     }
 
     public static void shellSort(Comparable[] a) {
-        System.out.println();
         int n = a.length;
-        int h = 1;
-        while (h < n / 3) {
-            h = 3 * h + 1;
-        }
 
-        while (h > 0) {
-            for (int i = h; i < n; i++) {
-                for (int j = i; j >= h && less(a[j], a[j - h]); j = j - h) {
-                    exch(a, j, j - h);
+        // 第一层定义分组的大小，间隔
+        for (int gap = n/2; gap > 0; gap /= 2) {
+            for (int i=gap; i<n; i++) {
+                for (int j=i; j>gap && less(a[j], a[j-gap]); j -= gap) {
+                    exch(a, j, j-gap);
                     show(a);
                 }
             }
-            h = h / 3;
         }
     }
 
