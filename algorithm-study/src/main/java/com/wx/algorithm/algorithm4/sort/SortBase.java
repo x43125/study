@@ -8,45 +8,6 @@ import java.util.Scanner;
  * @description
  */
 public class SortBase {
-    /**
-     * 选择排序
-     *
-     * @param a
-     */
-    public static void chooseSort(Comparable[] a) {
-        // TODO 各种排序算法
-        // 1.选择排序
-        int n = a.length;
-        for (int i = 0; i < n; i++) {
-            int min = i;
-            for (int j = i + 1; j < n; j++) {
-                // 如果a[i]小于a[j]
-                if (less(a[j], a[min])) {
-                    min = j;
-                }
-            }
-            // 最后交换i下标和最小值下标的两个值
-            exch(a, i, min);
-        }
-    }
-
-    /**
-     * 插入排序
-     * 
-     * @param a
-     */
-    public static void insertSort(Comparable[] a) {
-        int n = a.length;
-        // 外层控制起点
-        for (int i=1; i<n; i++) {
-            // 内层控制比较
-            for (int j=i; j>0; j--) {
-                if (less(a[j], a[j-1])) {
-                    exch(a, j, j-1);
-                }
-            }
-        }
-    }
 
     /**
      * 比较
@@ -88,18 +49,76 @@ public class SortBase {
         return true;
     }
 
+    /**
+     * 选择排序
+     *
+     * @param a
+     */
+    public static void chooseSort(Comparable[] a) {
+        // TODO 各种排序算法
+        // 1.选择排序
+        int n = a.length;
+        for (int i = 0; i < n; i++) {
+            int min = i;
+            for (int j = i + 1; j < n && less(a[j], a[min]); j++) {
+                // 如果a[i]小于a[j]
+                min = j;
+            }
+            // 最后交换i下标和最小值下标的两个值
+            exch(a, i, min);
+        }
+    }
+
+    /**
+     * 插入排序
+     * 
+     * @param a
+     */
+    public static void insertSort(Comparable[] a) {
+        int n = a.length;
+        // 外层控制起点
+        for (int i = 1; i < n; i++) {
+            // 内层控制比较
+            for (int j = i; j > 0; j--) {
+                if (less(a[j], a[j - 1])) {
+                    exch(a, j, j - 1);
+                }
+            }
+        }
+    }
+
+    public static void shellSort(Comparable[] a) {
+        System.out.println();
+        int n = a.length;
+        int h = 1;
+        while (h < n / 3) {
+            h = 3 * h + 1;
+        }
+
+        while (h > 0) {
+            for (int i = h; i < n; i++) {
+                for (int j = i; j >= h && less(a[j], a[j - h]); j = j - h) {
+                    exch(a, j, j - h);
+                    show(a);
+                }
+            }
+            h = h / 3;
+        }
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String[] a = sc.nextLine().split(" ");
-        Integer[] n = new Integer[a.length];
-        for (int i = 0; i < a.length; i++) {
-            n[i] = Integer.parseInt(a[i]);
-        }
+        // Integer[] n = new Integer[a.length];
+        // for (int i = 0; i < a.length; i++) {
+        // n[i] = Integer.parseInt(a[i]);
+        // }
 
         sc.close();
         // chooseSort(n);
-        insertSort(n);
-        assert isSorted(n);
-        show(n);
+        // insertSort(n);
+        shellSort(a);
+        assert isSorted(a);
+        // show(a);
     }
 }
