@@ -10,7 +10,8 @@ public class SortTest {
         // Sort sort = new ChooseSort();
         // Sort sort = new InsertSort();
         // Sort sort = new ShellSort();
-        Sort sort = new MergeSort();
+        // Sort sort = new MergeSort();
+        Sort sort = new MergeSortBU();
         sort.sort(a);
         assert sort.isSorted(a);
         sort.show(a);

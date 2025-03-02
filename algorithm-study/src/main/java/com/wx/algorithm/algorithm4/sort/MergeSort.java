@@ -6,8 +6,11 @@ package com.wx.algorithm.algorithm4.sort;
 public class MergeSort extends SortBase {
 
     // 辅助数组
-    private Comparable[] aux;
+    protected Comparable[] aux;
 
+    /**
+     * 自顶向下归并
+     */
     @Override
     public void sort(Comparable[] a) {
         aux = new Comparable[a.length];
@@ -32,6 +35,10 @@ public class MergeSort extends SortBase {
         sort(a, low, mid);
         // 递归处理右侧
         sort(a, mid + 1, high);
+        // 至此的时候，左右已经是分别排好序的了，如果a[mid]<=a[mid+1]
+        if (!less(a[mid+1], a[mid])) {
+            return;
+        }
         // 合并左右已合并好的数据
         merge(a, low, mid, high);
     }
@@ -44,7 +51,7 @@ public class MergeSort extends SortBase {
      * @param mid
      * @param high
      */
-    private void merge(Comparable[] a, int low, int mid, int high) {
+    protected void merge(Comparable[] a, int low, int mid, int high) {
         int i = low, j = mid + 1;
         for (int k = low; k <= high; k++) {
             aux[k] = a[k];
