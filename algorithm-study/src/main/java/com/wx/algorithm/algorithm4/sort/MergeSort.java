@@ -4,6 +4,7 @@ package com.wx.algorithm.algorithm4.sort;
  * 归并排序
  */
 public class MergeSort extends SortBase {
+
     // 辅助数组
     private Comparable[] aux;
 
@@ -50,11 +51,14 @@ public class MergeSort extends SortBase {
         }
 
         for (int k = low; k <= high; k++) {
+            // 如果左侧已经走完，则剩余的全是右侧
             if (i > mid) {
                 a[k] = aux[j++];
             } else if (j > high) {
+                // 如果右侧已经走完，则剩余的全是左侧
                 a[k] = aux[i++];
             } else if (less(aux[i], aux[j])) {
+                // 如果都还有剩余，则比较，谁小，走谁
                 a[k] = aux[i++];
             } else {
                 a[k] = aux[j++];
