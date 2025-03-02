@@ -11,7 +11,8 @@ public class SortTest {
         // Sort sort = new InsertSort();
         // Sort sort = new ShellSort();
         // Sort sort = new MergeSort();
-        Sort sort = new MergeSortBU();
+        // Sort sort = new MergeSortBU();
+        Sort sort = new QuickSort();
         sort.sort(a);
         assert sort.isSorted(a);
         sort.show(a);
