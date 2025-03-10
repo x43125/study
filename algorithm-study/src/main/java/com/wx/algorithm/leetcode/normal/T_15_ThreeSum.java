@@ -27,6 +27,7 @@ public class T_15_ThreeSum {
         int m = nums.length;
         List<List<Integer>> res = new ArrayList<>();
 
+        // 排序
         Arrays.sort(nums);
 
         for (int i = 0; i < m - 2; i++) {

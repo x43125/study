@@ -52,6 +52,7 @@ public class MaxPQ<Key extends Comparable<Key>> {
             exch(k/2, k);
             k = k/2;
         }
+
     }
 
     /**
