@@ -38,25 +38,30 @@ public class T_76_MinWindow {
             // 取得右侧新加入的值
             char rc = s.charAt(right);
             // 塞入sMap
-            sMap.put(rc, sMap.getOrDefault(rc, 0) + 1);
-            // 比较如果，两个相等，则移动左指针
-            while (check(sMap, tMap)) {
-                if (resR - resL > right - left) {
-                    resL = left;
-                    resR = right;
+            if (tMap.containsKey(rc)) {
+                sMap.put(rc, sMap.getOrDefault(rc, 0) + 1);
+                // 比较,如果两个map相等，则移动左指针
+                while (check(sMap, tMap)) {
+                    if (resR - resL > right - left) {
+                        resL = left;
+                        resR = right;
+                    }
+                    // 左指针对应字符
+                    char lc = s.charAt(left);
+                    // 将sMap中对应字符的数量-1
+                    if (tMap.containsKey(lc)) {
+                        sMap.put(lc, sMap.get(lc) - 1);
+                    }
+                    // 左指针右移直到不等
+                    left++;
                 }
-                // 左指针对应字符
-                char lc = s.charAt(left);
-                // 将sMap中对应字符的数量-1
-                sMap.put(lc, sMap.get(lc) - 1);
-                // 左指针右移直到不等
-                left++;
             }
+
             // 右指针右移
             right++;
         }
 
-        return resL == -1 || resR == -1 ? "" : s.substring(resL, resR+1);
+        return resL == -1 || resR == -1 ? "" : s.substring(resL, resR + 1);
     }
 
     private boolean check(Map<Character, Integer> sMap, Map<Character, Integer> tMap) {
@@ -91,7 +96,7 @@ public class T_76_MinWindow {
         while (r < sLen) {
             // r++
             ++r;
-            // 
+            //
             if (r < sLen && ori.containsKey(s.charAt(r))) {
                 cnt.put(s.charAt(r), cnt.getOrDefault(s.charAt(r), 0) + 1);
             }
@@ -122,9 +127,21 @@ public class T_76_MinWindow {
     }
 
     public static void main(String[] args) {
-        String s = "ADOBECODEBANC", t = "ABC";
+        String s1 = "ADOBECODEBANC", t1 = "ABC";
+        String s2 = "ABCBCA", t2 = "ABC";
+        String s3 = "A", t3 = "A";
+        String s4 = "A", t4 = "AA";
+        String s5 = "aucoiaaobbaaciocaabuiobccaciabbcoiabaa", t5 = "abc";
         T_76_MinWindow minWindow = new T_76_MinWindow();
-        String min = minWindow.minWindow_2(s, t);
-        System.out.println(min);
+        String min1 = minWindow.minWindow(s1, t1);
+        String min2 = minWindow.minWindow(s2, t2);
+        String min3 = minWindow.minWindow(s3, t3);
+        String min4 = minWindow.minWindow(s4, t4);
+        String min5 = minWindow.minWindow(s5, t5);
+        System.out.println(min1);
+        System.out.println(min2);
+        System.out.println(min3);
+        System.out.println(min4);
+        System.out.println(min5);
     }
 }
