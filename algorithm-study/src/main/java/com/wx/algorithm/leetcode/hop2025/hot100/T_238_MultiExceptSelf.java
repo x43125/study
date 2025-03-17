@@ -25,26 +25,23 @@ public class T_238_MultiExceptSelf {
     }
 
     public int[] productExceptSelf_2(int[] nums) {
+        int[] res = new int[nums.length];
+        Arrays.fill(res, 1);
         int lp = 1, rp = 1;
-        int n = nums.length;
-        int l = 0, r = n - 1;
-        int[] result = new int[n];
-        Arrays.fill(result, 1);
-        while (l < n) {
-            // result
-            result[l] *= lp;
+        int l = 0, r = nums.length - 1;
+        while (l < nums.length && r >= 0) {
+            res[l] *= lp;
             lp *= nums[l++];
-        }
-        
-        while (r >= 0) {
-            result[r] *= rp;
+
+            res[r] *= rp;
             rp *= nums[r--];
         }
-        return result;
+
+        return res;
     }
 
     public static void main(String[] args) {
-        int[] nums = {1,2,3,4};
+        int[] nums = { 1, 2, 3, 4 };
         // int[] nums = {-1,1,0,-3,3};
         // int[] nums = { -1, 1 };
         T_238_MultiExceptSelf multiExceptSelf = new T_238_MultiExceptSelf();
