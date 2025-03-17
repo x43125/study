@@ -31,10 +31,11 @@ public class T_238_MultiExceptSelf {
         int[] result = new int[n];
         Arrays.fill(result, 1);
         while (l < n) {
+            // result
             result[l] *= lp;
             lp *= nums[l++];
         }
-
+        
         while (r >= 0) {
             result[r] *= rp;
             rp *= nums[r--];
