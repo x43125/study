@@ -6,45 +6,48 @@ import com.wx.algorithm.base.model.ListNode;
 public class T_25_ReverseKGroup {
 
     public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode hair = new ListNode(0);
-        hair.next = head;
+        ListNode hair = new ListNode(0, head);
         ListNode pre = hair;
-
+        
         while (head != null) {
             ListNode tail = pre;
-            // 查看剩余部分长度是否大于等于 k
-            for (int i = 0; i < k; ++i) {
+            for (int i = 0; i < k; i++) {
                 tail = tail.next;
                 if (tail == null) {
                     return hair.next;
                 }
             }
-            ListNode nex = tail.next;
-            ListNode[] reverse = myReverse(head, tail);
+
+            ListNode next = tail.next;
+            // 翻转此部分链表
+            ListNode[] reverse = reverse(head, tail);
             head = reverse[0];
             tail = reverse[1];
-            // 把子链表重新接回原链表
+
             pre.next = head;
-            tail.next = nex;
+            tail.next = next;
             pre = tail;
-            head = tail.next;
+            head = next;
         }
 
         return hair.next;
     }
 
-    public ListNode[] myReverse(ListNode head, ListNode tail) {
-        ListNode prev = tail.next;
+    private ListNode[] reverse(ListNode head, ListNode tail) {
         ListNode p = head;
+        ListNode prev = tail.next;
+
         while (prev != tail) {
-            ListNode nex = p.next;
+            ListNode next = p.next;
             p.next = prev;
             prev = p;
-            p = nex;
+            p = next;
         }
-        return new ListNode[] { tail, head };
+
+        return new ListNode[]{tail, head};
     }
 
+    
     public static void main(String[] args) {
         int[] arr = { 1, 2, 3, 4, 5 };
         ListNode head = ListUtils.buildList(arr);
