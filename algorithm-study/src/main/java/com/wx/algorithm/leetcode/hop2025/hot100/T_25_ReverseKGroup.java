@@ -6,31 +6,26 @@ import com.wx.algorithm.base.model.ListNode;
 public class T_25_ReverseKGroup {
 
     public ListNode reverseKGroup(ListNode head, int k) {
-        ListNode hair = new ListNode(0, head);
-        ListNode pre = hair;
-        
+        ListNode newHead = new ListNode(0, head);
+        ListNode pre = newHead;
         while (head != null) {
             ListNode tail = pre;
             for (int i = 0; i < k; i++) {
                 tail = tail.next;
                 if (tail == null) {
-                    return hair.next;
+                    return newHead.next;
                 }
             }
-
             ListNode next = tail.next;
-            // 翻转此部分链表
             ListNode[] reverse = reverse(head, tail);
             head = reverse[0];
             tail = reverse[1];
 
             pre.next = head;
-            tail.next = next;
             pre = tail;
             head = next;
         }
-
-        return hair.next;
+        return newHead.next;
     }
 
     private ListNode[] reverse(ListNode head, ListNode tail) {
@@ -44,10 +39,9 @@ public class T_25_ReverseKGroup {
             p = next;
         }
 
-        return new ListNode[]{tail, head};
+        return new ListNode[] { tail, head };
     }
 
-    
     public static void main(String[] args) {
         int[] arr = { 1, 2, 3, 4, 5 };
         ListNode head = ListUtils.buildList(arr);
