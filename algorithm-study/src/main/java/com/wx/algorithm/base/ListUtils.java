@@ -4,6 +4,9 @@ import com.wx.algorithm.base.model.ListNode;
 
 public class ListUtils {
     public static ListNode buildList(int[] arr) {
+        if (arr == null || arr.length == 0) {
+            return null;
+        }
         ListNode head = new ListNode(arr[0]);
         ListNode p = head;
         for (int i = 1; i < arr.length; i++) {
