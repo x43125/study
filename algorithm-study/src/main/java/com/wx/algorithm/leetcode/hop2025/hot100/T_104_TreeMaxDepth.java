@@ -1,5 +1,6 @@
 package com.wx.algorithm.leetcode.hop2025.hot100;
 
+import com.wx.algorithm.base.TreeUtils;
 import com.wx.algorithm.base.model.TreeNode;
 
 public class T_104_TreeMaxDepth {
@@ -8,18 +9,12 @@ public class T_104_TreeMaxDepth {
     }
 
     public static void main(String[] args) {
-        
-        TreeNode node1 = new TreeNode(1);
-        TreeNode node2 = new TreeNode(2);
-        TreeNode node3 = new TreeNode(3);
-        TreeNode node4 = new TreeNode(4);
-
-        node1.right = node2;
-        node2.left = node3;
-        node2.right = node4;
+        Integer[] nums = {1, null, 2, 3};
+        TreeNode root = TreeUtils.buildTree(nums);
         
         T_104_TreeMaxDepth t_104_TreeMaxDepth = new T_104_TreeMaxDepth();
-        int depth = t_104_TreeMaxDepth.maxDepth(node1);
+        int depth = t_104_TreeMaxDepth.maxDepth(root);
         System.out.println(depth);
+        TreeUtils.printTree(root);
     }
 }
