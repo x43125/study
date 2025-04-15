@@ -1,6 +1,7 @@
 package com.wx.algorithm.base;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -41,82 +42,57 @@ public class TreeUtils {
     }
 
     /**
-     * 打印二叉树（树形结构）
-     * 
-     * @param root 根节点
+     * 打印二叉树
+     * @param root
      */
     public static void printTree(TreeNode root) {
-        if (root == null) {
-            System.out.println("(空树)");
-            return;
+        int height = getTreeHeight(root);
+        int width = (1 << height) * 2 - 1; // 根据树高计算宽度
+        char[][] grid = new char[height * 2 - 1][width];
+        for (char[] row : grid) {
+            Arrays.fill(row, ' ');
         }
-
-        // 获取最大深度
-        int maxDepth = getMaxDepth(root);
-        // 最后一行的元素数量为2^(n-1)*3+1
-        int elementCount = (int) Math.pow(2, maxDepth - 1) * 3 + 1;
-
-        // 初始化一个二维数组来存储打印内容
-        List<List<String>> printLines = new ArrayList<>();
-        for (int i = 0; i < maxDepth * 2; i++) {
-            List<String> line = new ArrayList<>();
-            for (int j = 0; j < elementCount; j++) {
-                line.add(" ");
-            }
-            printLines.add(line);
-        }
-
-        // 递归填充打印内容
-        fillPrintLines(root, printLines, 0, elementCount / 2, elementCount / 4);
-
-        // 打印结果
-        for (List<String> line : printLines) {
-            for (String s : line) {
-                System.out.print(s);
-            }
-            System.out.println();
-        }
+        fillGrid(root, grid, 0, 0, width - 1);
+        printGrid(grid);
     }
 
-    private static void fillPrintLines(TreeNode node, List<List<String>> printLines,
-            int level, int pos, int offset) {
-        if (node == null) {
-            return;
-        }
-
-        // 当前节点的值
-        String valStr = String.valueOf(node.val);
-        List<String> line = printLines.get(level * 2);
-        for (int i = 0; i < valStr.length(); i++) {
-            line.set(pos + i, String.valueOf(valStr.charAt(i)));
-        }
-
-        // 画连接线
-        if (level * 2 + 1 < printLines.size()) {
-            List<String> lineBelow = printLines.get(level * 2 + 1);
-            if (node.left != null) {
-                lineBelow.set(pos - offset / 2, "/");
-                for (int i = pos - offset / 2 + 1; i < pos; i++) {
-                    lineBelow.set(i, "_");
-                }
-            }
-            if (node.right != null) {
-                for (int i = pos + 1; i < pos + offset / 2; i++) {
-                    lineBelow.set(i, "_");
-                }
-                lineBelow.set(pos + offset / 2, "\\");
-            }
-        }
-
-        // 递归处理左右子树
-        fillPrintLines(node.left, printLines, level + 1, pos - offset, offset / 2);
-        fillPrintLines(node.right, printLines, level + 1, pos + offset, offset / 2);
-    }
-
-    private static int getMaxDepth(TreeNode node) {
-        if (node == null) {
+    // 计算二叉树高度
+    private static int getTreeHeight(TreeNode node) {
+        if (node == null)
             return 0;
+        return Math.max(getTreeHeight(node.left), getTreeHeight(node.right)) + 1;
+    }
+
+    // 递归填充二维数组
+    private static void fillGrid(TreeNode node, char[][] grid, int row, int left, int right) {
+        if (node == null)
+            return;
+
+        int mid = (left + right) / 2;
+        String value = Integer.toString(node.val);
+        // 将节点值写入网格中心
+        int pos = mid - value.length() / 2;
+        for (int i = 0; i < value.length(); i++) {
+            grid[row][pos + i] = value.charAt(i);
         }
-        return Math.max(getMaxDepth(node.left), getMaxDepth(node.right)) + 1;
+
+        // 绘制左右子节点连接线
+        if (node.left != null) {
+            int leftMid = (left + mid) / 2;
+            grid[row + 1][leftMid] = '/';
+            fillGrid(node.left, grid, row + 2, left, mid);
+        }
+        if (node.right != null) {
+            int rightMid = (mid + 1 + right) / 2;
+            grid[row + 1][rightMid] = '\\';
+            fillGrid(node.right, grid, row + 2, mid + 1, right);
+        }
+    }
+
+    // 打印二维数组
+    private static void printGrid(char[][] grid) {
+        for (char[] row : grid) {
+            System.out.println(new String(row).replaceAll("\\s+$", ""));
+        }
     }
 }
