@@ -3,6 +3,7 @@ package com.wx.algorithm.leetcode.hop2025.hot100;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.wx.algorithm.base.TreeUtils;
 import com.wx.algorithm.base.model.TreeNode;
 
 public class T_437_PathSum {
@@ -17,10 +18,9 @@ public class T_437_PathSum {
         if (root == null) {
             return 0;
         }
-        int count = 0;
         preSum += root.val;
 
-        count = prefix.getOrDefault(preSum - targetSum, 0);
+        int count = prefix.getOrDefault(preSum - targetSum, 0);
         prefix.put(preSum, prefix.getOrDefault(preSum, 0) + 1);
         count += dfs(root.left, prefix, preSum, targetSum);
         count += dfs(root.right, prefix, preSum, targetSum);
@@ -30,15 +30,11 @@ public class T_437_PathSum {
         return count;
     }
 
-    private TreeNode buildPrefix(TreeNode root, int preSum) {
-        if (root == null) {
-            return null;
-        }
-
-        preSum = preSum + root.val;
-        TreeNode node = new TreeNode(preSum);
-        node.left = buildPrefix(root.left, preSum);
-        node.right = buildPrefix(root.right, preSum);
-        return node;
+    public static void main(String[] args) {
+        Integer[] nums = {10,5,-3,3,2,null,11,3,-2,null,1};
+        TreeNode root = TreeUtils.buildTree(nums);
+        T_437_PathSum pathSum = new T_437_PathSum();
+        int count = pathSum.pathSum(root, 8);
+        System.out.println(8 + ":" + count);
     }
 }
