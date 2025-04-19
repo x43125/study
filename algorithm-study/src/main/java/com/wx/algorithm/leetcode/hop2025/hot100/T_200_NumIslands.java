@@ -3,8 +3,9 @@ package com.wx.algorithm.leetcode.hop2025.hot100;
 public class T_200_NumIslands {
     public int numIslands(char[][] grid) {
         int num = 0;
-        for (int i = 0; i < grid.length; i++) {
-            for (int j = 0; j < grid[0].length; j++) {
+
+        for (int i=0; i<grid.length; i++) {
+            for (int j=0; j<grid[0].length; j++) {
                 if (grid[i][j] == '1') {
                     num++;
                     dfs(grid, i, j);
@@ -15,24 +16,23 @@ public class T_200_NumIslands {
         return num;
     }
 
-    private void dfs(char[][] grid, int r, int c) {
-        if (!inArea(grid, r, c)) {
+    private void dfs(char[][] grid, int i, int j) {
+        if (notInArea(grid, i, j)) {
             return;
         }
 
-        if (grid[r][c] != '1') {
-            return;
+        if (grid[i][j] == '1') {
+            grid[i][j] = '2';
         }
 
-        grid[r][c] = 2;
-        dfs(grid, r - 1, c);
-        dfs(grid, r + 1, c);
-        dfs(grid, r, c - 1);
-        dfs(grid, r, c + 1);
+        dfs(grid, i-1, j);
+        dfs(grid, i+1, j);
+        dfs(grid, i, j-1);
+        dfs(grid, i, j+1);
     }
 
-    private boolean inArea(char[][] grid, int r, int c) {
-        return r >= 0 && r < grid.length && c >= 0 && c < grid[0].length;
+    private boolean notInArea(char[][] grid, int i, int j) {
+        return i < 0 || i >= grid.length || j < 0 || j >= grid[0].length || grid[i][j] != '1';
     }
 
     public static void main(String[] args) {

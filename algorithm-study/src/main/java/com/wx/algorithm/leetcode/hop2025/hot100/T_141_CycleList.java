@@ -37,9 +37,9 @@ public class T_141_CycleList {
         
         node3.next = node4;
         node4.next = node3;
-        // node4.next = node5;
-        // node5.next = node6;
-        // node6.next = node3;
+        node4.next = node5;
+        node5.next = node6;
+        node6.next = node3;
 
         T_141_CycleList cycleList = new T_141_CycleList();
         boolean hasCycle = cycleList.hasCycle(node1);
