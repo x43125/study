@@ -5,6 +5,12 @@ public class T_215_KLargest {
     int[] heap;
     int n;
 
+    /**
+     * 这题能想到小顶堆，太妙了
+     * @param nums
+     * @param k
+     * @return
+     */
     public int findKthLargest(int[] nums, int k) {
         n = 0;
         heap = new int[k];
@@ -14,6 +20,7 @@ public class T_215_KLargest {
                 heap[n] = num;
                 swim(n++);
             } else if (num > heap[0]) {
+                // 这个最多k,然后转换的思路太妙了
                 heap[0] = num;
                 sink(0);
             }
