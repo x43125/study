@@ -17,7 +17,7 @@ public class QuickSort extends SortBase {
      * @param high
      */
     private void sort(Comparable[] a, int low, int high) {
-        if (high <= low) {
+        if (low >= high) {
             return;
         }
         // 先找到本次递归里，的待排序的数的位置
@@ -45,7 +45,7 @@ public class QuickSort extends SortBase {
         // 循环找本次数组
         while (true) {
             // 从左侧循环直到找到比待排序数大的数，直接走到底的话，说明都比v小
-            while (less(a[++i], v) && i < high);
+            while (less(a[++i], v) && i < high);    
             // 从右侧循环直到找到比待排序数小或相等的数，如果直接走到底的话，说明都比v大
             while (less(v, a[--j]) && j > low);
             if (i >= j) break;
