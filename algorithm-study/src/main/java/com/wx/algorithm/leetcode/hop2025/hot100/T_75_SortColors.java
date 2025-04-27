@@ -1,8 +1,14 @@
 package com.wx.algorithm.leetcode.hop2025.hot100;
 
 public class T_75_SortColors {
+
+    /**
+     * 经典荷兰国旗问题🇳🇱
+     * @param nums
+     */
     public void sortColors(int[] nums) {
         int n = nums.length;
+        // 起点都从0开始算
         int p0 = 0, p1 = 0;
         for (int i = 0; i < n; ++i) {
             if (nums[i] == 1) {
