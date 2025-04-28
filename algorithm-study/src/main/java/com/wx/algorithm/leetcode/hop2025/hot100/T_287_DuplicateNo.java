@@ -4,6 +4,10 @@ public class T_287_DuplicateNo {
     public int findDuplicate(int[] nums) {
         // 1.要能领悟出这一题是做环状检测
         // 2.要能写出来，next 类比 i -> nums[i]
+
+        // 下标和值之间的映射
+        // 环的校验，快慢指针，先快慢指针分别走，直到相遇，然后快指针回到起点变成慢指针，和慢指针一起走，直到相遇
+
         int slow = 0, fast = 0;
         do {
             slow = nums[slow];
