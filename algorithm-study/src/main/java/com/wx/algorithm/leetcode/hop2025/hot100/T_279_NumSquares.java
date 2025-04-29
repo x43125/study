@@ -16,7 +16,7 @@ public class T_279_NumSquares {
     }
 
     public static void main(String[] args) {
-        int n = 5;
+        int n = 9;
         T_279_NumSquares numSquares = new T_279_NumSquares();
         int num = numSquares.numSquares(n);
         System.out.println(num);
