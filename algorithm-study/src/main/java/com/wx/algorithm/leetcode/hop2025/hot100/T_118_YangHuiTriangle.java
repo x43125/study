@@ -1,4 +1,4 @@
-package com.wx.algorithm.leetcode.hop2025;
+package com.wx.algorithm.leetcode.hop2025.hot100;
 
 import java.util.ArrayList;
 import java.util.List;
