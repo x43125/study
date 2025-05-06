@@ -56,10 +56,69 @@ public class T_416_SplitArray {
         return dp[n - 1][target] == target;
     }
 
+    public boolean canPartition_02(int[] nums) {
+        int n = nums.length;
+        int max = Integer.MIN_VALUE, sum = 0;
+        for (int num : nums) {
+            max = Math.max(max, sum);
+            sum += num;
+        }
+        int target = sum / 2;
+        if (sum % 2 != 0 || max > target) {
+            return false;
+        }
+
+        // 从0到i中任意选取，能组成0吗？
+        boolean[][] dp = new boolean[n][target + 1];
+        for (int i = 0; i < n; i++) {
+            dp[i][0] = true;
+        }
+
+        dp[0][nums[0]] = true;
+
+        for (int i = 1; i < n; i++) {
+            int num = nums[i];
+            for (int j = 1; j < target + 1; j++) {
+                if (j < num) {
+                    dp[i][j] = dp[i - 1][j];
+                } else {
+                    dp[i][j] = dp[i - 1][j] | dp[i - 1][j - num];
+                }
+            }
+        }
+
+        return dp[n - 1][target];
+    }
+
+    public boolean canPartition_03(int[] nums) {
+        int n = nums.length;
+        int max = Integer.MIN_VALUE, sum = 0;
+        for (int num : nums) {
+            max = Math.max(max, num);
+            sum += num;
+        }
+        int target = sum / 2;
+        if (sum % 2 != 0 || max > target) {
+            return false;
+        }
+
+        boolean[] dp = new boolean[target + 1];
+        dp[0] = true;
+
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            for (int j = target; j >= num; j--) {
+                dp[j] |= dp[j - num];
+            }
+        }
+
+        return dp[target];
+    }
+
     public static void main(String[] args) {
-        int[] nums = { 1, 1 };
+        int[] nums = { 1, 5, 11, 5, 6 };
         T_416_SplitArray splitArray = new T_416_SplitArray();
-        boolean canPartition = splitArray.canPartition(nums);
+        boolean canPartition = splitArray.canPartition_03(nums);
         System.out.println(canPartition);
     }
 }
