@@ -9,6 +9,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.nio.charset.Charset;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Shawn
@@ -18,12 +19,16 @@ import java.util.Iterator;
 public class WriteServer {
     public static void main(String[] args) throws IOException {
         ServerSocketChannel ssc = ServerSocketChannel.open();
+        // blocking false
         ssc.configureBlocking(false);
         Selector selector = Selector.open();
+        // 注册selector
         ssc.register(selector, SelectionKey.OP_ACCEPT);
+        // 绑定端口
         ssc.bind(new InetSocketAddress(8080));
 
         while (true) {
+            System.out.println("waiting for connection...");
             selector.select();
             Iterator<SelectionKey> iter = selector.selectedKeys().iterator();
             while (iter.hasNext()) {
@@ -42,6 +47,11 @@ public class WriteServer {
                         System.out.println("write = " + write);
                     }
                 }
+            }
+            try {
+                TimeUnit.SECONDS.sleep(3);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }
     }

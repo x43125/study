@@ -33,6 +33,7 @@ public class MultiThreadServer {
 
         // 1. 创建固定数量的worker并初始化
         int cpus = Runtime.getRuntime().availableProcessors();
+        cpus = cpus / 4;
         System.out.println("cpus = " + cpus);
         Worker[] workers = new Worker[cpus];
         for (int i = 0; i < cpus; i++) {

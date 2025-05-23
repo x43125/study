@@ -30,6 +30,7 @@ public class Server {
             ssc.bind(new InetSocketAddress(8080));
             // 3. 链接集合
             List<SocketChannel> channels = new ArrayList<>();
+            System.out.println("server start...welcome");
             while (true) {
                 // 4. accept建立与客户端连接 SocketChannel用来与客户端通信
                 SocketChannel sc = ssc.accept();

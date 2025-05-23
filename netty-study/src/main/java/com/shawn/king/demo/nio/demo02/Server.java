@@ -30,7 +30,7 @@ public class Server {
         SelectionKey sscKey = ssc.register(selector, 0, null);
         // 设置key只关注accept事件
         sscKey.interestOps(SelectionKey.OP_ACCEPT);
-        log.debug("register key: {}", sscKey);
+        System.out.println("register key: " + sscKey);
         // 2. 绑定端口
         ssc.bind(new InetSocketAddress(8080));
         while (true) {

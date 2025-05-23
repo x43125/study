@@ -17,6 +17,6 @@ public class Client {
         SocketChannel sc = SocketChannel.open();
         sc.connect(new InetSocketAddress(InetAddress.getLocalHost(), 8080));
         SocketAddress localAddress = sc.getLocalAddress();
-        System.out.println("waiting...");
+        System.out.println("waiting..." + localAddress);
     }
 }
