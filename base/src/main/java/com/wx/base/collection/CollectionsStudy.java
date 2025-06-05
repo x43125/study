@@ -1,4 +1,4 @@
-package com.wx.base;
+package com.wx.base.collection;
 
 import java.util.Arrays;
 import java.util.List;
