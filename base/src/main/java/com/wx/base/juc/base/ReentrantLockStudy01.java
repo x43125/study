@@ -1,6 +1,5 @@
 package com.wx.base.juc.base;
 
-import com.wx.base.StaticStudy;
 import com.wx.base.juc.advance.utils.JUCUtils;
 
 import java.util.concurrent.TimeUnit;
