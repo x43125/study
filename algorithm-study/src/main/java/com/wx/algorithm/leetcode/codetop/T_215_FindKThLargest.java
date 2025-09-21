@@ -1,6 +1,35 @@
 package com.wx.algorithm.leetcode.codetop;
 
 public class T_215_FindKThLargest {
+    public int findKthLargest_02(int[] nums, int k) {
+        return quicksort(nums, 0, nums.length - 1, nums.length - k);
+    }
+
+    private int quicksort(int[] nums, int l, int r, int k) {
+        if (l == r) {
+            return nums[k];
+        }
+
+        int x = nums[l], i = l - 1, j = r + 1;
+        while (i < j) {
+            do {
+                i++;
+            } while (nums[i] < x);
+            do {
+                j--;
+            } while (nums[j] > x);
+            if (i < j) {
+                swap(nums, i, j);
+            }
+        }
+
+        if (k <= i) {
+            return quicksort(nums, l, i, k);
+        } else {
+            return quicksort(nums, i + 1, r, k);
+        }
+    }
+
     public int findKthLargest(int[] nums, int k) {
         // 构建大顶堆
         buildMaxHeap(nums);
@@ -43,9 +72,9 @@ public class T_215_FindKThLargest {
     }
 
     public static void main(String[] args) {
-        int[] nums = { 3, 2, 3, 1, 2, 4, 5, 5, 6 };
+        int[] nums = { 3, 2, 1, 5, 6, 4 };
         T_215_FindKThLargest findKThLargest = new T_215_FindKThLargest();
-        int kthLargest = findKThLargest.findKthLargest(nums, 1);
+        int kthLargest = findKThLargest.findKthLargest_02(nums, 1);
         System.out.println(kthLargest);
     }
 }

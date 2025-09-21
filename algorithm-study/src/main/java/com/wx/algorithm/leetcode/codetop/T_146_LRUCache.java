@@ -4,96 +4,90 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class T_146_LRUCache {
+    // 双向链表来表示最近和最远
+    // 每次查看某个节点，就将这个节点调整到最前面
+    // 每次新增的节点，也插到最前面
+    //  如果超过长度，则将最后一位删除掉
+    // 要达到O(1)的访问速度，必须使用hash
 
-    class DLinkedNode {
-        int key;
-        int value;
-        DLinkedNode pre;
-        DLinkedNode next;
+    // 双向链表
+    class Node {
+        Integer key;
+        Integer val;
+        Node next;
+        Node pre;
 
-        public DLinkedNode() {
-        };
-
-        public DLinkedNode(int key, int value) {
+        public Node(){}
+        public Node(Integer key, Integer val) {
             this.key = key;
-            this.value = value;
+            this.val = val;
         }
     }
 
-    // capacity
-    // 当新的put导致容量超过capacity的时候，则删除最久未使用的数据
-    // 每次调用一个数据就将其改为最新的一条数据
-    // 删除，直接删除即可
-    // 队列？get不是o1？堆？ hashmap + 双向链表 hashmap的value里直接存双向链表的node节点
-    // hashmap存key-value，双向链表
-    private int capacity;
-    private Map<Integer, DLinkedNode> cache = new HashMap<>();
-    private DLinkedNode head;
-    private DLinkedNode tail;
-
+    // map
+    private Map<Integer, Node> map;
+    // 双向队列
+    private Node head;
+    private Node tail;
+    // 长度
+    int capacity;
+    
     public T_146_LRUCache(int capacity) {
         this.capacity = capacity;
-        head = new DLinkedNode();
-        tail = new DLinkedNode();
+        head = new Node();
+        tail = new Node();
         head.next = tail;
         tail.pre = head;
-    }
 
+        map = new HashMap<>();
+    }
+    
     public int get(int key) {
-        if (!cache.containsKey(key)) {
+        // 通过查询Map快速获取值
+        // 将该节点提前到队首
+        Node node = map.get(key);
+        if (node == null) {
             return -1;
         }
-
-        // 缓存存在key
-        DLinkedNode node = cache.get(key);
         move2head(node);
-        return node.value;
+        return node.val;
+    }
+    
+    private void move2head(Node node) {
+        delNode(node);
+        add2head(node);
     }
 
-    /**
-     * 将链表中的节点移动到链首
-     * 
-     * @param node
-     */
-    private void move2head(DLinkedNode node) {
-        // 将节点转移到头部
-        removeNode(node);
-        add2Head(node);
-    }
-
-    /*
-     * 将节点加到链首
-     */
-    private void add2Head(DLinkedNode node) {
-        node.next = head.next;
-        head.next.pre = node;
-        node.pre = head;
-        head.next = node;
-    }
-
-    /**
-     * 移除链表中的某节点
-     * 
-     * @param node
-     */
-    private void removeNode(DLinkedNode node) {
+    private void delNode(Node node) {
         node.pre.next = node.next;
         node.next.pre = node.pre;
     }
 
+    private void add2head(Node node) {
+        head.next.pre = node;
+        node.next = head.next;
+        head.next = node;
+        node.pre = head;
+    }
+
     public void put(int key, int value) {
-        if (cache.containsKey(key)) {
-            DLinkedNode node = cache.get(key);
-            node.value = value;
+        // 如果已经存在，则移到队首
+        // 如果未存在
+        //   如果队列未满则直接插到队首
+        //   如果已满，则先删除最后一位，再插入队首
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.val = value;
             move2head(node);
+            map.put(key, node);
         } else {
-            if (cache.size() == capacity) {
-                cache.remove(tail.pre.key);
-                removeNode(tail.pre);
+            if (map.size() >= capacity){
+                map.remove(tail.pre.key);
+                delNode(tail.pre);
             }
-            DLinkedNode node = new DLinkedNode(key, value);
-            add2Head(node);
-            cache.put(key, node);
+            Node node = new Node(key, value);
+            add2head(node);
+            map.put(key, node);
         }
     }
 
@@ -104,5 +98,9 @@ public class T_146_LRUCache {
         System.out.println(lruCache.get(1));
         lruCache.put(3, 3);
         System.out.println(lruCache.get(2));
+        lruCache.put(4, 4);
+        System.out.println(lruCache.get(1));
+        System.out.println(lruCache.get(3));
+        System.out.println(lruCache.get(4));
     }
 }

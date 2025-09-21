@@ -53,6 +53,8 @@ public class T_3_LongestNoRepeatSubstring {
         int start = 0;
         int end = -1;
         int max = 0;
+        Map<Integer, Integer> map = new HashMap<>();
+        map.remove(map)
         for (char c : s.toCharArray()) {
             while (set.contains(c) && start <= end) {
                 set.remove(s.charAt(start++));
