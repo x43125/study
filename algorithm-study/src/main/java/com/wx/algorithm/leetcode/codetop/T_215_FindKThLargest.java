@@ -2,32 +2,42 @@ package com.wx.algorithm.leetcode.codetop;
 
 public class T_215_FindKThLargest {
     public int findKthLargest_02(int[] nums, int k) {
-        return quicksort(nums, 0, nums.length - 1, nums.length - k);
-    }
-
-    private int quicksort(int[] nums, int l, int r, int k) {
-        if (l == r) {
-            return nums[k];
-        }
-
-        int x = nums[l], i = l - 1, j = r + 1;
-        while (i < j) {
-            do {
-                i++;
-            } while (nums[i] < x);
-            do {
-                j--;
-            } while (nums[j] > x);
-            if (i < j) {
-                swap(nums, i, j);
+        int len = nums.length;
+        int target = len - k;
+        int left = 0, right = len-1;
+        while (true) {
+            int pivot = partition(nums, left, right);
+            if (target == pivot) {
+                return nums[pivot];
+            } else if (target < pivot) {
+                right = pivot - 1;
+            } else {
+                left = pivot + 1;
             }
         }
+    }
 
-        if (k <= i) {
-            return quicksort(nums, l, i, k);
-        } else {
-            return quicksort(nums, i + 1, r, k);
+    private int partition(int[] nums, int left, int right) {
+        if (left == right) {
+            return left;
         }
+        int i = left, j = right, x = nums[left];
+        while (i < j) {
+            while (i < j && nums[j] >= x) {
+                j--;
+            }
+            if (i < j) {
+                nums[i] = nums[j];
+            }
+            while (i < j && nums[i] <= x) {
+                i++;
+            }
+            if (i < j) {
+                nums[j] = nums[i];
+            }
+        }
+        nums[i] = x;
+        return i;
     }
 
     public int findKthLargest(int[] nums, int k) {
