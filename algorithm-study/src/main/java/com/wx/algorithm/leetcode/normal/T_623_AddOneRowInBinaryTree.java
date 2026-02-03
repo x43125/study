@@ -26,7 +26,7 @@ public class T_623_AddOneRowInBinaryTree {
         T_623_AddOneRowInBinaryTree addOneRowInBinaryTree = new T_623_AddOneRowInBinaryTree();
         TreeNode newRoot = addOneRowInBinaryTree.addOneRow_2(node1, 2222, 2);
 
-        TreeUtils.preOrder(newRoot);
+//        TreeUtils.preOrder(newRoot);
     }
 
     static int value;

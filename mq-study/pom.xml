@@ -18,8 +18,8 @@
         <!-- https://mvnrepository.com/artifact/org.apache.rocketmq/rocketmq-client -->
         <dependency>
             <groupId>org.apache.rocketmq</groupId>
-            <artifactId>rocketmq-client</artifactId>
-            <version>4.9.7</version>
+            <artifactId>rocketmq-client-java</artifactId>
+            <version>5.0.4</version>
         </dependency>
 
     </dependencies>
