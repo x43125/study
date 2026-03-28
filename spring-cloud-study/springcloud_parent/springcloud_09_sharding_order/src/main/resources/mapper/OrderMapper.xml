@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zf.mapper.OrderMapper">
+
+    <!-- 批量插入订单 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO t_order (order_no, user_id, user_name, total_amount, status, receiver_name, 
+                           receiver_phone, receiver_address, create_time, update_time, deleted)
+        VALUES
+        <foreach collection="orders" item="order" separator=",">
+            (#{order.orderNo}, #{order.userId}, #{order.userName}, #{order.totalAmount}, 
+             #{order.status}, #{order.receiverName}, #{order.receiverPhone}, #{order.receiverAddress},
+             #{order.createTime}, #{order.updateTime}, #{order.deleted})
+        </foreach>
+    </insert>
+
+</mapper>

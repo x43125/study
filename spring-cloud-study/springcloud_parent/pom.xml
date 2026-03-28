@@ -18,6 +18,7 @@
         <module>springcloud_06feign_client01</module>
         <module>springcloud_07hystrix_dashboard</module>
         <module>springcloud_08gateway</module>
+        <module>springcloud_09_sharding_order</module>
     </modules>
 
     <parent>
