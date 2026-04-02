@@ -1,6 +1,5 @@
 package com.zf.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.zf.entity.Order;
 import com.zf.entity.OrderItem;
 
@@ -9,7 +8,7 @@ import java.util.List;
 /**
  * 订单Service接口
  */
-public interface OrderService extends IService<Order> {
+public interface OrderService {
 
     /**
      * 创建订单（含明细）

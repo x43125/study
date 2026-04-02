@@ -1,7 +1,5 @@
 package com.zf.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zf.entity.Order;
 import com.zf.entity.OrderItem;
 import com.zf.mapper.OrderItemMapper;
@@ -21,7 +19,7 @@ import java.util.List;
  * 3. 统计查询可能需要在业务层聚合
  */
 @Service
-public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements OrderService {
+public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
@@ -54,19 +52,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         }
 
         // 查询订单明细
-        LambdaQueryWrapper<OrderItem> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(OrderItem::getOrderId, orderId);
-        List<OrderItem> items = orderItemMapper.selectList(wrapper);
+        List<OrderItem> items = orderItemMapper.selectByOrderId(orderId);
 
         return order;
     }
 
     @Override
     public List<Order> getUserOrders(Long userId) {
-        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getUserId, userId);
-        wrapper.orderByDesc(Order::getCreateTime);
-        return orderMapper.selectList(wrapper);
+        return orderMapper.selectByUserId(userId);
     }
 
     @Override
@@ -79,7 +72,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
 
     @Override
     public long countOrders() {
-        return orderMapper.selectCount(null);
+        return orderMapper.selectCount();
     }
 
     @Override

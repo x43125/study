@@ -1,28 +1,66 @@
 server:
-  port: 9009
+  port: 9010
+
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zf.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 spring:
   application:
     name: order-service
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: 12345678
-    type: com.alibaba.druid.pool.DruidDataSource
-    druid:
-      initial-size: 5
-      min-idle: 5
-      max-active: 20
-      max-wait: 60000
-      time-between-eviction-runs-millis: 60000
-      min-evictable-idle-time-millis: 300000
-      validation-query: SELECT 1
-      test-while-idle: true
-      test-on-borrow: false
-      test-on-return: false
-      pool-prepared-statements: true
-      max-pool-prepared-statement-per-connection-size: 20
+  shardingsphere:
+    datasource:
+      names: ds0
+      ds0:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+        username: root
+        password: 12345678
+        type: com.alibaba.druid.pool.DruidDataSource
+        initial-size: 5
+        min-idle: 5
+        max-active: 20
+        max-wait: 60000
+    rules:
+      sharding:
+        tables:
+          # 订单表分表配置
+          t_order:
+            actual-data-nodes: ds0.t_order_$->{202601..202612},ds0.t_order
+            table-strategy:
+              standard:
+                sharding-column: code
+                sharding-algorithm-name: order-month-sharding
+          # 订单明细分表配置（绑定表）
+          t_order_item:
+            actual-data-nodes: ds0.t_order_item_$->{202601..202612},ds0.t_order_item
+            table-strategy:
+              standard:
+                sharding-column: code
+                sharding-algorithm-name: order-item-month-sharding
+        binding-tables:
+          - t_order,t_order_item
+        sharding-algorithms:
+          # 订单表分片算法：从code中提取年月
+          order-month-sharding:
+            type: CLASS_BASED
+            props:
+              strategy: STANDARD
+              algorithmClassName: com.zf.sharding.OrderShardingAlgorithm
+          # 订单明细分片算法：从code中提取年月
+          order-item-month-sharding:
+            type: CLASS_BASED
+            props:
+              strategy: STANDARD
+              algorithmClassName: com.zf.sharding.OrderItemShardingAlgorithm
+    props:
+      sql-show: true
+  main:
+    allow-bean-definition-overriding: true
 
 eureka:
   client:
@@ -32,15 +70,10 @@ eureka:
     prefer-ip-address: true
     instance-id: ${spring.application.name}:${server.port}
 
-mybatis-plus:
-  mapper-locations: classpath:mapper/*.xml
-  type-aliases-package: com.zf.entity
-  configuration:
-    map-underscore-to-camel-case: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-  global-config:
-    db-config:
-      id-type: auto
-      logic-delete-field: deleted
-      logic-delete-value: 1
-      logic-not-delete-value: 0
+apollo:
+  meta: http://localhost:8080
+  bootstrap:
+    enabled: true # 是否开启 Apollo
+    namespaces: application
+app:
+  id: order-service

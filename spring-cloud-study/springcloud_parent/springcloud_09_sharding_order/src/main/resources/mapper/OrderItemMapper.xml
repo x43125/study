@@ -2,14 +2,95 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zf.mapper.OrderItemMapper">
 
-    <!-- 批量插入订单明细 -->
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.zf.entity.OrderItem">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="BIGINT"/>
+        <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+        <result column="product_id" property="productId" jdbcType="BIGINT"/>
+        <result column="product_name" property="productName" jdbcType="VARCHAR"/>
+        <result column="product_img" property="productImg" jdbcType="VARCHAR"/>
+        <result column="price" property="price" jdbcType="DECIMAL"/>
+        <result column="quantity" property="quantity" jdbcType="INTEGER"/>
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="BIGINT"/>
+        <result column="update_time" property="updateTime" jdbcType="BIGINT"/>
+        <result column="deleted" property="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, code, order_id, product_id, product_name, product_img, price, quantity,
+        total_amount, create_time, update_time, deleted
+    </sql>
+
+    <!-- 插入订单明细 -->
+    <insert id="insert" parameterType="com.zf.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_order_item (code, order_id, product_id, product_name, product_img, price, quantity,
+                                 total_amount, create_time, update_time, deleted)
+        VALUES (#{code}, #{orderId}, #{productId}, #{productName}, #{productImg}, #{price}, #{quantity},
+                #{totalAmount}, #{createTime}, #{updateTime}, #{deleted})
+    </insert>
+
+    <!-- 根据ID查询订单明细 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order_item
+        WHERE id = #{id} AND deleted = 0
+    </select>
+
+    <!-- 根据订单ID查询订单明细列表 -->
+    <select id="selectByOrderId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order_item
+        WHERE order_id = #{orderId} AND deleted = 0
+        ORDER BY id
+    </select>
+
+    <!-- 查询所有订单明细 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order_item
+        WHERE deleted = 0
+        ORDER BY id
+    </select>
+
+    <!-- 统计订单明细数量 -->
+    <select id="selectCount" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM t_order_item
+        WHERE deleted = 0
+    </select>
+
+    <!-- 根据ID更新订单明细 -->
+    <update id="updateById" parameterType="com.zf.entity.OrderItem">
+        UPDATE t_order_item
+        <set>
+            <if test="code != null">code = #{code},</if>
+            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="productId != null">product_id = #{productId},</if>
+            <if test="productName != null">product_name = #{productName},</if>
+            <if test="productImg != null">product_img = #{productImg},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="quantity != null">quantity = #{quantity},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量插入订单明细（ShardingSphere自动路由到对应分表，与t_order绑定表关联） -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO t_order_item (order_id, product_id, product_name, price, quantity, 
+        INSERT INTO t_order_item (code, order_id, product_id, product_name, price, quantity,
                                  total_amount, create_time, update_time, deleted)
         VALUES
-        <foreach collection="items" item="item" separator=",">
-            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.price}, 
-             #{item.quantity}, #{item.totalAmount}, #{item.createTime}, #{item.updateTime}, 
+        <foreach collection="list" item="item" separator=",">
+            (#{item.code}, #{item.orderId}, #{item.productId}, #{item.productName}, #{item.price},
+             #{item.quantity}, #{item.totalAmount}, #{item.createTime}, #{item.updateTime},
              #{item.deleted})
         </foreach>
     </insert>

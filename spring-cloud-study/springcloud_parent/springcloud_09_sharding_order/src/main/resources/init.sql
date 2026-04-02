@@ -1,6 +1,11 @@
 -- =============================================
--- 订单服务数据库初始化脚本
--- 说明：这是单库单表版本，用于分库分表改造前的基准测试
+-- 订单服务数据库初始化脚本（分表版本）
+-- 说明：
+--   1. 不分库，单数据库 order_db
+--   2. 按月分表，code（雪花算法）作为分片键
+--   3. 从 code 时间戳提取月份，路由到对应月份的分表
+--   4. t_order_default：历史数据兜底表
+--   5. t_order_202601 ~ t_order_202612：按月分表
 -- =============================================
 
 -- 创建数据库
@@ -70,16 +75,15 @@ INSERT INTO t_region (code, name, parent_id, level, sort) VALUES
 ('440305', '南山区', 14, 3, 2);
 
 -- =============================================
--- 3. 订单表（t_order）
--- 说明：适合分库分表的核心表
--- 分库建议：使用userId作为分库键
--- 分表建议：使用orderId作为分表键
+-- 3. 订单表（t_order）- 历史数据兜底表
+-- 说明：存放无法按月份路由的历史数据
 -- =============================================
 DROP TABLE IF EXISTS t_order;
 CREATE TABLE t_order (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
     order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
-    user_id BIGINT NOT NULL COMMENT '用户ID（分库键）',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
     user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
     total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
     status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
@@ -93,21 +97,357 @@ CREATE TABLE t_order (
     ship_time DATETIME COMMENT '发货时间',
     finish_time DATETIME COMMENT '完成时间',
     deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
-    INDEX idx_user_id (user_id) COMMENT '用户ID索引（分库键）',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
     INDEX idx_order_no (order_no) COMMENT '订单编号索引',
-    INDEX idx_status (status) COMMENT '订单状态索引',
     INDEX idx_create_time (create_time) COMMENT '创建时间索引'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表（默认/历史兜底表）';
 
 -- =============================================
--- 4. 订单明细表（t_order_item）
+-- 3.1 订单分表 - 2026年1月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202601;
+CREATE TABLE t_order_202601 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年1月';
+
+-- =============================================
+-- 3.2 订单分表 - 2026年2月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202602;
+CREATE TABLE t_order_202602 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年2月';
+
+-- =============================================
+-- 3.3 订单分表 - 2026年3月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202603;
+CREATE TABLE t_order_202603 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年3月';
+
+-- =============================================
+-- 3.4 订单分表 - 2026年4月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202604;
+CREATE TABLE t_order_202604 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年4月';
+
+-- =============================================
+-- 3.5 订单分表 - 2026年5月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202605;
+CREATE TABLE t_order_202605 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年5月';
+
+-- =============================================
+-- 3.6 订单分表 - 2026年6月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202606;
+CREATE TABLE t_order_202606 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年6月';
+
+-- =============================================
+-- 3.7 订单分表 - 2026年7月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202607;
+CREATE TABLE t_order_202607 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年7月';
+
+-- =============================================
+-- 3.8 订单分表 - 2026年8月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202608;
+CREATE TABLE t_order_202608 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年8月';
+
+-- =============================================
+-- 3.9 订单分表 - 2026年9月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202609;
+CREATE TABLE t_order_202609 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年9月';
+
+-- =============================================
+-- 3.10 订单分表 - 2026年10月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202610;
+CREATE TABLE t_order_202610 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年10月';
+
+-- =============================================
+-- 3.11 订单分表 - 2026年11月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202611;
+CREATE TABLE t_order_202611 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年11月';
+
+-- =============================================
+-- 3.12 订单分表 - 2026年12月
+-- =============================================
+DROP TABLE IF EXISTS t_order_202612;
+CREATE TABLE t_order_202612 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    user_id BIGINT NOT NULL COMMENT '用户ID',
+    user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
+    status TINYINT DEFAULT 0 COMMENT '订单状态：0-待支付 1-已支付 2-已发货 3-已完成 4-已取消',
+    address_id BIGINT COMMENT '收货地址ID',
+    receiver_name VARCHAR(50) COMMENT '收货人姓名',
+    receiver_phone VARCHAR(20) COMMENT '收货人电话',
+    receiver_address VARCHAR(255) COMMENT '收货地址',
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    pay_time DATETIME COMMENT '支付时间',
+    ship_time DATETIME COMMENT '发货时间',
+    finish_time DATETIME COMMENT '完成时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_user_id (user_id) COMMENT '用户ID索引',
+    INDEX idx_order_no (order_no) COMMENT '订单编号索引',
+    INDEX idx_create_time (create_time) COMMENT '创建时间索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单表-2026年12月';
+
+-- =============================================
+-- 4. 订单明细表（t_order_item）- 历史数据兜底表
 -- 说明：与Order表配置为绑定表（Binding Table）
--- 确保同一订单的订单明细和订单在同一个分库分表中
 -- =============================================
 DROP TABLE IF EXISTS t_order_item;
 CREATE TABLE t_order_item (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
-    order_id BIGINT NOT NULL COMMENT '订单ID（分片键）',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
     product_id BIGINT COMMENT '商品ID',
     product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
     product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
@@ -117,8 +457,261 @@ CREATE TABLE t_order_item (
     create_time BIGINT COMMENT '创建时间',
     update_time BIGINT COMMENT '更新时间',
     deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
-    INDEX idx_order_id (order_id) COMMENT '订单ID索引（分片键）'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表';
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表（默认/历史兜底表）';
+
+-- =============================================
+-- 4.1 订单明细分表 - 2026年1月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202601;
+CREATE TABLE t_order_item_202601 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年1月';
+
+-- =============================================
+-- 4.2 订单明细分表 - 2026年2月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202602;
+CREATE TABLE t_order_item_202602 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年2月';
+
+-- =============================================
+-- 4.3 订单明细分表 - 2026年3月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202603;
+CREATE TABLE t_order_item_202603 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年3月';
+
+-- =============================================
+-- 4.4 订单明细分表 - 2026年4月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202604;
+CREATE TABLE t_order_item_202604 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年4月';
+
+-- =============================================
+-- 4.5 订单明细分表 - 2026年5月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202605;
+CREATE TABLE t_order_item_202605 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年5月';
+
+-- =============================================
+-- 4.6 订单明细分表 - 2026年6月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202606;
+CREATE TABLE t_order_item_202606 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年6月';
+
+-- =============================================
+-- 4.7 订单明细分表 - 2026年7月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202607;
+CREATE TABLE t_order_item_202607 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年7月';
+
+-- =============================================
+-- 4.8 订单明细分表 - 2026年8月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202608;
+CREATE TABLE t_order_item_202608 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年8月';
+
+-- =============================================
+-- 4.9 订单明细分表 - 2026年9月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202609;
+CREATE TABLE t_order_item_202609 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年9月';
+
+-- =============================================
+-- 4.10 订单明细分表 - 2026年10月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202610;
+CREATE TABLE t_order_item_202610 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年10月';
+
+-- =============================================
+-- 4.11 订单明细分表 - 2026年11月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202611;
+CREATE TABLE t_order_item_202611 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年11月';
+
+-- =============================================
+-- 4.12 订单明细分表 - 2026年12月
+-- =============================================
+DROP TABLE IF EXISTS t_order_item_202612;
+CREATE TABLE t_order_item_202612 (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '明细ID',
+    code BIGINT COMMENT '订单编码（雪花算法，分片键）',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT COMMENT '商品ID',
+    product_name VARCHAR(100) COMMENT '商品名称（冗余字段）',
+    product_img VARCHAR(255) COMMENT '商品图片URL（冗余字段）',
+    price DECIMAL(10,2) NOT NULL COMMENT '商品单价',
+    quantity INT NOT NULL COMMENT '购买数量',
+    total_amount DECIMAL(10,2) NOT NULL COMMENT '小计金额',
+    create_time BIGINT COMMENT '创建时间',
+    update_time BIGINT COMMENT '更新时间',
+    deleted TINYINT DEFAULT 0 COMMENT '逻辑删除：0-未删除 1-已删除',
+    INDEX idx_code (code) COMMENT '订单编码索引（分片键）',
+    INDEX idx_order_id (order_id) COMMENT '订单ID索引'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='订单明细表-2026年12月';
 
 -- =============================================
 -- 初始化用户数据

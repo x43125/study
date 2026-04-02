@@ -1,0 +1,10 @@
+# Apollo 配置中心 - 启动阶段加载
+app:
+  id: eureka-client
+
+apollo:
+  bootstrap:
+    enabled: true
+    namespaces: application
+  meta: http://localhost:8080
+  cache-dir: /opt/data/apollo-cache-eureka-client

@@ -1,8 +1,5 @@
 package com.zf.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,7 +13,6 @@ import java.time.LocalDateTime;
  * 3. 也可以考虑将User表作为单表放在独立的用户库中
  */
 @Data
-@TableName("t_user")
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +20,6 @@ public class User implements Serializable {
     /**
      * 用户ID - 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

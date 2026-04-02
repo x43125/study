@@ -1,8 +1,5 @@
 package com.zf.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,7 +13,6 @@ import java.time.LocalDateTime;
  * 3. 适合作为广播表的场景：数据量小、变更频率低、需要关联查询的字典表
  */
 @Data
-@TableName("t_region")
 public class Region implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,7 +20,6 @@ public class Region implements Serializable {
     /**
      * 区域ID - 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
 
     /**

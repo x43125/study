@@ -1,8 +1,5 @@
 package com.zf.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,7 +13,6 @@ import java.math.BigDecimal;
  *    确保同一订单的订单明细和订单在同一个分库分表中，避免跨库关联查询
  */
 @Data
-@TableName("t_order_item")
 public class OrderItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -24,8 +20,13 @@ public class OrderItem implements Serializable {
     /**
      * 明细ID - 主键
      */
-    @TableId(type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 订单编码 - 雪花算法生成，用作分片键
+     * 与Order表的code保持一致，用于绑定表关联
+     */
+    private Long code;
 
     /**
      * 订单ID - 关联订单表

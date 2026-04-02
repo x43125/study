@@ -2,13 +2,107 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.zf.mapper.OrderMapper">
 
-    <!-- 批量插入订单 -->
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.zf.entity.Order">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="code" property="code" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
+        <result column="user_id" property="userId" jdbcType="BIGINT"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="total_amount" property="totalAmount" jdbcType="DECIMAL"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="address_id" property="addressId" jdbcType="BIGINT"/>
+        <result column="receiver_name" property="receiverName" jdbcType="VARCHAR"/>
+        <result column="receiver_phone" property="receiverPhone" jdbcType="VARCHAR"/>
+        <result column="receiver_address" property="receiverAddress" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="pay_time" property="payTime" jdbcType="TIMESTAMP"/>
+        <result column="ship_time" property="shipTime" jdbcType="TIMESTAMP"/>
+        <result column="finish_time" property="finishTime" jdbcType="TIMESTAMP"/>
+        <result column="deleted" property="deleted" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, code, order_no, user_id, user_name, total_amount, status, address_id,
+        receiver_name, receiver_phone, receiver_address, create_time, update_time,
+        pay_time, ship_time, finish_time, deleted
+    </sql>
+
+    <!-- 插入订单 -->
+    <insert id="insert" parameterType="com.zf.entity.Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_order (code, order_no, user_id, user_name, total_amount, status, address_id,
+                           receiver_name, receiver_phone, receiver_address, create_time, update_time,
+                           pay_time, ship_time, finish_time, deleted)
+        VALUES (#{code}, #{orderNo}, #{userId}, #{userName}, #{totalAmount}, #{status}, #{addressId},
+                #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{createTime}, #{updateTime},
+                #{payTime}, #{shipTime}, #{finishTime}, #{deleted})
+    </insert>
+
+    <!-- 根据ID查询订单 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order
+        WHERE id = #{id} AND deleted = 0
+    </select>
+
+    <!-- 根据用户ID查询订单列表 -->
+    <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order
+        WHERE user_id = #{userId} AND deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 查询所有订单 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order
+        WHERE deleted = 0
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计订单数量 -->
+    <select id="selectCount" resultType="java.lang.Long">
+        SELECT COUNT(*)
+        FROM t_order
+        WHERE deleted = 0
+    </select>
+
+    <!-- 根据ID更新订单 -->
+    <update id="updateById" parameterType="com.zf.entity.Order">
+        UPDATE t_order
+        <set>
+            <if test="code != null">code = #{code},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="totalAmount != null">total_amount = #{totalAmount},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="addressId != null">address_id = #{addressId},</if>
+            <if test="receiverName != null">receiver_name = #{receiverName},</if>
+            <if test="receiverPhone != null">receiver_phone = #{receiverPhone},</if>
+            <if test="receiverAddress != null">receiver_address = #{receiverAddress},</if>
+            <if test="payTime != null">pay_time = #{payTime},</if>
+            <if test="shipTime != null">ship_time = #{shipTime},</if>
+            <if test="finishTime != null">finish_time = #{finishTime},</if>
+            <if test="deleted != null">deleted = #{deleted},</if>
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 批量插入订单（ShardingSphere自动路由到对应分表） -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO t_order (order_no, user_id, user_name, total_amount, status, receiver_name, 
+        INSERT INTO t_order (code, order_no, user_id, user_name, total_amount, status, receiver_name,
                            receiver_phone, receiver_address, create_time, update_time, deleted)
         VALUES
-        <foreach collection="orders" item="order" separator=",">
-            (#{order.orderNo}, #{order.userId}, #{order.userName}, #{order.totalAmount}, 
+        <foreach collection="list" item="order" separator=",">
+            (#{order.code}, #{order.orderNo}, #{order.userId}, #{order.userName}, #{order.totalAmount},
              #{order.status}, #{order.receiverName}, #{order.receiverPhone}, #{order.receiverAddress},
              #{order.createTime}, #{order.updateTime}, #{order.deleted})
         </foreach>
