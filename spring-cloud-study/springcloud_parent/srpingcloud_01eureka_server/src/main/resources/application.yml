@@ -1,11 +1,3 @@
-# eureka默认端口号
-server:
-  port: 8761
-# 不能有下划线，不区分大小写
-spring:
-  application:
-    name: eureka-server
-
 apollo:
   meta: http://localhost:8080
   bootstrap:
