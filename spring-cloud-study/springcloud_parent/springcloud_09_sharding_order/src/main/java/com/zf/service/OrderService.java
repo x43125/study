@@ -4,6 +4,7 @@ import com.zf.dto.CreateOrderDTO;
 import com.zf.entity.Order;
 import com.zf.entity.OrderItem;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -71,4 +72,24 @@ public interface OrderService {
      * 生成订单编号
      */
     String generateOrderNo();
+
+    /**
+     * 发送订单创建消息
+     */
+    boolean sendOrderCreateMessage(String orderCode, Long userId, BigDecimal totalAmount, String address);
+
+    /**
+     * 发送订单支付消息
+     */
+    boolean sendOrderPayMessage(String orderCode, Long userId, BigDecimal totalAmount);
+
+    /**
+     * 发送订单发货消息
+     */
+    boolean sendOrderShipMessage(String orderCode, Long userId, String address);
+
+    /**
+     * 批量发送订单消息
+     */
+    int batchSendOrderMessages(int count, String messageType);
 }

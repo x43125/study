@@ -364,4 +364,93 @@ public class OrderServiceImpl implements OrderService {
         
         return items;
     }
+
+    @Override
+    public boolean sendOrderCreateMessage(String orderCode, Long userId, BigDecimal totalAmount, String address) {
+        try {
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .totalAmount(totalAmount)
+                    .status(0)
+                    .address(address)
+                    .orderTime(new java.util.Date())
+                    .messageType("ORDER_CREATE")
+                    .build();
+            return orderProducer.sendOrderMessage(orderMessage);
+        } catch (Exception e) {
+            log.error("发送订单创建消息失败：{}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean sendOrderPayMessage(String orderCode, Long userId, BigDecimal totalAmount) {
+        try {
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .totalAmount(totalAmount)
+                    .status(1)
+                    .orderTime(new java.util.Date())
+                    .messageType("ORDER_PAY")
+                    .build();
+            return orderProducer.sendOrderMessage(orderMessage);
+        } catch (Exception e) {
+            log.error("发送订单支付消息失败：{}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public boolean sendOrderShipMessage(String orderCode, Long userId, String address) {
+        try {
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .status(2)
+                    .address(address)
+                    .orderTime(new java.util.Date())
+                    .messageType("ORDER_SHIP")
+                    .build();
+            return orderProducer.sendOrderMessage(orderMessage);
+        } catch (Exception e) {
+            log.error("发送订单发货消息失败：{}", e.getMessage(), e);
+            return false;
+        }
+    }
+
+    @Override
+    public int batchSendOrderMessages(int count, String messageType) {
+        int successCount = 0;
+        try {
+            for (int i = 0; i < count; i++) {
+                String orderCode = "TEST" + System.currentTimeMillis() + i;
+                Long userId = 1L + (long) (Math.random() * 100);
+                BigDecimal totalAmount = new BigDecimal(100 + Math.random() * 900);
+                String address = "测试地址" + i;
+
+                OrderMessage orderMessage = OrderMessage.builder()
+                        .orderCode(orderCode)
+                        .userId(userId)
+                        .totalAmount(totalAmount)
+                        .status(0)
+                        .address(address)
+                        .orderTime(new java.util.Date())
+                        .messageType(messageType)
+                        .build();
+
+                boolean success = orderProducer.sendOrderMessage(orderMessage);
+                if (success) {
+                    successCount++;
+                }
+
+                // 添加延迟，避免发送过快
+                Thread.sleep(100);
+            }
+        } catch (Exception e) {
+            log.error("批量发送订单消息失败：{}", e.getMessage(), e);
+        }
+        return successCount;
+    }
 }
