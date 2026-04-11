@@ -8,6 +8,7 @@ import com.zf.mapper.OrderMapper;
 import com.zf.mq.OrderMessage;
 import com.zf.mq.OrderProducer;
 import com.zf.service.OrderService;
+import com.zf.util.CodeGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,21 +35,6 @@ public class OrderServiceImpl implements OrderService {
      * 默认未删除标记
      */
     private static final int NOT_DELETED = 0;
-
-    /**
-     * 订单编号前缀
-     */
-    private static final String ORDER_NO_PREFIX = "ORD";
-
-    /**
-     * 订单编号后缀随机数位数
-     */
-    private static final int ORDER_NO_SUFFIX_LENGTH = 4;
-
-    /**
-     * 订单编号后缀最大值
-     */
-    private static final int ORDER_NO_SUFFIX_MAX = 10000;
 
     /**
      * 订单明细数量范围
@@ -93,15 +79,26 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderProducer orderProducer;
 
+    /**
+     * 雪花算法ID生成器（直接注入，使用无参构造函数基于IP自动生成）
+     * CodeGenerator 已经标记为 @Component，会自动创建并注入
+     */
+    @Autowired
+    private CodeGenerator codeGenerator;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createOrder(Order order, List<OrderItem> orderItems) {
+        // 1. 保存订单
         orderMapper.insert(order);
         Long orderId = order.getId();
 
-        for (OrderItem item : orderItems) {
-            item.setOrderId(orderId);
-            orderItemMapper.insert(item);
+        // 2. 设置订单ID并保存订单明细（暂时使用循环插入，ShardingSphere批量插入需要额外配置）
+        if (orderItems != null && !orderItems.isEmpty()) {
+            for (OrderItem item : orderItems) {
+                item.setOrderId(orderId);
+                orderItemMapper.insert(item);
+            }
         }
 
         return orderId;
@@ -164,7 +161,7 @@ public class OrderServiceImpl implements OrderService {
 
         // 发送订单创建消息到 MQ
         OrderMessage orderMessage = OrderMessage.builder()
-                .orderCode(order.getOrderNo())
+                .orderNo(order.getOrderNo())
                 .userId(userId)
                 .totalAmount(totalAmount)
                 .status(order.getStatus())
@@ -178,9 +175,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String generateOrderNo() {
-        return ORDER_NO_PREFIX + System.currentTimeMillis()
-                + String.format("%0" + ORDER_NO_SUFFIX_LENGTH + "d", random.nextInt(ORDER_NO_SUFFIX_MAX));
+    public Long generateOrderNo() {
+        // 使用雪花算法生成订单编号
+        // CodeGenerator 会基于IP地址自动生成 datacenterId 和 workerId
+        return codeGenerator.nextId();
     }
 
     /**

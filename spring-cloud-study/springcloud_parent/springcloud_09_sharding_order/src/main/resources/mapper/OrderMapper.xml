@@ -5,7 +5,6 @@
     <!-- 结果映射 -->
     <resultMap id="BaseResultMap" type="com.zf.entity.Order">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="code" property="code" jdbcType="BIGINT"/>
         <result column="order_no" property="orderNo" jdbcType="VARCHAR"/>
         <result column="user_id" property="userId" jdbcType="BIGINT"/>
         <result column="user_name" property="userName" jdbcType="VARCHAR"/>
@@ -25,17 +24,17 @@
 
     <!-- 基础列 -->
     <sql id="Base_Column_List">
-        id, code, order_no, user_id, user_name, total_amount, status, address_id,
+        id, order_no, user_id, user_name, total_amount, status, address_id,
         receiver_name, receiver_phone, receiver_address, create_time, update_time,
         pay_time, ship_time, finish_time, deleted
     </sql>
 
     <!-- 插入订单 -->
     <insert id="insert" parameterType="com.zf.entity.Order" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_order (code, order_no, user_id, user_name, total_amount, status, address_id,
+        INSERT INTO t_order (order_no, user_id, user_name, total_amount, status, address_id,
                            receiver_name, receiver_phone, receiver_address, create_time, update_time,
                            pay_time, ship_time, finish_time, deleted)
-        VALUES (#{code}, #{orderNo}, #{userId}, #{userName}, #{totalAmount}, #{status}, #{addressId},
+        VALUES (#{orderNo}, #{userId}, #{userName}, #{totalAmount}, #{status}, #{addressId},
                 #{receiverName}, #{receiverPhone}, #{receiverAddress}, #{createTime}, #{updateTime},
                 #{payTime}, #{shipTime}, #{finishTime}, #{deleted})
     </insert>
@@ -77,7 +76,6 @@
     <update id="updateById" parameterType="com.zf.entity.Order">
         UPDATE t_order
         <set>
-            <if test="code != null">code = #{code},</if>
             <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="userId != null">user_id = #{userId},</if>
             <if test="userName != null">user_name = #{userName},</if>
@@ -98,11 +96,11 @@
 
     <!-- 批量插入订单（ShardingSphere自动路由到对应分表） -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO t_order (code, order_no, user_id, user_name, total_amount, status, receiver_name,
+        INSERT INTO t_order (order_no, user_id, user_name, total_amount, status, receiver_name,
                            receiver_phone, receiver_address, create_time, update_time, deleted)
         VALUES
         <foreach collection="list" item="order" separator=",">
-            (#{order.code}, #{order.orderNo}, #{order.userId}, #{order.userName}, #{order.totalAmount},
+            (#{order.orderNo}, #{order.userId}, #{order.userName}, #{order.totalAmount},
              #{order.status}, #{order.receiverName}, #{order.receiverPhone}, #{order.receiverAddress},
              #{order.createTime}, #{order.updateTime}, #{order.deleted})
         </foreach>

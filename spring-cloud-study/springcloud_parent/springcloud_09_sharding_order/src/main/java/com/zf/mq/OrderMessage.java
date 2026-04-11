@@ -22,9 +22,9 @@ public class OrderMessage implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 订单编号
+     * 订单编号（雪花算法生成）
      */
-    private String orderCode;
+    private Long orderNo;
 
     /**
      * 用户ID

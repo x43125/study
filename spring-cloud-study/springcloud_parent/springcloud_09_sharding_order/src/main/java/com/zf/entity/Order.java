@@ -17,9 +17,9 @@ public class Order extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 订单编号 - 唯一业务标识
+     * 订单编号 - 雪花算法生成
      */
-    private String orderNo;
+    private Long orderNo;
 
     /**
      * 用户ID - 分库键

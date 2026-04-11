@@ -14,53 +14,56 @@ spring:
   main:
     allow-bean-definition-overriding: true
   
-  # ShardingSphere 分库分表配置
-  shardingsphere:
-    datasource:
-      names: ds0
-      ds0:
-        type: com.alibaba.druid.pool.DruidDataSource
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=utf8mb4&useSSL=false&serverTimezone=Asia/Shanghai
-        username: root
-        password: 12345678
-        initial-size: 5
-        min-idle: 5
-        max-active: 20
-        max-wait: 60000
-    props:
-      sql-show: true
-    rules:
-      sharding:
-        binding-tables: t_order,t_order_item
-        tables:
-          t_order:
-            actual-data-nodes: ds0.t_order_$->{202601..202612},ds0.t_order
-            table-strategy:
-              standard:
-                sharding-column: code
-                sharding-algorithm-name: order-month-sharding
-          t_order_item:
-            actual-data-nodes: ds0.t_order_item_$->{202601..202612},ds0.t_order_item
-            table-strategy:
-              standard:
-                sharding-column: code
-                sharding-algorithm-name: order-item-month-sharding
-          t_region:
-            actual-data-nodes: ds0.t_region
-          t_user:
-            actual-data-nodes: ds0.t_user
-        sharding-algorithms:
-          order-month-sharding:
-            type: CLASS_BASED
-            props:
-              strategy: STANDARD
-              algorithmClassName: com.zf.sharding.OrderShardingAlgorithm
-          order-item-month-sharding:
-            type: CLASS_BASED
-            props:
-              strategy: STANDARD
-              algorithmClassName: com.zf.sharding.OrderItemShardingAlgorithm
+  # ShardingSphere 分库分表配置（暂时禁用，直接使用普通数据源）
+  # shardingsphere:
+  #   datasource:
+  #     names: ds0
+  #     ds0:
+  #       type: com.alibaba.druid.pool.DruidDataSource
+  #       driver-class-name: com.mysql.cj.jdbc.Driver
+  #       url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+  #       username: root
+  #       password: 12345678
+  #       initial-size: 5
+  #       min-idle: 5
+  #       max-active: 20
+  #       max-wait: 60000
+  #   props:
+  #     sql-show: true
+  #   rules:
+  #     sharding:
+  #       tables:
+  #         t_order:
+  #           actual-data-nodes: ds0.t_order
+  #         t_order_item:
+  #           actual-data-nodes: ds0.t_order_item
+  #         t_region:
+  #           actual-data-nodes: ds0.t_region
+  #         t_user:
+  #           actual-data-nodes: ds0.t_user
+  #       sharding-algorithms:
+  #         order-month-sharding:
+  #           type: CLASS_BASED
+  #           props:
+  #             strategy: STANDARD
+  #             algorithmClassName: com.zf.sharding.OrderShardingAlgorithm
+  #         order-item-month-sharding:
+  #           type: CLASS_BASED
+  #           props:
+  #             strategy: STANDARD
+  #             algorithmClassName: com.zf.sharding.OrderItemShardingAlgorithm
+
+  # 普通数据源配置（暂时使用）
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/order_db?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: 12345678
+    initial-size: 5
+    min-idle: 5
+    max-active: 20
+    max-wait: 60000
 
 # RocketMQ 配置
 rocketmq:

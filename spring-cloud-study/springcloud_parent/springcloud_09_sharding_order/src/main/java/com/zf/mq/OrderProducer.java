@@ -40,14 +40,14 @@ public class OrderProducer {
             rocketMQTemplate.syncSend(ORDER_TOPIC, message);
 
             log.info("订单消息发送成功 - 订单编号: {}, 消息类型: {}, 发送时间: {}",
-                    orderMessage.getOrderCode(),
+                    orderMessage.getOrderNo(),
                     orderMessage.getMessageType(),
                     orderMessage.getSendTime());
 
             return true;
         } catch (Exception e) {
             log.error("订单消息发送失败 - 订单编号: {}, 错误信息: {}",
-                    orderMessage.getOrderCode(),
+                    orderMessage.getOrderNo(),
                     e.getMessage(),
                     e);
             return false;
@@ -71,20 +71,20 @@ public class OrderProducer {
             rocketMQTemplate.asyncSend(ORDER_TOPIC, message, new org.apache.rocketmq.client.producer.SendCallback() {
                 @Override
                 public void onSuccess(org.apache.rocketmq.client.producer.SendResult sendResult) {
-                    log.info("异步消息发送成功 - 订单编号: {}", orderMessage.getOrderCode());
+                    log.info("异步消息发送成功 - 订单编号: {}", orderMessage.getOrderNo());
                 }
 
                 @Override
                 public void onException(Throwable e) {
                     log.error("异步消息发送失败 - 订单编号: {}, 错误信息: {}",
-                            orderMessage.getOrderCode(), e.getMessage(), e);
+                            orderMessage.getOrderNo(), e.getMessage(), e);
                 }
             });
 
-            log.info("订单消息异步发送中 - 订单编号: {}", orderMessage.getOrderCode());
+            log.info("订单消息异步发送中 - 订单编号: {}", orderMessage.getOrderNo());
         } catch (Exception e) {
             log.error("订单消息异步发送失败 - 订单编号: {}, 错误信息: {}",
-                    orderMessage.getOrderCode(),
+                    orderMessage.getOrderNo(),
                     e.getMessage(),
                     e);
         }

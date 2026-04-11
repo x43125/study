@@ -42,7 +42,7 @@ public interface OrderService {
     long countOrders();
 
     /**
-     * 生成订单编号
+     * 生成订单编号（雪花算法）
      */
-    String generateOrderNo();
+    Long generateOrderNo();
 }

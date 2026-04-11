@@ -23,7 +23,7 @@ public class OrderConsumer implements RocketMQListener<OrderMessage> {
     public void onMessage(OrderMessage orderMessage) {
         try {
             log.info("========== 开始消费订单消息 ==========");
-            log.info("订单编号: {}", orderMessage.getOrderCode());
+            log.info("订单编号: {}", orderMessage.getOrderNo());
             log.info("用户ID: {}", orderMessage.getUserId());
             log.info("订单金额: {}", orderMessage.getTotalAmount());
             log.info("订单状态: {}", orderMessage.getStatus());
@@ -38,7 +38,7 @@ public class OrderConsumer implements RocketMQListener<OrderMessage> {
 
         } catch (Exception e) {
             log.error("消费订单消息失败 - 订单编号: {}, 错误信息: {}",
-                    orderMessage.getOrderCode(),
+                    orderMessage.getOrderNo(),
                     e.getMessage(),
                     e);
             // 抛出异常让 RocketMQ 进行重试
@@ -73,7 +73,7 @@ public class OrderConsumer implements RocketMQListener<OrderMessage> {
      * 处理订单创建消息
      */
     private void handleOrderCreate(OrderMessage orderMessage) {
-        log.info("处理订单创建消息 - 订单编号: {}", orderMessage.getOrderCode());
+        log.info("处理订单创建消息 - 订单编号: {}", orderMessage.getOrderNo());
         // TODO: 这里可以添加订单创建后的业务逻辑
         // 例如：发送短信通知、更新库存、生成报表等
     }
@@ -82,7 +82,7 @@ public class OrderConsumer implements RocketMQListener<OrderMessage> {
      * 处理订单支付消息
      */
     private void handleOrderPay(OrderMessage orderMessage) {
-        log.info("处理订单支付消息 - 订单编号: {}", orderMessage.getOrderCode());
+        log.info("处理订单支付消息 - 订单编号: {}", orderMessage.getOrderNo());
         // TODO: 这里可以添加订单支付后的业务逻辑
         // 例如：更新订单状态、触发发货流程、发送支付成功通知等
     }
@@ -91,7 +91,7 @@ public class OrderConsumer implements RocketMQListener<OrderMessage> {
      * 处理订单发货消息
      */
     private void handleOrderShip(OrderMessage orderMessage) {
-        log.info("处理订单发货消息 - 订单编号: {}", orderMessage.getOrderCode());
+        log.info("处理订单发货消息 - 订单编号: {}", orderMessage.getOrderNo());
         // TODO: 这里可以添加订单发货后的业务逻辑
         // 例如：发送物流通知、更新订单状态等
     }

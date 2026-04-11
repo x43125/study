@@ -21,10 +21,10 @@ public class MybatisConfig {
 
     /**
      * 创建 SqlSessionFactory
-     * 使用 ShardingSphere 创建的数据源
+     * 使用自动配置的数据源
      */
     @Bean(name = "sqlSessionFactory")
-    public SqlSessionFactory sqlSessionFactory(@Qualifier("shardingSphereDataSource") DataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean bean = new SqlSessionFactoryBean();
         bean.setDataSource(dataSource);
         bean.setTypeAliasesPackage("com.zf.entity");

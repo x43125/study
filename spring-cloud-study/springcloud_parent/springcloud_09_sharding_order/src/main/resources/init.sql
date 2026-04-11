@@ -79,7 +79,7 @@ INSERT INTO t_region (code, name, parent_id, level, sort) VALUES
 DROP TABLE IF EXISTS t_order;
 CREATE TABLE t_order (
     id BIGINT PRIMARY KEY AUTO_INCREMENT COMMENT '订单ID',
-    order_no VARCHAR(50) NOT NULL UNIQUE COMMENT '订单编号',
+    order_no BIGINT NOT NULL UNIQUE COMMENT '订单编号（雪花算法生成）',
     user_id BIGINT NOT NULL COMMENT '用户ID',
     user_name VARCHAR(50) COMMENT '用户昵称（冗余字段）',
     total_amount DECIMAL(10,2) NOT NULL COMMENT '订单总金额',
