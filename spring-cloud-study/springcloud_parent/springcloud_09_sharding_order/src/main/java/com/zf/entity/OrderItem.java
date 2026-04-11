@@ -2,8 +2,8 @@ package com.zf.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 /**
  * 订单明细实体
@@ -13,20 +13,9 @@ import java.math.BigDecimal;
  *    确保同一订单的订单明细和订单在同一个分库分表中，避免跨库关联查询
  */
 @Data
-public class OrderItem implements Serializable {
+public class OrderItem extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 明细ID - 主键
-     */
-    private Long id;
-
-    /**
-     * 订单编码 - 雪花算法生成，用作分片键
-     * 与Order表的code保持一致，用于绑定表关联
-     */
-    private Long code;
 
     /**
      * 订单ID - 关联订单表
@@ -63,19 +52,4 @@ public class OrderItem implements Serializable {
      * 小计金额（price * quantity）
      */
     private BigDecimal totalAmount;
-
-    /**
-     * 创建时间
-     */
-    private Long createTime;
-
-    /**
-     * 更新时间
-     */
-    private Long updateTime;
-
-    /**
-     * 逻辑删除：0-未删除 1-已删除
-     */
-    private Integer deleted;
 }

@@ -2,7 +2,6 @@ package com.zf.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -13,20 +12,9 @@ import java.time.LocalDateTime;
  * 2. orderId适合作为分表键（订单ID是唯一标识）
  */
 @Data
-public class Order implements Serializable {
+public class Order extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 订单ID - 主键
-     */
-    private Long id;
-
-    /**
-     * 订单编码 - 雪花算法生成，用作分片键
-     * 从code的时间戳提取月份，用于路由到对应月份的分表
-     */
-    private Long code;
 
     /**
      * 订单编号 - 唯一业务标识
@@ -75,16 +63,6 @@ public class Order implements Serializable {
     private String receiverAddress;
 
     /**
-     * 创建时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
      * 支付时间
      */
     private LocalDateTime payTime;
@@ -98,9 +76,4 @@ public class Order implements Serializable {
      * 完成时间
      */
     private LocalDateTime finishTime;
-
-    /**
-     * 逻辑删除：0-未删除 1-已删除
-     */
-    private Integer deleted;
 }

@@ -2,9 +2,6 @@ package com.zf.entity;
 
 import lombok.Data;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
 /**
  * 用户实体
  * 分库分表改造提示：
@@ -13,14 +10,9 @@ import java.time.LocalDateTime;
  * 3. 也可以考虑将User表作为单表放在独立的用户库中
  */
 @Data
-public class User implements Serializable {
+public class User extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
-
-    /**
-     * 用户ID - 主键
-     */
-    private Long id;
 
     /**
      * 用户名
@@ -61,19 +53,4 @@ public class User implements Serializable {
      * 用户状态：0-正常 1-禁用
      */
     private Integer status;
-
-    /**
-     * 注册时间
-     */
-    private LocalDateTime createTime;
-
-    /**
-     * 更新时间
-     */
-    private LocalDateTime updateTime;
-
-    /**
-     * 逻辑删除：0-未删除 1-已删除
-     */
-    private Integer deleted;
 }

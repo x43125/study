@@ -8,7 +8,6 @@ import com.zf.mapper.OrderMapper;
 import com.zf.mq.OrderMessage;
 import com.zf.mq.OrderProducer;
 import com.zf.service.OrderService;
-import com.zf.util.CodeGenerator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -32,11 +29,6 @@ import java.util.Random;
 @Slf4j
 @Service
 public class OrderServiceImpl implements OrderService {
-
-    /**
-     * 批量插入的批次大小
-     */
-    private static final int BATCH_SIZE = 1000;
 
     /**
      * 默认未删除标记
@@ -83,26 +75,6 @@ public class OrderServiceImpl implements OrderService {
     private static final int MAX_QUANTITY = 5;
 
     /**
-     * 测试用户数量
-     */
-    private static final int TEST_USER_COUNT = 10;
-
-    /**
-     * 批量生成测试用户数量
-     */
-    private static final int BATCH_USER_COUNT = 100;
-
-    /**
-     * 历史订单天数范围
-     */
-    private static final int HISTORY_DAYS = 30;
-
-    /**
-     * 订单状态范围
-     */
-    private static final int MAX_STATUS = 5;
-
-    /**
      * 订单初始状态
      */
     private static final int INITIAL_STATUS = 0;
@@ -116,12 +88,6 @@ public class OrderServiceImpl implements OrderService {
     private OrderItemMapper orderItemMapper;
 
     /**
-     * 雪花算法ID生成器
-     */
-    @Autowired
-    private CodeGenerator codeGenerator;
-
-    /**
      * 订单消息生产者
      */
     @Autowired
@@ -130,16 +96,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createOrder(Order order, List<OrderItem> orderItems) {
-        Long code = codeGenerator.nextId();
-        order.setCode(code);
-        
-        log.info("生成订单code: {}", code);
-        
         orderMapper.insert(order);
         Long orderId = order.getId();
 
         for (OrderItem item : orderItems) {
-            item.setCode(code);
             item.setOrderId(orderId);
             orderItemMapper.insert(item);
         }
@@ -154,7 +114,8 @@ public class OrderServiceImpl implements OrderService {
             return null;
         }
 
-        orderItemMapper.selectByOrderId(orderId);
+        List<OrderItem> items = orderItemMapper.selectByOrderId(orderId);
+        // 可以在这里设置到order对象中，如果需要的话
         return order;
     }
 
@@ -178,34 +139,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void batchInsertOrders(List<Order> orders) {
-        if (orders == null || orders.isEmpty()) {
-            return;
-        }
-        int total = orders.size();
-        for (int i = 0; i < total; i += BATCH_SIZE) {
-            int end = Math.min(i + BATCH_SIZE, total);
-            List<Order> batch = orders.subList(i, end);
-            orderMapper.batchInsert(batch);
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void batchInsertOrderItems(List<OrderItem> items) {
-        if (items == null || items.isEmpty()) {
-            return;
-        }
-        int total = items.size();
-        for (int i = 0; i < total; i += BATCH_SIZE) {
-            int end = Math.min(i + BATCH_SIZE, total);
-            List<OrderItem> batch = items.subList(i, end);
-            orderItemMapper.batchInsert(batch);
-        }
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
     public Long createOrderWithDTO(CreateOrderDTO createOrderDTO) {
         Long userId = createOrderDTO.getUserId();
 
@@ -219,6 +152,7 @@ public class OrderServiceImpl implements OrderService {
         order.setReceiverAddress(createOrderDTO.getReceiverAddress());
         order.setCreateTime(LocalDateTime.now());
         order.setUpdateTime(LocalDateTime.now());
+        order.setDeleted(NOT_DELETED);
 
         List<OrderItem> items = generateRandomOrderItems();
         BigDecimal totalAmount = items.stream()
@@ -244,101 +178,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public int batchCreateOrders(int count) {
-        int successCount = 0;
-        for (int i = 0; i < count; i++) {
-            try {
-                Long userId = (long) (random.nextInt(TEST_USER_COUNT) + 1);
-                Order order = createRandomOrder(userId);
-                List<OrderItem> items = generateRandomOrderItems();
-                
-                BigDecimal totalAmount = items.stream()
-                        .map(OrderItem::getTotalAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                order.setTotalAmount(totalAmount);
-                
-                createOrder(order, items);
-                successCount++;
-            } catch (Exception e) {
-                log.error("创建订单失败：{}", e.getMessage());
-            }
-        }
-        return successCount;
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public void batchInsertOrdersWithItems(List<Order> orders, List<OrderItem> items) {
-        batchInsertOrders(orders);
-        batchInsertOrderItems(items);
-    }
-
-    @Override
     public String generateOrderNo() {
-        return ORDER_NO_PREFIX + System.currentTimeMillis() 
+        return ORDER_NO_PREFIX + System.currentTimeMillis()
                 + String.format("%0" + ORDER_NO_SUFFIX_LENGTH + "d", random.nextInt(ORDER_NO_SUFFIX_MAX));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> batchGenerateOrders(int count) {
-        Map<String, Object> result = new HashMap<>();
-        long startTime = System.currentTimeMillis();
-
-        try {
-            List<Order> orders = new ArrayList<>();
-            List<OrderItem> allItems = new ArrayList<>();
-            
-            for (int i = 0; i < count; i++) {
-                Long userId = (long) (random.nextInt(BATCH_USER_COUNT) + 1);
-                Order order = createRandomOrder(userId);
-                
-                List<OrderItem> items = generateRandomOrderItems();
-                BigDecimal totalAmount = items.stream()
-                        .map(OrderItem::getTotalAmount)
-                        .reduce(BigDecimal.ZERO, BigDecimal::add);
-                order.setTotalAmount(totalAmount);
-                
-                allItems.addAll(items);
-                orders.add(order);
-            }
-            
-            batchInsertOrders(orders);
-            batchInsertOrderItems(allItems);
-            
-            long endTime = System.currentTimeMillis();
-            long duration = endTime - startTime;
-            
-            result.put("success", true);
-            result.put("message", String.format("批量插入完成：%d条订单，耗时：%d秒", count, duration / 1000));
-            result.put("data", count);
-            result.put("duration", duration + "ms");
-        } catch (Exception e) {
-            log.error("批量插入失败：{}", e.getMessage(), e);
-            result.put("success", false);
-            result.put("message", "批量插入失败：" + e.getMessage());
-        }
-
-        return result;
-    }
-
-    /**
-     * 创建随机订单
-     */
-    private Order createRandomOrder(Long userId) {
-        Order order = new Order();
-        order.setOrderNo(generateOrderNo());
-        order.setUserId(userId);
-        order.setUserName("用户" + userId);
-        order.setStatus(random.nextInt(MAX_STATUS));
-        order.setReceiverName("收货人" + userId);
-        order.setReceiverPhone("13800138000");
-        order.setReceiverAddress("北京市朝阳区");
-        order.setCreateTime(LocalDateTime.now().minusDays(random.nextInt(HISTORY_DAYS)));
-        order.setUpdateTime(LocalDateTime.now());
-        order.setDeleted(NOT_DELETED);
-        return order;
     }
 
     /**
@@ -347,7 +189,7 @@ public class OrderServiceImpl implements OrderService {
     private List<OrderItem> generateRandomOrderItems() {
         List<OrderItem> items = new ArrayList<>();
         int itemCount = random.nextInt(MAX_ITEM_COUNT - MIN_ITEM_COUNT + 1) + MIN_ITEM_COUNT;
-        
+
         for (int i = 0; i < itemCount; i++) {
             OrderItem item = new OrderItem();
             item.setProductId((long) (random.nextInt(MAX_PRODUCT_ID - MIN_PRODUCT_ID + 1) + MIN_PRODUCT_ID));
@@ -355,102 +197,13 @@ public class OrderServiceImpl implements OrderService {
             item.setPrice(new BigDecimal(random.nextInt(MAX_PRICE - MIN_PRICE + 1) + MIN_PRICE));
             item.setQuantity(random.nextInt(MAX_QUANTITY - MIN_QUANTITY + 1) + MIN_QUANTITY);
             item.setTotalAmount(item.getPrice().multiply(new BigDecimal(item.getQuantity())));
-            item.setCreateTime(System.currentTimeMillis());
-            item.setUpdateTime(System.currentTimeMillis());
+            item.setCreateTime(LocalDateTime.now());
+            item.setUpdateTime(LocalDateTime.now());
             item.setDeleted(NOT_DELETED);
-            
+
             items.add(item);
         }
-        
+
         return items;
-    }
-
-    @Override
-    public boolean sendOrderCreateMessage(String orderCode, Long userId, BigDecimal totalAmount, String address) {
-        try {
-            OrderMessage orderMessage = OrderMessage.builder()
-                    .orderCode(orderCode)
-                    .userId(userId)
-                    .totalAmount(totalAmount)
-                    .status(0)
-                    .address(address)
-                    .orderTime(new java.util.Date())
-                    .messageType("ORDER_CREATE")
-                    .build();
-            return orderProducer.sendOrderMessage(orderMessage);
-        } catch (Exception e) {
-            log.error("发送订单创建消息失败：{}", e.getMessage(), e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean sendOrderPayMessage(String orderCode, Long userId, BigDecimal totalAmount) {
-        try {
-            OrderMessage orderMessage = OrderMessage.builder()
-                    .orderCode(orderCode)
-                    .userId(userId)
-                    .totalAmount(totalAmount)
-                    .status(1)
-                    .orderTime(new java.util.Date())
-                    .messageType("ORDER_PAY")
-                    .build();
-            return orderProducer.sendOrderMessage(orderMessage);
-        } catch (Exception e) {
-            log.error("发送订单支付消息失败：{}", e.getMessage(), e);
-            return false;
-        }
-    }
-
-    @Override
-    public boolean sendOrderShipMessage(String orderCode, Long userId, String address) {
-        try {
-            OrderMessage orderMessage = OrderMessage.builder()
-                    .orderCode(orderCode)
-                    .userId(userId)
-                    .status(2)
-                    .address(address)
-                    .orderTime(new java.util.Date())
-                    .messageType("ORDER_SHIP")
-                    .build();
-            return orderProducer.sendOrderMessage(orderMessage);
-        } catch (Exception e) {
-            log.error("发送订单发货消息失败：{}", e.getMessage(), e);
-            return false;
-        }
-    }
-
-    @Override
-    public int batchSendOrderMessages(int count, String messageType) {
-        int successCount = 0;
-        try {
-            for (int i = 0; i < count; i++) {
-                String orderCode = "TEST" + System.currentTimeMillis() + i;
-                Long userId = 1L + (long) (Math.random() * 100);
-                BigDecimal totalAmount = new BigDecimal(100 + Math.random() * 900);
-                String address = "测试地址" + i;
-
-                OrderMessage orderMessage = OrderMessage.builder()
-                        .orderCode(orderCode)
-                        .userId(userId)
-                        .totalAmount(totalAmount)
-                        .status(0)
-                        .address(address)
-                        .orderTime(new java.util.Date())
-                        .messageType(messageType)
-                        .build();
-
-                boolean success = orderProducer.sendOrderMessage(orderMessage);
-                if (success) {
-                    successCount++;
-                }
-
-                // 添加延迟，避免发送过快
-                Thread.sleep(100);
-            }
-        } catch (Exception e) {
-            log.error("批量发送订单消息失败：{}", e.getMessage(), e);
-        }
-        return successCount;
     }
 }
