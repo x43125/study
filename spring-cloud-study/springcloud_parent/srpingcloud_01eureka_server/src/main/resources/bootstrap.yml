@@ -1,0 +1,21 @@
+# Apollo 配置中心启动配置
+# 此文件必须在 application.yml 之前加载，用于配置 Apollo 连接信息
+
+app:
+  id: eureka-server  # Apollo 中的应用 ID
+
+# Apollo 环境配置（使用 env 属性）
+env: dev
+
+apollo:
+  # Meta Server 地址（多个用逗号分隔）
+  meta: http://localhost:8080
+
+  bootstrap:
+    enabled: true  # 是否开启 Apollo 预加载
+    namespaces: application  # 使用的命名空间（多个用逗号分隔）
+    eagerLoad:
+      enabled: true  # 是否在启动时就加载 Apollo 配置
+
+  # 配置服务地址（直接指定，避免 Docker 内部地址问题）
+  configService: http://localhost:8080

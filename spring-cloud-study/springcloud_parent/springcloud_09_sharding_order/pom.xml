@@ -77,6 +77,20 @@
             <version>${apollo.version}</version>
         </dependency>
 
+        <!-- RocketMQ Spring Boot Starter（升级到 2.2.5 以支持 RocketMQ 5.x） -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-spring-boot-starter</artifactId>
+            <version>2.2.5</version>
+        </dependency>
+
+        <!-- RocketMQ Client（显式指定 5.3.0 版本以匹配 Broker） -->
+        <dependency>
+            <groupId>org.apache.rocketmq</groupId>
+            <artifactId>rocketmq-client</artifactId>
+            <version>5.3.0</version>
+        </dependency>
+
         <!-- Spring Boot Test -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -3,11 +3,15 @@ package com.zf.controller;
 import com.zf.dto.CreateOrderDTO;
 import com.zf.dto.ResponseDTO;
 import com.zf.entity.Order;
+import com.zf.mq.OrderMessage;
+import com.zf.mq.OrderProducer;
 import com.zf.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +24,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private OrderProducer orderProducer;
 
     /**
      * 创建订单
@@ -134,6 +141,154 @@ public class OrderController {
             }
         } catch (Exception e) {
             return ResponseDTO.error("批量插入失败：" + e.getMessage());
+        }
+    }
+
+    // ========== RocketMQ 测试接口 ==========
+
+    /**
+     * 发送订单创建消息
+     * POST /order/send-message
+     */
+    @PostMapping("/send-message")
+    public ResponseDTO<String> sendOrderMessage(
+            @RequestParam String orderCode,
+            @RequestParam Long userId,
+            @RequestParam BigDecimal totalAmount,
+            @RequestParam String address,
+            @RequestParam(defaultValue = "ORDER_CREATE") String messageType) {
+        try {
+            // 构建订单消息
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .totalAmount(totalAmount)
+                    .status(0)
+                    .address(address)
+                    .orderTime(new Date())
+                    .messageType(messageType)
+                    .build();
+
+            // 发送消息
+            boolean success = orderProducer.sendOrderMessage(orderMessage);
+
+            if (success) {
+                return ResponseDTO.success("订单消息发送成功", orderCode);
+            } else {
+                return ResponseDTO.error("订单消息发送失败");
+            }
+        } catch (Exception e) {
+            return ResponseDTO.error("发送消息失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 发送订单支付消息
+     * POST /order/send-pay-message
+     */
+    @PostMapping("/send-pay-message")
+    public ResponseDTO<String> sendPayMessage(
+            @RequestParam String orderCode,
+            @RequestParam Long userId,
+            @RequestParam BigDecimal totalAmount) {
+        try {
+            // 构建订单支付消息
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .totalAmount(totalAmount)
+                    .status(1)
+                    .orderTime(new Date())
+                    .messageType("ORDER_PAY")
+                    .build();
+
+            // 发送消息
+            boolean success = orderProducer.sendOrderMessage(orderMessage);
+
+            if (success) {
+                return ResponseDTO.success("订单支付消息发送成功", orderCode);
+            } else {
+                return ResponseDTO.error("订单支付消息发送失败");
+            }
+        } catch (Exception e) {
+            return ResponseDTO.error("发送消息失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 发送订单发货消息
+     * POST /order/send-ship-message
+     */
+    @PostMapping("/send-ship-message")
+    public ResponseDTO<String> sendShipMessage(
+            @RequestParam String orderCode,
+            @RequestParam Long userId,
+            @RequestParam String address) {
+        try {
+            // 构建订单发货消息
+            OrderMessage orderMessage = OrderMessage.builder()
+                    .orderCode(orderCode)
+                    .userId(userId)
+                    .status(2)
+                    .address(address)
+                    .orderTime(new Date())
+                    .messageType("ORDER_SHIP")
+                    .build();
+
+            // 发送消息
+            boolean success = orderProducer.sendOrderMessage(orderMessage);
+
+            if (success) {
+                return ResponseDTO.success("订单发货消息发送成功", orderCode);
+            } else {
+                return ResponseDTO.error("订单发货消息发送失败");
+            }
+        } catch (Exception e) {
+            return ResponseDTO.error("发送消息失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 批量发送订单消息（用于压力测试）
+     * POST /order/batch-send-message
+     */
+    @PostMapping("/batch-send-message")
+    public ResponseDTO<Integer> batchSendOrderMessage(
+            @RequestParam(defaultValue = "10") int count,
+            @RequestParam(defaultValue = "ORDER_CREATE") String messageType) {
+        try {
+            int successCount = 0;
+            for (int i = 0; i < count; i++) {
+                String orderCode = "TEST" + System.currentTimeMillis() + i;
+                Long userId = 1L + (long) (Math.random() * 100);
+                BigDecimal totalAmount = new BigDecimal(100 + Math.random() * 900);
+                String address = "测试地址" + i;
+
+                OrderMessage orderMessage = OrderMessage.builder()
+                        .orderCode(orderCode)
+                        .userId(userId)
+                        .totalAmount(totalAmount)
+                        .status(0)
+                        .address(address)
+                        .orderTime(new Date())
+                        .messageType(messageType)
+                        .build();
+
+                boolean success = orderProducer.sendOrderMessage(orderMessage);
+                if (success) {
+                    successCount++;
+                }
+
+                // 添加延迟，避免发送过快
+                Thread.sleep(100);
+            }
+
+            return ResponseDTO.success(
+                    String.format("批量发送完成，成功：%d，失败：%d", successCount, count - successCount),
+                    successCount
+            );
+        } catch (Exception e) {
+            return ResponseDTO.error("批量发送失败：" + e.getMessage());
         }
     }
 }

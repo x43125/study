@@ -1,7 +1,48 @@
-apollo:
-  meta: http://localhost:8080
-  bootstrap:
-    enabled: true # 是否开启 Apollo
-    namespaces: application
-app:
-  id: eureka-server
+# ========== 本地配置文件 ==========
+# 注意：此文件用于本地开发或作为默认配置
+# 生产环境请使用 Apollo 配置中心进行配置管理
+# Apollo 配置优先级高于本地配置
+
+# ========== 服务器配置 ==========
+server:
+  port: 8761
+
+# ========== Spring 应用配置 ==========
+# 注意：Eureka Server 的应用名称不能有下划线，不区分大小写
+spring:
+  application:
+    name: EUREKASERVER
+  cloud:
+    inetutils:
+      ignored-interfaces: .*VMnet.*  # 忽略 VMware 虚拟网卡
+
+# ========== Eureka Server 配置 ==========
+eureka:
+  client:
+    # Eureka Server 的服务地址
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    # 是否从 Eureka Server 获取注册信息（单机模式设置为 false）
+    fetch-registry: false
+    # 是否将自己注册到 Eureka Server（单机模式可以设置为 false，但通常设置为 true）
+    register-with-eureka: false
+  # Eureka Server 实例配置
+  instance:
+    # 使用 IP 地址而不是主机名
+    prefer-ip-address: true
+    # 实例 ID 显示格式
+    instance-id: ${spring.application.name}:${server.port}
+    # 心跳间隔（秒）
+    lease-renewal-interval-in-seconds: 30
+    # 服务失效时间（秒）
+    lease-expiration-duration-in-seconds: 90
+  # Eureka Server 服务器配置
+  server:
+    # 关闭自我保护机制（生产环境建议开启）
+    enable-self-preservation: false
+    # 清理无效节点的时间间隔（毫秒）
+    eviction-interval-timer-in-ms: 60000
+    # 等待时间（毫秒）
+    wait-time-in-ms-when-sync-empty: 0
+    # 禁用从只读缓存读取数据
+    response-cache-update-interval-ms: 30000
