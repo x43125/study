@@ -5,6 +5,8 @@ import com.zf.entity.Order;
 import com.zf.entity.OrderItem;
 import com.zf.mapper.OrderItemMapper;
 import com.zf.mapper.OrderMapper;
+import com.zf.mq.OrderMessage;
+import com.zf.mq.OrderProducer;
 import com.zf.service.OrderService;
 import com.zf.util.CodeGenerator;
 import lombok.extern.slf4j.Slf4j;
@@ -119,6 +121,12 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private CodeGenerator codeGenerator;
 
+    /**
+     * 订单消息生产者
+     */
+    @Autowired
+    private OrderProducer orderProducer;
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Long createOrder(Order order, List<OrderItem> orderItems) {
@@ -200,7 +208,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional(rollbackFor = Exception.class)
     public Long createOrderWithDTO(CreateOrderDTO createOrderDTO) {
         Long userId = createOrderDTO.getUserId();
-        
+
         Order order = new Order();
         order.setOrderNo(generateOrderNo());
         order.setUserId(userId);
@@ -218,7 +226,21 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         order.setTotalAmount(totalAmount);
-        return createOrder(order, items);
+        Long orderId = createOrder(order, items);
+
+        // 发送订单创建消息到 MQ
+        OrderMessage orderMessage = OrderMessage.builder()
+                .orderCode(order.getOrderNo())
+                .userId(userId)
+                .totalAmount(totalAmount)
+                .status(order.getStatus())
+                .address(order.getReceiverAddress())
+                .orderTime(new java.util.Date())
+                .messageType("ORDER_CREATE")
+                .build();
+        orderProducer.sendOrderMessage(orderMessage);
+
+        return orderId;
     }
 
     @Override
