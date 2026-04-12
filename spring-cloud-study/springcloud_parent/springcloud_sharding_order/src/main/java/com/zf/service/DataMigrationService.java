@@ -1,9 +1,8 @@
 package com.zf.service;
 
-import com.zf.dto.MigrationTaskDTO;
-import com.zf.entity.DataMigrationTask;
-
 import java.util.List;
+
+import com.zf.dto.MigrationTaskDTO;
 
 /**
  * 数据迁移服务接口
