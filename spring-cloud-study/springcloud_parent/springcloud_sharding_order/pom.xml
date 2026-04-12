@@ -71,11 +71,11 @@
         </dependency>
 
         <!-- Apollo 配置中心客户端 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>com.ctrip.framework.apollo</groupId>
             <artifactId>apollo-client</artifactId>
             <version>${apollo.version}</version>
-        </dependency>
+        </dependency> -->
 
         <!-- RocketMQ Spring Boot Starter（使用 2.2.3 本地可用版本） -->
         <dependency>

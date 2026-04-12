@@ -5,7 +5,7 @@
     <!-- 结果映射 -->
     <resultMap id="BaseResultMap" type="com.zf.entity.OrderItem">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="order_id" property="orderNo" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="BIGINT"/>
         <result column="product_id" property="productId" jdbcType="BIGINT"/>
         <result column="product_name" property="productName" jdbcType="VARCHAR"/>
         <result column="product_img" property="productImg" jdbcType="VARCHAR"/>
@@ -19,13 +19,13 @@
 
     <!-- 基础列 -->
     <sql id="Base_Column_List">
-        id, order_id, product_id, product_name, product_img, price, quantity,
+        id, order_no, product_id, product_name, product_img, price, quantity,
         total_amount, create_time, update_time, deleted
     </sql>
 
     <!-- 插入订单明细 -->
     <insert id="insert" parameterType="com.zf.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO t_order_item (order_id, product_id, product_name, product_img, price, quantity,
+        INSERT INTO t_order_item (order_no, product_id, product_name, product_img, price, quantity,
                                  total_amount, create_time, update_time, deleted)
         VALUES (#{orderNo}, #{productId}, #{productName}, #{productImg}, #{price}, #{quantity},
                 #{totalAmount}, #{createTime}, #{updateTime}, #{deleted})
@@ -44,7 +44,7 @@
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_order_item
-        WHERE order_id = #{orderNo} AND deleted = 0
+        WHERE order_no = #{orderNo} AND deleted = 0
         ORDER BY id
     </select>
 
@@ -68,7 +68,7 @@
     <update id="updateById" parameterType="com.zf.entity.OrderItem">
         UPDATE t_order_item
         <set>
-            <if test="orderNo != null">order_id = #{orderNo},</if>
+            <if test="orderNo != null">order_no = #{orderNo},</if>
             <if test="productId != null">product_id = #{productId},</if>
             <if test="productName != null">product_name = #{productName},</if>
             <if test="productImg != null">product_img = #{productImg},</if>
@@ -83,7 +83,7 @@
 
     <!-- 批量插入订单明细（ShardingSphere自动路由到对应分表，与t_order绑定表关联） -->
     <insert id="batchInsert" parameterType="java.util.List">
-        INSERT INTO t_order_item (order_id, product_id, product_name, price, quantity,
+        INSERT INTO t_order_item (order_no, product_id, product_name, price, quantity,
                                  total_amount, create_time, update_time, deleted)
         VALUES
         <foreach collection="items" item="item" separator=",">
