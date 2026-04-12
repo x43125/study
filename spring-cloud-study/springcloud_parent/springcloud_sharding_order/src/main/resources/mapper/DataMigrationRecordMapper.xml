@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zf.mapper.DataMigrationRecordMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.zf.entity.DataMigrationRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="task_id" property="taskId" jdbcType="BIGINT"/>
+        <result column="order_no" property="orderNo" jdbcType="BIGINT"/>
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <result column="target_table" property="targetTable" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="retry_count" property="retryCount" jdbcType="INTEGER"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="migrate_time" property="migrateTime" jdbcType="TIMESTAMP"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, task_id, order_no, table_name, target_table, status,
+        retry_count, error_msg, migrate_time, create_time, update_time
+    </sql>
+
+    <!-- 插入迁移记录 -->
+    <insert id="insert" parameterType="com.zf.entity.DataMigrationRecord" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_data_migration_record (
+            task_id, order_no, table_name, target_table, status,
+            retry_count, error_msg, migrate_time, create_time, update_time
+        ) VALUES (
+            #{taskId}, #{orderNo}, #{tableName}, #{targetTable}, #{status},
+            #{retryCount}, #{errorMsg}, #{migrateTime}, NOW(), NOW()
+        )
+        ON DUPLICATE KEY UPDATE
+            status = VALUES(status),
+            target_table = VALUES(target_table),
+            retry_count = retry_count + 1,
+            error_msg = VALUES(error_msg),
+            migrate_time = VALUES(migrate_time),
+            update_time = NOW()
+    </insert>
+
+    <!-- 批量插入迁移记录 -->
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO t_data_migration_record (
+            task_id, order_no, table_name, target_table, status,
+            retry_count, error_msg, migrate_time, create_time, update_time
+        ) VALUES
+        <foreach collection="records" item="record" separator=",">
+            (#{record.taskId}, #{record.orderNo}, #{record.tableName}, #{record.targetTable}, 
+             #{record.status}, #{record.retryCount}, #{record.errorMsg}, #{record.migrateTime}, NOW(), NOW())
+        </foreach>
+    </insert>
+
+    <!-- 根据任务ID和订单号查询迁移记录 -->
+    <select id="selectByTaskIdAndOrderNo" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_record
+        WHERE task_id = #{taskId} AND order_no = #{orderNo}
+    </select>
+
+    <!-- 根据任务ID查询迁移记录 -->
+    <select id="selectByTaskId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_record
+        WHERE task_id = #{taskId}
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 根据任务ID和状态查询迁移记录 -->
+    <select id="selectByTaskIdAndStatus" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_record
+        WHERE task_id = #{taskId} AND status = #{status}
+        ORDER BY create_time ASC
+    </select>
+
+    <!-- 统计任务的成功记录数 -->
+    <select id="countSuccessByTaskId" parameterType="java.lang.Long" resultType="int">
+        SELECT COUNT(*)
+        FROM t_data_migration_record
+        WHERE task_id = #{taskId} AND status = 1
+    </select>
+
+    <!-- 统计任务的失败记录数 -->
+    <select id="countFailedByTaskId" parameterType="java.lang.Long" resultType="int">
+        SELECT COUNT(*)
+        FROM t_data_migration_record
+        WHERE task_id = #{taskId} AND status = 2
+    </select>
+
+    <!-- 更新迁移记录状态 -->
+    <update id="updateStatus">
+        UPDATE t_data_migration_record
+        SET status = #{status},
+            update_time = NOW()
+            <if test="errorMsg != null">
+                , error_msg = #{errorMsg}
+            </if>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新迁移记录重试次数 -->
+    <update id="incrementRetryCount">
+        UPDATE t_data_migration_record
+        SET retry_count = retry_count + 1,
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据任务ID删除迁移记录 -->
+    <delete id="deleteByTaskId" parameterType="java.lang.Long">
+        DELETE FROM t_data_migration_record
+        WHERE task_id = #{taskId}
+    </delete>
+
+    <!-- 根据任务ID和表名删除迁移记录 -->
+    <delete id="deleteByTaskIdAndTableName">
+        DELETE FROM t_data_migration_record
+        WHERE task_id = #{taskId} AND table_name = #{tableName}
+    </delete>
+
+</mapper>

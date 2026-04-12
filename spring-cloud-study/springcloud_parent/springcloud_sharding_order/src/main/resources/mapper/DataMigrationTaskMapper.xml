@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zf.mapper.DataMigrationTaskMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.zf.entity.DataMigrationTask">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="task_name" property="taskName" jdbcType="VARCHAR"/>
+        <result column="table_name" property="tableName" jdbcType="VARCHAR"/>
+        <result column="start_month" property="startMonth" jdbcType="VARCHAR"/>
+        <result column="end_month" property="endMonth" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="INTEGER"/>
+        <result column="migrated_count" property="migratedCount" jdbcType="BIGINT"/>
+        <result column="total_count" property="totalCount" jdbcType="BIGINT"/>
+        <result column="start_time" property="startTime" jdbcType="TIMESTAMP"/>
+        <result column="end_time" property="endTime" jdbcType="TIMESTAMP"/>
+        <result column="error_msg" property="errorMsg" jdbcType="VARCHAR"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, task_name, table_name, start_month, end_month, status,
+        migrated_count, total_count, start_time, end_time, error_msg,
+        create_time, update_time
+    </sql>
+
+    <!-- 插入迁移任务 -->
+    <insert id="insert" parameterType="com.zf.entity.DataMigrationTask" 
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO t_data_migration_task (
+            task_name, table_name, start_month, end_month, status,
+            migrated_count, total_count, start_time, end_time, error_msg,
+            create_time, update_time
+        ) VALUES (
+            #{taskName}, #{tableName}, #{startMonth}, #{endMonth}, #{status},
+            #{migratedCount}, #{totalCount}, #{startTime}, #{endTime}, #{errorMsg},
+            NOW(), NOW()
+        )
+    </insert>
+
+    <!-- 根据ID查询迁移任务 -->
+    <select id="selectById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_task
+        WHERE id = #{id}
+    </select>
+
+    <!-- 根据任务名称查询迁移任务 -->
+    <select id="selectByTaskName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_task
+        WHERE task_name = #{taskName}
+    </select>
+
+    <!-- 更新迁移任务状态 -->
+    <update id="updateStatus">
+        UPDATE t_data_migration_task
+        SET status = #{status},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新迁移进度 -->
+    <update id="updateProgress">
+        UPDATE t_data_migration_task
+        SET migrated_count = #{migratedCount},
+            total_count = #{totalCount},
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 更新任务失败信息 -->
+    <update id="updateErrorInfo">
+        UPDATE t_data_migration_task
+        SET status = 3,
+            error_msg = #{errorMsg},
+            end_time = NOW(),
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 设置任务开始时间 -->
+    <update id="setStartTime">
+        UPDATE t_data_migration_task
+        SET status = 1,
+            start_time = NOW(),
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 设置任务结束时间 -->
+    <update id="setEndTime">
+        UPDATE t_data_migration_task
+        SET end_time = NOW(),
+            update_time = NOW()
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询所有迁移任务 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_task
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据状态查询迁移任务 -->
+    <select id="selectByStatus" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM t_data_migration_task
+        WHERE status = #{status}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 删除迁移任务 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM t_data_migration_task
+        WHERE id = #{id}
+    </delete>
+
+</mapper>
