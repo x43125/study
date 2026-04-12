@@ -8,9 +8,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 /**
  * 订单服务启动类
  */
-@SpringBootApplication(exclude = {
-    org.apache.shardingsphere.spring.boot.ShardingSphereAutoConfiguration.class
-})
+@SpringBootApplication
 @EnableEurekaClient
 @EnableApolloConfig
 public class OrderApplication {

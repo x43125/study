@@ -125,25 +125,6 @@ public class CodeGenerator {
     }
 
     /**
-     * 构造函数
-     *
-     * @param datacenterId 数据中心ID（0-31）
-     * @param workerId     机器ID（0-31）
-     * @deprecated 建议使用无参构造函数，自动基于IP生成机器ID
-     */
-    @Deprecated
-    public CodeGenerator(long datacenterId, long workerId) {
-        if (datacenterId > MAX_DATACENTER_ID || datacenterId < 0) {
-            throw new IllegalArgumentException("Datacenter ID can't be greater than " + MAX_DATACENTER_ID + " or less than 0");
-        }
-        if (workerId > MAX_WORKER_ID || workerId < 0) {
-            throw new IllegalArgumentException("Worker ID can't be greater than " + MAX_WORKER_ID + " or less than 0");
-        }
-        this.datacenterId = datacenterId;
-        this.workerId = workerId;
-    }
-
-    /**
      * 基于IP地址生成机器ID
      * <p>
      * 算法说明：
@@ -318,14 +299,6 @@ public class CodeGenerator {
             String yearMonth = extractYearMonth(code);
             long timestamp = extractTimestamp(code);
             System.out.println("code: " + code + ", yearMonth: " + yearMonth + ", timestamp: " + timestamp);
-        }
-
-        // 测试有参构造函数（已废弃，向后兼容）
-        System.out.println("\n=== 测试有参构造函数（已废弃）===");
-        CodeGenerator generator2 = new CodeGenerator(1L, 1L);
-        for (int i = 0; i < 5; i++) {
-            long code = generator2.nextId();
-            System.out.println("code: " + code);
         }
 
         // 测试静态方法

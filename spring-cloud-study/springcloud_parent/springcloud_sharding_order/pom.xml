@@ -57,11 +57,11 @@
         </dependency>
 
         <!-- ShardingSphere-JDBC 分库分表 -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.apache.shardingsphere</groupId>
             <artifactId>shardingsphere-jdbc-core-spring-boot-starter</artifactId>
             <version>5.2.1</version>
-        </dependency>
+        </dependency> -->
 
         <!-- SnakeYAML（解决版本冲突，ShardingSphere 5.2.1 需要 1.26+） -->
         <dependency>
