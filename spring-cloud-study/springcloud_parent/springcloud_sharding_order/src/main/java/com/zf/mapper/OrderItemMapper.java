@@ -25,7 +25,7 @@ public interface OrderItemMapper {
     /**
      * 根据订单号查询订单明细列表
      */
-    List<OrderItem> selectByOrderNo(@Param("orderNo") Long orderNo);
+    List<OrderItem> selectByOrderNo(@Param("orderNo") String orderNo);
 
     /**
      * 查询所有订单明细

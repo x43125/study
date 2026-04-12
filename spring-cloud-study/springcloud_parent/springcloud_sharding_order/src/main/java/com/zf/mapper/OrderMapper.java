@@ -23,6 +23,11 @@ public interface OrderMapper {
     Order selectById(@Param("id") Long id);
 
     /**
+     * 根据订单号查询订单
+     */
+    Order selectByOrderNo(@Param("orderNo") String orderNo);
+
+    /**
      * 根据用户ID查询订单列表
      */
     List<Order> selectByUserId(@Param("userId") Long userId);

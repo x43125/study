@@ -40,7 +40,7 @@
     </select>
 
     <!-- 根据订单号查询订单明细列表 -->
-    <select id="selectByOrderNo" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_order_item

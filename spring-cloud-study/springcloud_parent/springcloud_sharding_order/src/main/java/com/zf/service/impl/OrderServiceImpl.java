@@ -110,12 +110,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @DataSourceRouter(value = DataSourceContextHolder.NEW_DATASOURCE, read = true)
     public Order getOrderWithItems(Long orderNo) {
-        Order order = orderMapper.selectById(orderNo);
+        // 将Long类型的订单号转换为String进行查询
+        String orderNoStr = String.valueOf(orderNo);
+        Order order = orderMapper.selectByOrderNo(orderNoStr);
         if (order == null) {
             return null;
         }
 
-        List<OrderItem> items = orderItemMapper.selectByOrderNo(orderNo);
+        List<OrderItem> items = orderItemMapper.selectByOrderNo(orderNoStr);
         // 可以在这里设置到order对象中，如果需要的话
         return order;
     }

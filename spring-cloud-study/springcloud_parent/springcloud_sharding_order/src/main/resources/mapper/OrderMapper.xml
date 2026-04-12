@@ -47,6 +47,14 @@
         WHERE id = #{id} AND deleted = 0
     </select>
 
+    <!-- 根据订单号查询订单 -->
+    <select id="selectByOrderNo" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM t_order
+        WHERE order_no = #{orderNo} AND deleted = 0
+    </select>
+
     <!-- 根据用户ID查询订单列表 -->
     <select id="selectByUserId" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
