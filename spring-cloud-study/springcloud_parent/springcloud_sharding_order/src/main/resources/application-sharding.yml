@@ -1,0 +1,91 @@
+# ========== ShardingSphere 分库分表配置 ==========
+# 说明：此配置用于启用ShardingSphere分片功能
+# 使用方式：启动时添加参数 --spring.profiles.active=sharding
+
+spring:
+  autoconfigure:
+    exclude:
+      - com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure
+  shardingsphere:
+    # 数据源配置
+    datasource:
+      names: ds0
+      ds0:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/order_db?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=UTC
+        username: root
+        password: 12345678
+        druid:
+          initial-size: 5
+          min-idle: 5
+          max-active: 20
+          max-wait: 60000
+          time-between-eviction-runs-millis: 60000
+          min-evictable-idle-time-millis: 300000
+          validation-query: SELECT 1
+          test-while-idle: true
+          test-on-borrow: false
+          test-on-return: false
+          filters: stat,wall,log4j2
+          web-stat-filter:
+            enabled: true
+            url-pattern: /*
+          stat-view-servlet:
+            enabled: true
+            url-pattern: /druid/*
+            reset-enable: false
+    
+    # 分片规则配置
+    rules:
+      # 分片表配置
+      sharding:
+        # 分片表定义
+        tables:
+          # 订单表分片配置
+          t_order:
+            # 实际数据节点：ds0.t_order_202510 ~ ds0.t_order_202610
+            actual-data-nodes: ds0.t_order_$->{202510..202610}
+            # 表分片策略
+            table-strategy:
+              standard:
+                # 分片列：order_no
+                sharding-column: order_no
+                # 分片算法名称
+                sharding-algorithm-name: order-month-algorithm
+            
+          # 订单明细表分片配置
+          t_order_item:
+            # 实际数据节点：ds0.t_order_item_202510 ~ ds0.t_order_item_202610
+            actual-data-nodes: ds0.t_order_item_$->{202510..202610}
+            # 表分片策略
+            table-strategy:
+              standard:
+                # 分片列：order_no
+                sharding-column: order_no
+                # 分片算法名称
+                sharding-algorithm-name: order-month-algorithm
+        
+        # 绑定表配置
+        # 说明：绑定表是指主表和子表的分片键一致，这样在进行关联查询时，可以避免跨分片查询
+        binding-tables:
+          - t_order,t_order_item
+        
+        # 分片算法配置
+        sharding-algorithms:
+          # 按月分片算法
+          order-month-algorithm:
+            # 算法类型：基于类的分片算法
+            type: CLASS_BASED
+            props:
+              # 分片策略：标准分片
+              strategy: standard
+              # 分片算法实现类（使用algorithmClassName而不是algorithm-class-name）
+              algorithmClassName: com.zf.sharding.OrderMonthShardingAlgorithm
+    
+    # 属性配置
+    props:
+      # 显示SQL
+      sql-show: true
+      # 是否在控制台打印SQL
+      sql-log-enabled: true

@@ -1,5 +1,7 @@
 package com.zf.service.impl;
 
+import com.zf.datasource.DataSourceContextHolder;
+import com.zf.datasource.DataSourceRouter;
 import com.zf.dto.CreateOrderDTO;
 import com.zf.entity.Order;
 import com.zf.entity.OrderItem;
@@ -88,6 +90,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
+    @DataSourceRouter(dualWrite = true)
     public Long createOrder(Order order, List<OrderItem> orderItems) {
         // 1. 保存订单
         orderMapper.insert(order);
@@ -105,6 +108,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @DataSourceRouter(value = DataSourceContextHolder.NEW_DATASOURCE, read = true)
     public Order getOrderWithItems(Long orderNo) {
         Order order = orderMapper.selectById(orderNo);
         if (order == null) {

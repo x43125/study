@@ -5,7 +5,9 @@ import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -14,8 +16,12 @@ import javax.sql.DataSource;
 /**
  * MyBatis 配置类
  * 手动配置 MyBatis 与 ShardingSphere 的集成
+ * 
+ * 注意：此配置类仅在未使用sharding profile时生效
+ * 当使用sharding profile时，由ShardingDataSourceConfig接管
  */
 @Configuration
+@Conditional(NotShardingProfileCondition.class)
 @MapperScan(basePackages = "com.zf.mapper", sqlSessionTemplateRef = "sqlSessionTemplate")
 public class MybatisConfig {
 

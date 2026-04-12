@@ -67,8 +67,8 @@ public class OrderMonthShardingAlgorithm implements StandardShardingAlgorithm<Lo
         log.debug("精确分片 - orderNo: {}, availableTables: {}, logicTable: {}",
                 orderNo, availableTargetNames, tableName);
 
-        // 从订单号中提取年月
-        String suffix = extractMonthFromSnowflakeId(orderNo);
+        // 使用当前系统时间获取年月（新订单总是路由到当前月份的表）
+        String suffix = extractMonthFromCurrentTime();
 
         // 构建目标表名
         String targetTableName = tableName + "_" + suffix;
@@ -134,6 +134,31 @@ public class OrderMonthShardingAlgorithm implements StandardShardingAlgorithm<Lo
                             && tableSuffix.compareTo(upperSuffix[0]) <= 0;
                 })
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * 从当前系统时间提取年月
+     * 
+     * @return 年月字符串（格式：yyyyMM）
+     */
+    private String extractMonthFromCurrentTime() {
+        try {
+            // 获取当前日期
+            LocalDate currentDate = LocalDate.now();
+
+            // 格式化为年月字符串
+            String suffix = String.format(TABLE_SUFFIX_FORMAT,
+                    currentDate.getYear(),
+                    currentDate.getMonthValue());
+
+            log.debug("当前系统时间 → 日期: {} → 分片后缀: {}", currentDate, suffix);
+
+            return suffix;
+
+        } catch (Exception e) {
+            log.error("从当前系统时间提取年月失败", e);
+            throw new RuntimeException("从当前系统时间提取年月失败", e);
+        }
     }
 
     /**
