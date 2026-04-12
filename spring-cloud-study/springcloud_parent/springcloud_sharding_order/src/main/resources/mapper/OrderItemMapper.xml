@@ -5,7 +5,7 @@
     <!-- 结果映射 -->
     <resultMap id="BaseResultMap" type="com.zf.entity.OrderItem">
         <id column="id" property="id" jdbcType="BIGINT"/>
-        <result column="order_id" property="orderId" jdbcType="BIGINT"/>
+        <result column="order_id" property="orderNo" jdbcType="BIGINT"/>
         <result column="product_id" property="productId" jdbcType="BIGINT"/>
         <result column="product_name" property="productName" jdbcType="VARCHAR"/>
         <result column="product_img" property="productImg" jdbcType="VARCHAR"/>
@@ -27,7 +27,7 @@
     <insert id="insert" parameterType="com.zf.entity.OrderItem" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO t_order_item (order_id, product_id, product_name, product_img, price, quantity,
                                  total_amount, create_time, update_time, deleted)
-        VALUES (#{orderId}, #{productId}, #{productName}, #{productImg}, #{price}, #{quantity},
+        VALUES (#{orderNo}, #{productId}, #{productName}, #{productImg}, #{price}, #{quantity},
                 #{totalAmount}, #{createTime}, #{updateTime}, #{deleted})
     </insert>
 
@@ -39,12 +39,12 @@
         WHERE id = #{id} AND deleted = 0
     </select>
 
-    <!-- 根据订单ID查询订单明细列表 -->
-    <select id="selectByOrderId" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <!-- 根据订单号查询订单明细列表 -->
+    <select id="selectByOrderNo" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT
         <include refid="Base_Column_List"/>
         FROM t_order_item
-        WHERE order_id = #{orderId} AND deleted = 0
+        WHERE order_id = #{orderNo} AND deleted = 0
         ORDER BY id
     </select>
 
@@ -68,7 +68,7 @@
     <update id="updateById" parameterType="com.zf.entity.OrderItem">
         UPDATE t_order_item
         <set>
-            <if test="orderId != null">order_id = #{orderId},</if>
+            <if test="orderNo != null">order_id = #{orderNo},</if>
             <if test="productId != null">product_id = #{productId},</if>
             <if test="productName != null">product_name = #{productName},</if>
             <if test="productImg != null">product_img = #{productImg},</if>
@@ -87,7 +87,7 @@
                                  total_amount, create_time, update_time, deleted)
         VALUES
         <foreach collection="items" item="item" separator=",">
-            (#{item.orderId}, #{item.productId}, #{item.productName}, #{item.price},
+            (#{item.orderNo}, #{item.productId}, #{item.productName}, #{item.price},
              #{item.quantity}, #{item.totalAmount}, #{item.createTime}, #{item.updateTime},
              #{item.deleted})
         </foreach>

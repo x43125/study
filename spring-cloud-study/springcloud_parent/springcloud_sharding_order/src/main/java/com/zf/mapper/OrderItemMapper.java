@@ -23,9 +23,9 @@ public interface OrderItemMapper {
     OrderItem selectById(@Param("id") Long id);
 
     /**
-     * 根据订单ID查询订单明细列表
+     * 根据订单号查询订单明细列表
      */
-    List<OrderItem> selectByOrderId(@Param("orderId") Long orderId);
+    List<OrderItem> selectByOrderNo(@Param("orderNo") Long orderNo);
 
     /**
      * 查询所有订单明细

@@ -91,27 +91,27 @@ public class OrderServiceImpl implements OrderService {
     public Long createOrder(Order order, List<OrderItem> orderItems) {
         // 1. 保存订单
         orderMapper.insert(order);
-        Long orderId = order.getId();
+        Long orderNo = order.getOrderNo();
 
-        // 2. 设置订单ID并保存订单明细（暂时使用循环插入，ShardingSphere批量插入需要额外配置）
+        // 2. 设置订单号并保存订单明细（暂时使用循环插入，ShardingSphere批量插入需要额外配置）
         if (orderItems != null && !orderItems.isEmpty()) {
             for (OrderItem item : orderItems) {
-                item.setOrderId(orderId);
+                item.setOrderNo(orderNo);
                 orderItemMapper.insert(item);
             }
         }
 
-        return orderId;
+        return orderNo;
     }
 
     @Override
-    public Order getOrderWithItems(Long orderId) {
-        Order order = orderMapper.selectById(orderId);
+    public Order getOrderWithItems(Long orderNo) {
+        Order order = orderMapper.selectById(orderNo);
         if (order == null) {
             return null;
         }
 
-        List<OrderItem> items = orderItemMapper.selectByOrderId(orderId);
+        List<OrderItem> items = orderItemMapper.selectByOrderNo(orderNo);
         // 可以在这里设置到order对象中，如果需要的话
         return order;
     }
@@ -122,11 +122,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean updateOrderStatus(Long orderId, Integer status) {
+    public boolean updateOrderStatus(Long orderNo, Integer status) {
         Order order = new Order();
-        order.setId(orderId);
+        order.setOrderNo(orderNo);
         order.setStatus(status);
-        return orderMapper.updateById(order) > 0;
+        return orderMapper.updateByOrderNo(order) > 0;
     }
 
     @Override
@@ -140,6 +140,7 @@ public class OrderServiceImpl implements OrderService {
         Long userId = createOrderDTO.getUserId();
 
         Order order = new Order();
+        // 雪花算法生成orderNo
         order.setOrderNo(generateOrderNo());
         order.setUserId(userId);
         order.setUserName("用户" + userId);
@@ -157,11 +158,11 @@ public class OrderServiceImpl implements OrderService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         order.setTotalAmount(totalAmount);
-        Long orderId = createOrder(order, items);
+        Long orderNo = createOrder(order, items);
 
         // 发送订单创建消息到 MQ
         OrderMessage orderMessage = OrderMessage.builder()
-                .orderNo(order.getOrderNo())
+                .orderNo(orderNo)
                 .userId(userId)
                 .totalAmount(totalAmount)
                 .status(order.getStatus())
@@ -171,7 +172,7 @@ public class OrderServiceImpl implements OrderService {
                 .build();
         orderProducer.sendOrderMessage(orderMessage);
 
-        return orderId;
+        return orderNo;
     }
 
     @Override

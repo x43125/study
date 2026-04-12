@@ -1,14 +1,13 @@
 package com.zf.entity;
 
-import lombok.Data;
-
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+
+import lombok.Data;
 
 /**
  * 订单明细实体
  * 分库分表改造提示：
- * 1. orderId适合作为分库分表键，与Order表保持一致
+ * 1. orderNo适合作为分库分表键，与Order表保持一致
  * 2. OrderItem应该与Order配置为绑定表（Binding Table）
  *    确保同一订单的订单明细和订单在同一个分库分表中，避免跨库关联查询
  */
@@ -18,10 +17,10 @@ public class OrderItem extends BaseEntity {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 订单ID - 关联订单表
+     * 订单No - 关联订单表
      * 分片键建议：与Order表的分片策略保持一致
      */
-    private Long orderId;
+    private Long orderNo;
 
     /**
      * 商品ID

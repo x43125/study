@@ -26,17 +26,17 @@ public class OrderController {
      */
     @PostMapping("/create")
     public ResponseDTO<Long> createOrder(@Valid @RequestBody CreateOrderDTO createOrderDTO) {
-        Long orderId = orderService.createOrderWithDTO(createOrderDTO);
-        return ResponseDTO.success("订单创建成功", orderId);
+        Long orderNo = orderService.createOrderWithDTO(createOrderDTO);
+        return ResponseDTO.success("订单创建成功", orderNo);
     }
 
     /**
      * 查询订单详情
-     * GET /order/{id}
+     * GET /order/{orderNo}
      */
-    @GetMapping("/{id}")
-    public ResponseDTO<Order> getOrder(@PathVariable Long id) {
-        Order order = orderService.getOrderWithItems(id);
+    @GetMapping("/{orderNo}")
+    public ResponseDTO<Order> getOrder(@PathVariable Long orderNo) {
+        Order order = orderService.getOrderWithItems(orderNo);
         if (order == null) {
             throw new IllegalArgumentException("订单不存在");
         }
@@ -55,11 +55,11 @@ public class OrderController {
 
     /**
      * 更新订单状态
-     * PUT /order/{id}/status
+     * PUT /order/{orderNo}/status
      */
-    @PutMapping("/{id}/status")
-    public ResponseDTO<Void> updateOrderStatus(@PathVariable Long id, @RequestParam Integer status) {
-        boolean success = orderService.updateOrderStatus(id, status);
+    @PutMapping("/{orderNo}/status")
+    public ResponseDTO<Void> updateOrderStatus(@PathVariable Long orderNo, @RequestParam Integer status) {
+        boolean success = orderService.updateOrderStatus(orderNo, status);
         if (!success) {
             throw new IllegalArgumentException("状态更新失败");
         }

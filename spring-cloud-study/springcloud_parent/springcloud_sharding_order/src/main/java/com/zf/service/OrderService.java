@@ -24,7 +24,7 @@ public interface OrderService {
     /**
      * 查询订单详情（含明细）
      */
-    Order getOrderWithItems(Long orderId);
+    Order getOrderWithItems(Long orderNo);
 
     /**
      * 查询用户订单列表
@@ -34,7 +34,7 @@ public interface OrderService {
     /**
      * 更新订单状态
      */
-    boolean updateOrderStatus(Long orderId, Integer status);
+    boolean updateOrderStatus(Long orderNo, Integer status);
 
     /**
      * 统计订单数量

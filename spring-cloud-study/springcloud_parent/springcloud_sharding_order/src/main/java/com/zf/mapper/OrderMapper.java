@@ -43,6 +43,11 @@ public interface OrderMapper {
     int updateById(Order order);
 
     /**
+     * 根据订单号更新订单
+     */
+    int updateByOrderNo(Order order);
+
+    /**
      * 批量插入订单（用于快速生成测试数据）
      */
     void batchInsert(@Param("orders") List<Order> orders);

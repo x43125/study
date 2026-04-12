@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
  * 订单实体
  * 分库分表改造提示：
  * 1. userId适合作为分库键（按用户查询订单是常见场景）
- * 2. orderId适合作为分表键（订单ID是唯一标识）
+ * 2. orderNo适合作为分表键（订单编号是唯一标识）
  */
 @Data
 public class Order extends BaseEntity {
