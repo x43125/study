@@ -167,16 +167,16 @@ public class OrderServiceImpl implements OrderService {
         Long orderNo = createOrder(order, items);
 
         // 发送订单创建消息到 MQ
-        OrderMessage orderMessage = OrderMessage.builder()
-                .orderNo(orderNo)
-                .userId(userId)
-                .totalAmount(totalAmount)
-                .status(order.getStatus())
-                .address(order.getReceiverAddress())
-                .orderTime(new java.util.Date())
-                .messageType("ORDER_CREATE")
-                .build();
-        orderProducer.sendOrderMessage(orderMessage);
+//        OrderMessage orderMessage = OrderMessage.builder()
+//                .orderNo(orderNo)
+//                .userId(userId)
+//                .totalAmount(totalAmount)
+//                .status(order.getStatus())
+//                .address(order.getReceiverAddress())
+//                .orderTime(new java.util.Date())
+//                .messageType("ORDER_CREATE")
+//                .build();
+//        orderProducer.sendOrderMessage(orderMessage);
 
         return orderNo;
     }

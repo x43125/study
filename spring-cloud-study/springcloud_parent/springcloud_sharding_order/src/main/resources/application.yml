@@ -80,12 +80,12 @@ datasource-router:
   # - old: 只写老表
   # - new: 只写新表（分片表）
   # - both: 双写（老表和新表都写）
-  write-mode: old
+  write-mode: new
   
   # 读取模式：old/new
   # - old: 只读老表
   # - new: 只读新表（分片表）
-  read-mode: old
+  read-mode: new
   
   # 双写顺序（当write-mode=both时生效）
   # - old-first: 先写老表，再写新表
@@ -94,5 +94,5 @@ datasource-router:
 
 # 分片功能开关
 sharding:
-  enabled: false
+  enabled: true
 
