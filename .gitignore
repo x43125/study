@@ -36,3 +36,5 @@ build/
 
 ### Mac ###
 .DS_Store
+
+.lcpr_data/
