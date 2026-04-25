@@ -1,9 +1,16 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=2187 lang=java
+ * @lcpr version=30403
+ *
+ * [2187] 完成旅途的最少时间
+ */
 
-public class SolutionTest {
+// @lc code=start
+class Solution {
     public long minimumTime(int[] time, int totalTrips) {
         // 并发
-        // 暴力法：模拟
+        // 暴力法：模拟，超时
+        // 二分优化
         long dur = time[0];
         long left = 0;
         while (true) {
@@ -40,11 +47,16 @@ public class SolutionTest {
         }
         return new long[]{trip, minModNum};
     }
-
-    public static void main(String[] args) {
-        SolutionTest solution = new SolutionTest();
-        // long ans = solution.minimumTime(new int[]{3,3,8}, 6);
-        long ans = solution.minimumTime(new int[]{66}, 8295);
-        System.out.println(ans);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [1,2,3]\n5\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [2]\n1\n
+ * // @lcpr case=end
+ * 
+ */
