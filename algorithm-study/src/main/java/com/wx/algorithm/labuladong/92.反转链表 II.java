@@ -1,6 +1,23 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=92 lang=java
+ * @lcpr version=30403
+ *
+ * [92] 反转链表 II
+ */
 
-public class SolutionTest {
+// @lc code=start
+
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     public ListNode reverseBetween(ListNode head, int left, int right) {
         if (head.next == null || left == right) {
             return head;
@@ -39,14 +56,16 @@ public class SolutionTest {
 
         return headPreNode.next;
     }
-
-    public static void main(String[] args) {
-        // ListNode head = ListUtils.buildList(new int[]{1,2,3,4,5});
-        ListNode head = ListUtils.buildList(new int[]{1,2,3,4,5});
-        // ListNode head = ListUtils.buildList(new int[]{5});
-        ListUtils.printList(head);
-        SolutionTest solution = new SolutionTest();
-        head = solution.reverseBetween(head, 2, 3);
-        ListUtils.printList(head);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [1,2,3,4,5]\n2\n4\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [5]\n1\n1\n
+ * // @lcpr case=end
+ * 
+ */
