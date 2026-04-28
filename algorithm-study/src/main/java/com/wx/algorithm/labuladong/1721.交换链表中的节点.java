@@ -1,7 +1,23 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=1721 lang=java
+ * @lcpr version=30403
+ *
+ * [1721] 交换链表中的节点
+ */
 
-public class SolutionTest {
-    public ListNode reverseBetween(ListNode head, int k) {
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public ListNode swapNodes(ListNode head, int k) {
         // 1.边界处理: 还有一种特殊情况，就是刚好这两个数相邻
         // 2.双指针
         ListNode dummy = new ListNode();
@@ -46,14 +62,19 @@ public class SolutionTest {
 
         return dummy.next;
     }
-
-    public static void main(String[] args) {
-        // ListNode head = ListUtils.buildList(new int[]{1,2,3,4,5});
-        ListNode head = ListUtils.buildList(new int[] { 7, 9, 6, 6, 7, 8, 3, 0, 9, 5 });
-        // ListNode head = ListUtils.buildList(new int[]{5});
-        ListUtils.printList(head);
-        SolutionTest solution = new SolutionTest();
-        head = solution.reverseBetween(head, 6);
-        ListUtils.printList(head);
-    }
 }
+// @lc code=end
+
+
+
+/*
+// @lcpr case=start
+// [1,2,3,4,5]\n2\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [7,9,6,6,7,8,3,0,9,5]\n5\n
+// @lcpr case=end
+
+ */
+
