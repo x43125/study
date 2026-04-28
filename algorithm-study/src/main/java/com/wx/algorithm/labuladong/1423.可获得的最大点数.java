@@ -8,36 +8,34 @@
 // @lc code=start
 class Solution {
     public int maxScore(int[] cardPoints, int k) {
-        // 从 n-k 到 k
-        int n = cardPoints.length, sum = 0, max = 0;
-        // 先算出初始 sum
-        for (int i = n - k; i < n; i++) {
-            sum += cardPoints[i];
+        // 是一个变种的滑动窗口
+        // 从距离开头或者结尾k个长度的地方，往另一头跑，中间会有被截断各在头尾两边的情况，
+        // 找这个滑动的过程中，最大的值
+        // 从 n-k ~ k
+        // end 从 n-k -> n-1
+        // start 从 n-1 -> k-1
+        int n = cardPoints.length, start = n-1;
+        for (int end = n - k; end < n; end++;) {
+            
         }
-        max = Math.max(max, sum);
-
-        for (int i = 0; i < k; i++) {
-            sum += cardPoints[i];
-            sum -= cardPoints[n - (k - i)];
-            max = Math.max(max, sum);
-        }
-
-        return max;
     }
 }
 // @lc code=end
 
+
+
 /*
- * // @lcpr case=start
- * // [1,2,3,4,5,6,1]\n3\n
- * // @lcpr case=end
- * 
- * // @lcpr case=start
- * // [2,2,2]\n2\n
- * // @lcpr case=end
- * 
- * // @lcpr case=start
- * // [9,7,7,9,7,7,9]\n7\n
- * // @lcpr case=end
- * 
+// @lcpr case=start
+// [1,2,3,4,5,6,1]\n3\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [2,2,2]\n2\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [9,7,7,9,7,7,9]\n7\n
+// @lcpr case=end
+
  */
+
