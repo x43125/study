@@ -1,56 +1,29 @@
 package com.wx.algorithm.labuladong;
 
 public class SolutionTest {
-    public boolean solution(ListNode head) {
-        // 从中间向两面走，每走一个，两边节点比较
-        // 非双指针，无法直接比较，将中间点往后的链表翻转过来，再比较
-        // 找到中间点
-        ListNode dummy = new ListNode();
-        dummy.next = head;
-        ListNode fast = head;
-        ListNode slow = dummy;
-        while (fast != null && fast.next != null) {
-            slow = slow.next;
-            fast = fast.next.next;
+    public int solution(int[] nums) {
+        // 转化成判断链表有环，很神奇
+        // 1,3,4,2,5,2
+        // 先用快慢指针，找到快慢指针下标相同的点
+        // 然后再将慢指针挪到开头，快指针从当前往后走，各移动一位，
+        // 期间比较两个指针是否有值相同，而下标不同的情况
+        int slow = 0, fast = 0;
+        do {
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        } while (slow != fast);
+        slow = 0;
+        while (slow != fast) {
+            slow = nums[slow];
+            fast = nums[fast];
         }
-        // 0, 1,2,3,2,1
-        // 0, 1,2,2,1
-        if (fast != null) {
-            slow = slow.next;
-        }
-
-        // 翻转，并拼接到原中间点之后
-        ListNode mid = slow;
-        // 开始翻转mid之后的数据
-        fast = mid.next;
-        slow = null;
-        while (fast != null) {
-            ListNode next = fast.next;
-            fast.next = slow;
-            slow = fast;
-            fast = next;
-            mid.next = slow;
-        }
-
-        // 比较
-        while (slow != null) {
-            if (slow.val != head.val) {
-                return false;
-            }
-            head = head.next;
-            slow = slow.next;
-        }
-
-        return true;
+        return slow;
     }
 
     public static void main(String[] args) {
-        ListNode head = ListUtils.buildList(new int[] { 1, 2, 2, 2, 2, 4 });
-        // ListNode head = ListUtils.buildList(new int[]{5});
-        ListUtils.printList(head);
         SolutionTest solution = new SolutionTest();
-        boolean ans = solution.solution(head);
+        int ans = solution
+                .solution(new int[] { 2,1,2 });
         System.out.println(ans);
-        ListUtils.printList(head);
     }
 }
