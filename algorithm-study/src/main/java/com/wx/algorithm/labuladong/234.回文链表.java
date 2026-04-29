@@ -1,7 +1,23 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=234 lang=java
+ * @lcpr version=30403
+ *
+ * [234] 回文链表
+ */
 
-public class SolutionTest {
-    public boolean solution(ListNode head) {
+// @lc code=start
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
+    public boolean isPalindrome(ListNode head) {
         // 从中间向两面走，每走一个，两边节点比较
         // 非双指针，无法直接比较，将中间点往后的链表翻转过来，再比较
         // 找到中间点
@@ -43,14 +59,19 @@ public class SolutionTest {
 
         return true;
     }
-
-    public static void main(String[] args) {
-        ListNode head = ListUtils.buildList(new int[] { 1, 2, 2, 2, 2, 4 });
-        // ListNode head = ListUtils.buildList(new int[]{5});
-        ListUtils.printList(head);
-        SolutionTest solution = new SolutionTest();
-        boolean ans = solution.solution(head);
-        System.out.println(ans);
-        ListUtils.printList(head);
-    }
 }
+// @lc code=end
+
+
+
+/*
+// @lcpr case=start
+// [1,2,2,1]\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [1,2]\n
+// @lcpr case=end
+
+ */
+
