@@ -1,9 +1,27 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=445 lang=java
+ * @lcpr version=30403
+ *
+ * [445] 两数相加 II
+ */
+
+// @lc code=start
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Stack;
 
-public class SolutionTest {
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
         // 高位在左
         Deque<ListNode> stack1 = new ArrayDeque<>();
@@ -58,13 +76,20 @@ public class SolutionTest {
         }
         return next;
     }
-
-    public static void main(String[] args) {
-        SolutionTest solution = new SolutionTest();
-        ListNode ans = solution
-                .addTwoNumbers(
-                        ListUtils.buildList(new int[] { 5 }),
-                        ListUtils.buildList(new int[] { 5 }));
-        ListUtils.printList(ans);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [7,2,4,3]\n[5,6,4]\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [2,4,3]\n[5,6,4]\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [0]\n[0]\n
+ * // @lcpr case=end
+ * 
+ */
