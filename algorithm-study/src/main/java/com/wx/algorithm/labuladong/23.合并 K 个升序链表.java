@@ -1,9 +1,31 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=23 lang=java
+ * @lcpr version=30403
+ *
+ * [23] 合并 K 个升序链表
+ */
 
+// @lc code=start
+
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
-public class SolutionTest {
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ * int val;
+ * ListNode next;
+ * ListNode() {}
+ * ListNode(int val) { this.val = val; }
+ * ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         // 两两排序，然后合并
         Deque<ListNode> queue = new LinkedList<>();
@@ -49,14 +71,20 @@ public class SolutionTest {
 
         return dummy.next;
     }
-
-    public static void main(String[] args) {
-        SolutionTest solution = new SolutionTest();
-        // [1,4,5],[1,3,4],[2,6]
-        ListNode ans = solution
-                .mergeKLists(new ListNode[] { ListUtils.buildList(new int[] { 1, 4, 5 }),
-                        ListUtils.buildList(new int[] { 1, 3, 4 }),
-                        ListUtils.buildList(new int[] { 2, 6 }) });
-        ListUtils.printList(ans);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [[1,4,5],[1,3,4],[2,6]]\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // []\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [[]]\n
+ * // @lcpr case=end
+ * 
+ */
