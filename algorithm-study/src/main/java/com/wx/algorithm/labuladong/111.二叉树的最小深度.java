@@ -1,9 +1,29 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=111 lang=java
+ * @lcpr version=30403
+ *
+ * [111] 二叉树的最小深度
+ */
 
-public class SolutionTest {
+// @lc code=start
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ * int val;
+ * TreeNode left;
+ * TreeNode right;
+ * TreeNode() {}
+ * TreeNode(int val) { this.val = val; }
+ * TreeNode(int val, TreeNode left, TreeNode right) {
+ * this.val = val;
+ * this.left = left;
+ * this.right = right;
+ * }
+ * }
+ */
+class Solution {
     int height;
     int min;
-
     public int minDepth(TreeNode root) {
         height = 0;
         min = Integer.MAX_VALUE;
@@ -41,12 +61,16 @@ public class SolutionTest {
         dfs(root.right);
         height--;
     }
-
-    public static void main(String[] args) {
-        TreeNode root1 = TreeUtils.buildTree(new Integer[] { 1, 2, 3, 4, null, null, 5 });
-
-        SolutionTest solution = new SolutionTest();
-        int ans = solution.minDepth(root1);
-        System.out.println(ans);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [3,9,20,null,null,15,7]\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [2,null,3,null,4,null,5,null,6]\n
+ * // @lcpr case=end
+ * 
+ */
