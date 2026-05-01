@@ -1,8 +1,8 @@
 /*
- * @lc app=leetcode.cn id=111 lang=java
+ * @lc app=leetcode.cn id=112 lang=java
  * @lcpr version=30403
  *
- * [111] 二叉树的最小深度
+ * [112] 路径总和
  */
 
 // @lc code=start
@@ -22,35 +22,39 @@
  * }
  */
 class Solution {
-    public int minDepth(TreeNode root) {
+    public boolean hasPathSum(TreeNode root, int targetSum) {
         if (root == null) {
-            return 0;
+            return false;
         }
 
+        boolean hasPathSum = false;
         if (root.left == null && root.right == null) {
-            return 1;
+            return root.val == targetSum;
         }
-        
-        int min = Integer.MAX_VALUE;
-        if (root.left != null) {
-            min = Math.min(minDepth(root.left), min);
+
+        if (root.left != null ) {
+            hasPathSum = hasPathSum(root.left, targetSum - root.val);
         }
         if (root.right != null) {
-            min = Math.min(minDepth(root.right), min);
+            hasPathSum = hasPathSum || hasPathSum(root.right, targetSum - root.val);
         }
 
-        return min + 1;
+        return hasPathSum;
     }
 }
 // @lc code=end
 
 /*
  * // @lcpr case=start
- * // [3,9,20,null,null,15,7]\n
+ * // [5,4,8,11,null,13,4,7,2,null,null,null,1]\n22\n
  * // @lcpr case=end
  * 
  * // @lcpr case=start
- * // [2,null,3,null,4,null,5,null,6]\n
+ * // [1,2,3]\n5\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // []\n0\n
  * // @lcpr case=end
  * 
  */
