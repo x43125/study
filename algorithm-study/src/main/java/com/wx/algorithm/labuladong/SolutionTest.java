@@ -1,62 +1,37 @@
 package com.wx.algorithm.labuladong;
 
 public class SolutionTest {
-    String minStr;
-
-    public String smallestFromLeaf(TreeNode root) {
-        minStr = "";
-        dfs(root, "");
-        return minStr;
+    Integer secondMin;
+    public int findSecondMinimumValue(TreeNode root) {
+        // 根节点 == min(left, right)
+        secondMin = null;
+        dfs(root);
+        
+        return (secondMin == null || secondMin == root.val) ? -1 : secondMin;
     }
 
-    private void dfs(TreeNode root, String prefix) {
-        if (root == null) {
+    private void dfs(TreeNode root) {
+        if (root == null || root.left == null) {
             return;
         }
-        prefix = (char) (root.val + 'a') + prefix;
-        if (root.left == null && root.right == null) {
-            minStr = compare(minStr, prefix);
-            return;
-        }
-        dfs(root.left, prefix);
-        dfs(root.right, prefix);
-    }
 
-    private String compare(String a, String b) {
-        if (a == "") {
-            return b;
+        if (root.left.val == root.right.val) {
+            dfs(root.left);
+            dfs(root.right);
+        } else if (root.left.val < root.right.val) {
+            secondMin = secondMin == null ? root.right.val : Math.min(root.right.val, secondMin);
+            dfs(root.left);
+        } else {
+            secondMin = secondMin == null ? root.left.val : Math.min(root.left.val, secondMin);
+            dfs(root.right);
         }
-        if (b == "") {
-            return a;
-        }
-        if (a.equals(b)) {
-            return a;
-        }
-        if (a.startsWith(b)) {
-            return b;
-        }
-        if (b.startsWith(a)) {
-            return a;
-        }
-        int n = Math.min(a.length(), b.length());
-        for (int i = 0; i < n; i++) {
-            char c1 = a.charAt(i);
-            char c2 = b.charAt(i);
-            if (c1 < c2) {
-                return a;
-            } else if (c1 > c2) {
-                return b;
-            }
-        }
-
-        return a;
     }
 
     public static void main(String[] args) {
-        TreeNode root1 = TreeUtils.buildTree(new Integer[] { 25 });
+        TreeNode root1 = TreeUtils.buildTree(new Integer[] { 2,2,2147483647 });
 
-        SolutionTest solution = new SolutionTest();
-        String ans = solution.smallestFromLeaf(root1);
+        SolutionTest solution = new SolutionTest(); 
+        int ans = solution.findSecondMinimumValue(root1);
         System.out.println(ans);
     }
 }
