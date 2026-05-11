@@ -1,9 +1,16 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=78 lang=java
+ * @lcpr version=30403
+ *
+ * [78] 子集
+ */
+
+// @lc code=start
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SolutionTest {
+class Solution {
     List<List<Integer>> ans;
     List<Integer> t;
 
@@ -19,22 +26,21 @@ public class SolutionTest {
             ans.add(new ArrayList<Integer>(t));
             return;
         }
-        // 选当前节点
         t.add(nums[cur]);
         dfs(cur + 1, nums);
-        // 不选当前节点
         t.remove(t.size() - 1);
         dfs(cur + 1, nums);
     }
-
-    public static void main(String[] args) {
-        SolutionTest solution = new SolutionTest();
-        List<List<Integer>> ans = solution.subsets(new int[]{1,2,3});
-        for (List<Integer> ans2 : ans) {
-            for (Integer ans22 : ans2) {
-                System.out.print(ans22 + " ");
-            }
-            System.out.println();
-        }
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // [1,2,3]\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // [0]\n
+ * // @lcpr case=end
+ * 
+ */
