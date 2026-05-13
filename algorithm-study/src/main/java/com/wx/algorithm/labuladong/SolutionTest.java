@@ -1,37 +1,25 @@
 package com.wx.algorithm.labuladong;
 
 public class SolutionTest {
-    Integer secondMin;
-    public int findSecondMinimumValue(TreeNode root) {
-        // 根节点 == min(left, right)
-        secondMin = null;
-        dfs(root);
-        
-        return (secondMin == null || secondMin == root.val) ? -1 : secondMin;
-    }
+    public int climbStairs(int n, int[] costs) {
+        int zero = 0;
+        int first = costs[0] + 1;
+        int second = Math.min(zero + costs[1] + 4, first + costs[1] + 1);
+        int third = 0;
 
-    private void dfs(TreeNode root) {
-        if (root == null || root.left == null) {
-            return;
+        for (int i = 3; i <= n; i++) {
+            third = Math.min(zero + costs[i-1]+9, first + costs[i-1]+4);
+            third = Math.min(third, second + costs[i-1]+1);
+            zero = first;
+            first = second;
+            second = third;
         }
-
-        if (root.left.val == root.right.val) {
-            dfs(root.left);
-            dfs(root.right);
-        } else if (root.left.val < root.right.val) {
-            secondMin = secondMin == null ? root.right.val : Math.min(root.right.val, secondMin);
-            dfs(root.left);
-        } else {
-            secondMin = secondMin == null ? root.left.val : Math.min(root.left.val, secondMin);
-            dfs(root.right);
-        }
+        return third;
     }
 
     public static void main(String[] args) {
-        TreeNode root1 = TreeUtils.buildTree(new Integer[] { 2,2,2147483647 });
-
-        SolutionTest solution = new SolutionTest(); 
-        int ans = solution.findSecondMinimumValue(root1);
+        SolutionTest solution = new SolutionTest();
+        int ans = solution.climbStairs(4, new int[] { 1, 2, 3 , 4});
         System.out.println(ans);
     }
 }
