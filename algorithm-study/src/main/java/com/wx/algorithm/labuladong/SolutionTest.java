@@ -1,40 +1,25 @@
 package com.wx.algorithm.labuladong;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SolutionTest {
-    List<List<Integer>> ans;
-    List<Integer> t;
+    public int climbStairs(int n, int[] costs) {
+        int zero = 0;
+        int first = costs[0] + 1;
+        int second = Math.min(zero + costs[1] + 4, first + costs[1] + 1);
+        int third = 0;
 
-    public List<List<Integer>> subsets(int[] nums) {
-        ans = new ArrayList<>();
-        t = new ArrayList<>();
-        dfs(0, nums);
-        return ans;
-    }
-
-    private void dfs(int cur, int[] nums) {
-        if (cur == nums.length) {
-            ans.add(new ArrayList<Integer>(t));
-            return;
+        for (int i = 3; i <= n; i++) {
+            third = Math.min(zero + costs[i-1]+9, first + costs[i-1]+4);
+            third = Math.min(third, second + costs[i-1]+1);
+            zero = first;
+            first = second;
+            second = third;
         }
-        // 选当前节点
-        t.add(nums[cur]);
-        dfs(cur + 1, nums);
-        // 不选当前节点
-        t.remove(t.size() - 1);
-        dfs(cur + 1, nums);
+        return third;
     }
 
     public static void main(String[] args) {
         SolutionTest solution = new SolutionTest();
-        List<List<Integer>> ans = solution.subsets(new int[]{1,2,3});
-        for (List<Integer> ans2 : ans) {
-            for (Integer ans22 : ans2) {
-                System.out.print(ans22 + " ");
-            }
-            System.out.println();
-        }
+        int ans = solution.climbStairs(4, new int[] { 1, 2, 3 , 4});
+        System.out.println(ans);
     }
 }
