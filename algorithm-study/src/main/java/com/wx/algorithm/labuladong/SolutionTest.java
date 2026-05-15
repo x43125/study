@@ -1,25 +1,22 @@
 package com.wx.algorithm.labuladong;
 
 public class SolutionTest {
-    public int climbStairs(int n, int[] costs) {
-        int zero = 0;
-        int first = costs[0] + 1;
-        int second = Math.min(zero + costs[1] + 4, first + costs[1] + 1);
-        int third = 0;
+    public int climbStairs(int[] costs) {
+        // dp[i] = (dp[i-1] + costs[i-1], dp[i-1] + costs[i-2]);
+        int first = 0, second = 0;
 
-        for (int i = 3; i <= n; i++) {
-            third = Math.min(zero + costs[i-1]+9, first + costs[i-1]+4);
-            third = Math.min(third, second + costs[i-1]+1);
-            zero = first;
+        for (int i = 2; i <= costs.length; i++) {
+            int three = Math.min(first + costs[i-2], second + costs[i-1]);
             first = second;
-            second = third;
+            second = three;
         }
-        return third;
+
+        return second;
     }
 
     public static void main(String[] args) {
         SolutionTest solution = new SolutionTest();
-        int ans = solution.climbStairs(4, new int[] { 1, 2, 3 , 4});
+        int ans = solution.climbStairs(new int[] { 2, 100});
         System.out.println(ans);
     }
 }
