@@ -8,9 +8,11 @@
 // @lc code=start
 class Solution {
     public int minCostClimbingStairs(int[] cost) {
-        // dp[i] = (dp[i-1] + costs[i-1], dp[i-1] + costs[i-2]);
+        // 和爬楼梯 2 差不多，只是收费方式变了，
+        // dp[i] = 爬到i 需要的最小花费
+        // 转移方程: dp[i] = Math.min(dp[i-2] + cost[i-2], dp[i-1] + cost[i-1])
+        // 边界：dp[0] = cost[0], dp[1] = Math.min(cost[0], cost[1])
         int first = 0, second = 0;
-
         for (int i = 2; i <= cost.length; i++) {
             int three = Math.min(first + cost[i-2], second + cost[i-1]);
             first = second;
