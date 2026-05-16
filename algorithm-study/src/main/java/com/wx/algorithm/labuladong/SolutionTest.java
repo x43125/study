@@ -1,22 +1,50 @@
 package com.wx.algorithm.labuladong;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 public class SolutionTest {
-    public int climbStairs(int[] costs) {
-        // dp[i] = (dp[i-1] + costs[i-1], dp[i-1] + costs[i-2]);
-        int first = 0, second = 0;
-
-        for (int i = 2; i <= costs.length; i++) {
-            int three = Math.min(first + costs[i-2], second + costs[i-1]);
-            first = second;
-            second = three;
+    //  回溯：正确但超时，尝试 DP
+    int n;
+    int target;
+    public int combinationSum4(int[] nums, int target) {
+        // 更像回溯
+        // 当前节点标记是否已被使用，避免重复
+        // 从 0 开始，表示可以重复使用
+        n = 0;
+        this.target = target;
+        Arrays.sort(nums);
+        dfs(nums, 0);
+        return n;
+    }
+    
+    private void dfs(int[] nums, int preSum) {
+        if (preSum == target) {
+            n++;
+            return;
         }
-
-        return second;
+        if (preSum > target) {
+            return;
+        }
+        
+        Set<Integer> choosed = new HashSet<>();
+        for (int j = 0; j < nums.length; j++) {
+            if (choosed.contains(nums[j])) {
+                continue;
+            }
+            choosed.add(nums[j]);
+            preSum += nums[j];
+            dfs(nums, preSum);
+            preSum -= nums[j];
+        }
     }
 
     public static void main(String[] args) {
         SolutionTest solution = new SolutionTest();
-        int ans = solution.climbStairs(new int[] { 2, 100});
+        long time = System.currentTimeMillis();
+        int ans = solution.combinationSum4(new int[] { 4,2,1}, 32);
         System.out.println(ans);
+        System.out.println(System.currentTimeMillis() - time);
     }
 }
