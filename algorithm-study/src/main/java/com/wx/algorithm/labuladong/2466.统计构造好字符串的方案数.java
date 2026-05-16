@@ -1,6 +1,12 @@
-package com.wx.algorithm.labuladong;
+/*
+ * @lc app=leetcode.cn id=2466 lang=java
+ * @lcpr version=30403
+ *
+ * [2466] 统计构造好字符串的方案数
+ */
 
-public class SolutionTest {
+// @lc code=start
+class Solution {
     public int countGoodStrings(int low, int high, int m, int n) {
         // 题目有病，描述的这么不清晰
         // dp[i] = 按照规定能组成的长度为i的好字符数
@@ -15,18 +21,22 @@ public class SolutionTest {
         for (int i = s; i <= high; i++) {
             dp[i] = (dp[i - s] + (i >= l ? dp[i - l] : 0)) % 1_000_000_007;
             if (i >= low) {
-                cnt = (cnt + dp[i]) % 1_000_000_007;
+                cnt = (cnt + dp[i]) % 1000000007;
             }
         }
 
         return cnt;
     }
-
-    public static void main(String[] args) {
-        SolutionTest solution = new SolutionTest();
-        long time = System.currentTimeMillis();
-        int ans = solution.countGoodStrings(200, 200, 10, 1);
-        System.out.println("ans:" + ans);
-        System.out.println(System.currentTimeMillis() - time);
-    }
 }
+// @lc code=end
+
+/*
+ * // @lcpr case=start
+ * // 3\n3\n1\n1\n
+ * // @lcpr case=end
+ * 
+ * // @lcpr case=start
+ * // 2\n3\n1\n2\n
+ * // @lcpr case=end
+ * 
+ */
