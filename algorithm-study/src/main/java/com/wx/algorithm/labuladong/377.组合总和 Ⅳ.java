@@ -6,6 +6,7 @@
  */
 
 // @lc code=start
+<<<<<<< HEAD
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,10 +41,17 @@ class Solution {
         }
 
         return dp[target];
+=======
+class Solution {
+    public int combinationSum4(int[] nums, int target) {
+        // 不同顺序，属于不同的结果
+        
+>>>>>>> 0b84efd (全排列)
     }
 }
 // @lc code=end
 
+<<<<<<< HEAD
 /*
  * // @lcpr case=start
  * // [1,2,3]\n4\n
@@ -54,3 +62,18 @@ class Solution {
  * // @lcpr case=end
  * 
  */
+=======
+
+
+/*
+// @lcpr case=start
+// [1,2,3]\n4\n
+// @lcpr case=end
+
+// @lcpr case=start
+// [9]\n3\n
+// @lcpr case=end
+
+ */
+
+>>>>>>> 0b84efd (全排列)

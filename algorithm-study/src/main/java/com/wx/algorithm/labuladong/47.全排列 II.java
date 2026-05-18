@@ -6,6 +6,7 @@
  */
 
 // @lc code=start
+<<<<<<< HEAD
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,11 @@ class Solution {
             list.remove(list.size()-1);
             used[i] = false;
         }
+=======
+class Solution {
+    public List<List<Integer>> permuteUnique(int[] nums) {
+        
+>>>>>>> 0b84efd (全排列)
     }
 }
 // @lc code=end
