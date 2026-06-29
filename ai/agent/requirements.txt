@@ -1,0 +1,2 @@
+python-dotenv==1.2.2
+zai==0.0.2

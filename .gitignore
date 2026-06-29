@@ -1,4 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
+
+# Maven/Java
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
@@ -6,7 +8,20 @@ target/
 !**/src/test/**/target/
 *.class
 
-### STS ###
+# Gradle
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### IDEs ###
+
+### IntelliJ IDEA ###
+.idea/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse/STS ###
 .apt_generated
 .classpath
 .factorypath
@@ -15,28 +30,75 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
 ### NetBeans ###
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
 ### VS Code ###
 .vscode/
+*.swp
+*.swo
+*~
+
+### Operating Systems ###
 
 ### Mac ###
 .DS_Store
 
-.lcpr_data/
+### Windows ###
+Thumbs.db
 
+### Python ###
+
+### Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+### Distribution / packaging
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+### Virtual environments
+.venv
+venv/
+env/
+ENV/
+
+### Jupyter Notebook
+.ipynb_checkpoints
+
+### Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+### Node.js ###
 .nvm/
+
+### Environment variables - IMPORTANT for security!
+.env
+.env.local
+
+### Logs ###
+*.log
+
+### Other ###
+.lcpr_data/
