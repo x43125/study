@@ -36,8 +36,6 @@ from anthropic import Anthropic
 from dotenv import load_dotenv
 
 load_dotenv(override=True)
-if os.getenv("ZHIPUAI_URL"):
-    os.environ.pop("ZHIPUAI_API_KEY", None)
 WORKDIR = Path.cwd()
 client = Anthropic(
     api_key=os.environ.get("ZHIPUAI_API_KEY"),
