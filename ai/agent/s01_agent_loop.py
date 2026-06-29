@@ -43,9 +43,9 @@ if os.getenv("ANTHROPIC_BASE_URL"):
     os.environ.pop("ANTHROPIC_AUTH_TOKEN", None)
 client = Anthropic(
     api_key=os.environ.get("ZHIPUAI_API_KEY"),
-    base_url="https://open.bigmodel.cn/api/anthropic",
+    base_url="ZHIPUAI_URL",
 )
-MODEL = os.environ.get("ZHIPUAI_MODEL", "glm-4")
+MODEL = os.environ.get("MODEL_ID", "glm-4")
 SYSTEM = f"You are a coding agent at {os.getcwd()}. Use bash to solve tasks. Act, don't explain."
 # ── Tool definition: just bash ────────────────────────────
 TOOLS = [
