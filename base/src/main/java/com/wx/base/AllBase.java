@@ -1,18 +1,7 @@
 package com.wx.base;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.TreeMap;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
-
-import com.wx.base.AllBase.Runn2;
 
 public class AllBase {
     public static void main(String[] args) throws InterruptedException, ExecutionException {

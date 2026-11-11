@@ -22,6 +22,7 @@ public class Study01 {
         Set<Integer> treeSet = new TreeSet<>();
 
         Map<String, String> map = new HashMap<>();
+        Map<String, String> map1 = new HashMap<>(16);
         map.put("a", "b");
 
         Map<String, String> treeMap = new TreeMap<>();

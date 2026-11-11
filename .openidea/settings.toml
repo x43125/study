@@ -1,0 +1,8 @@
+[languages.java]
+jdk = "/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home"
+jdtlsJdk = "/opt/homebrew/Cellar/openjdk/26.0.1/libexec/openjdk.jdk/Contents/Home"
+[languages.java.maven]
+home = "/Users/wangxiang/workspace/env/apache-maven-3.5.4"
+
+[languages.java.gradle]
+jvm = "/Library/Java/JavaVirtualMachines/jdk1.8.0_351.jdk/Contents/Home"
